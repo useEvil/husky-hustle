@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		{% include "include/page-header.html" %}
+		<link rel="stylesheet" href="/static/js/flexigrid/css/flexigrid.css" type="text/css" media="screen, projection" charset="utf-8" />
+	</head>
+	<body>
+		<div class="background-cover"></div>
+		<div class="background-cover-top">
+			<img src="/static/images/loading_circle_lg.gif" class="centered" />
+		</div>
+		<div id="wrapper">
+			{% include "include/menu.html" %}
+			<div id="inner">
+				<div id="content">
+					{% if messages %}
+					<ul class="messages">
+						{% for message in messages %}
+						<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+					<div class="box">
+						<h3><a href="/accounts/profile/">Profile</a> &gt; Donation List</h3>
+						{% if child %}
+						<span>{{ child }}:  In room {{ child.teacher.room_number }} with {{ child.teacher.full_name }}{% if child.laps %} ran {{ child.laps }} laps.{% endif %}</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<br class="clearfix" />
+			<table id="donations" style="display: none;"></table>
+			<div id="page-bottom">
+				{% include "include/page-bottom.html" %}
+			</div>
+		</div>
+		<div id="footer">
+			{% include "include/page-footer.html" %}
+		</div>
+		<div id="overlay-box-reminder" class="overlay-box" title="Send Reminder to Selected Sponsors" style="z-index: 1010;">
+			<div class="overlay-content">
+				<form id="reminder_form" action="/reminders" action="post">
+					{% csrf_token %}
+					<div class="wrapper">
+						<ul>
+							<li>
+								<label for="custom_message" id="custom_message_label">Custom Message</label><br />
+								<textarea class="input" id="custom_message" name="custom_message" value="" cols="200" rows="10"></textarea>
+							</li>
+							<li>
+								Sample:
+								<pre style="font-size: 0.8em;line-height: 1.2em;">
+									{% include "email/reminder.txt" with name='"Donor Name"' child_name='"Student Name"' payment_url='"http://payment_url/"' custom_message='"Your Custom Message"' %}
+								</pre>
+							</li>
+							<li>
+								<input type="button" style="width: 8em;" class="control input submit_button" id="submit_reminder" value=" Submit " />
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div id="overlay-box-thanks" class="overlay-box" title="Send a Thank You to Selected Sponsors" style="z-index: 1010;">
+			<div class="overlay-content">
+				<form id="thanks_form" action="/thanks" action="post">
+					{% csrf_token %}
+					<div class="wrapper">
+						<ul>
+							<li>
+								<label for="custom_message" id="custom_message_label">Custom Message</label><br />
+								<textarea class="input" id="custom_message" name="custom_message" value="" cols="200" rows="10"></textarea>
+							</li>
+							<li>
+								Sample:
+								<pre style="font-size: 0.8em;line-height: 1.2em;">
+									{% include "email/thanks.txt" with name='"Donor Name"' custom_message='"Your Custom Message"' %}
+								</pre>
+							</li>
+							<li>
+								<input type="button" style="width: 8em;" class="control input submit_button" id="submit_thanks" value=" Submit " />
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+		</div>
+	{% if child %}
+		<div id="overlay-box-edit" class="overlay-box" title="Edit Sponsor" style="z-index: 1010;">
+			<div class="overlay-content">
+				{% include "include/donation-form.html" with edit=1 %}
+			</div>
+		</div>
+		<div id="overlay-box-add" class="overlay-box" title="Add Sponsor" style="z-index: 1010;">
+			<div class="overlay-content">
+				{% include "include/donation-form.html" with from_account=1 %}
+			</div>
+		</div>
+		<div id="overlay-box-teacher" class="overlay-box" title="Teacher Donation" style="z-index: 1010;">
+			<div class="overlay-content">
+				{% include "include/donation-form-teachers.html" with make_donation=1 from_account=1 %}
+			</div>
+		</div>
+	{% endif %}
+		<form id="delete_form" action="/delete/sponsor">
+			{% csrf_token %}
+		</form>
+	</body>
+	<script type="text/javascript" src="/static/js/jquery-1.8.2.js"></script>
+	<script type="text/javascript" src="/static/js/jquery-ui-1.9.0.custom.min.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="/static/js/husky-hustle.js"></script>
+	<script type="text/javascript" src="/static/js/flexigrid/js/flexigrid.js"></script>
+	<script type="text/javascript">
+		$(document).ready(
+			function () {
+				if ($('a.closeEl')) $('a.closeEl').bind('click', toggleContent);
+				var timecolwidth = 110;
+				var releaseGridDonations = $("#donations").flexigrid({
+					url: "/JSON/{{ identifier }}",
+					method: 'GET',
+					dataType: 'json',
+					colModel: [
+						{display: 'ID', name: 'id', width: 35, sortable: true, align: 'left'},
+						{display: 'First Name', name: 'first_name', width: 115, sortable: true, align: 'left'},
+						{display: 'Last Name', name: 'last_name', width: 115, sortable: true, align: 'left'},
+						{display: 'Email', name: 'email_address', width: 189, sortable: true, align: 'left'},
+						{display: 'Phone Number', name: 'phone_number', width: 80, sortable: true, align: 'left'},
+						{display: 'Date Added', name: 'date_added', width: 60, sortable: true, align: 'left'},
+						{display: 'Laps', name: 'laps', width: 25, sortable: false, align: 'left'},
+						{display: 'Donation', name: 'donation', width: 60, sortable: true, align: 'left'},
+						{display: 'Total', name: 'total', width: 50, sortable: false, align: 'left'},
+						{display: 'Per Lap', name: 'per_lap', width: 40, sortable: true, align: 'center'},
+						{display: '<span title="Mark Donations as Paid">Paid</span>', name: 'paid', width: 20, sortable: true, align: 'center'},
+						{display: '<input type="checkbox" value="" name="set-all-reminders" class="set-all-reminders" title="Select All/None" />', name: '', width: 15, sortable: true, align: 'center'}
+					],
+					searchitems : [
+						{display: 'First Name', name : 'first_name', isdefault: false},
+						{display: 'Last Name', name : 'last_name', isdefault: true},
+						{display: 'Email Address', name : 'email_address', isdefault: false},
+						{display: 'Phone Number', name : 'phone_number', isdefault: false},
+						{display: 'ID', name : 'id', isdefault: false}
+					],
+					buttons: [
+						{name: 'Reload', bclass: 'reset', onpress: reloadPage},
+						{separator: true},
+						{% if child %}
+						{name: 'Add Sponsor', bclass: 'add', onpress: showFormDonate},
+						{separator: true},
+						{name: 'Teacher Donation', bclass: 'add', onpress: showFormTeacher},
+						{separator: true},
+						{% endif %}
+						{name: 'Delete', bclass: 'delete', onpress: deleteSponsors},
+						{separator: true},
+						{% if child %}
+						{name: 'Print', bclass: 'print', onpress: function() { window.open('/donation_sheet/{{ child.identifier }}', '_print') }},
+						{separator: true},
+						{% endif %}
+						{name: 'Send Thank You', bclass: 'reminder', onpress: sendThanks},
+						{separator: true},
+						{name: 'Send Reminders', bclass: 'reminder', onpress: sendReminders},
+						{separator: true},
+						{name: 'Make a Payment', bclass: 'payment', onpress: makePayment},
+						{separator: true}
+					],
+					sortname: 'id',
+					sortorder: 'asc',
+					usepager: true,
+					title: 'Sponsors and Donations',
+					useRp: true,
+					rp: 15,
+					rpOptions: [15,20,25,30,35,40,45,60,100],
+					showTableToggleBtn: false,
+					showToggleBtn: false,
+					width: 980,
+					height: 600,
+					singleSelect: true,
+					resizable: false
+				});
+			});
+		var resizeTimer;
+		$(window).resize(function() {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(function() {
+				$('.flexigrid').width(980);
+				$('#donations').width($('.flexigrid').width()-17);
+				$('.hDivBox table').width($('.hDiv').width()-15);
+				$('.bDiv').height(600);
+			}, 50);
+		});
+	</script>
+</html>

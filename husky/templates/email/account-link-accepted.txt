@@ -1,0 +1,12 @@
+{% autoescape off %}
+Dear {{ full_name }},
+
+{{ linked_full_name }} has accepted your request to link to their account.
+
+Regards,
+
+The Husky Hustle Team
+
+http://www.huskyhustle.com
+husky@huskyhustle.com
+{% endautoescape %}

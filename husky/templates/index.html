@@ -1,0 +1,60 @@
+{% load custom_filters %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    {% include "include/page-header.html" %}
+  </head>
+  <body>
+    <div id="wrapper">
+      {% include "include/menu.html" %}
+      <div id="inner">
+        <div id="splash" class="full" style="text-align: center;">
+          <img class="image" src="/static/images/hicks-logo-banner.jpg" height="260" alt="" />
+        </div>
+        <div id="page">
+          <div id="content">
+            {% if messages %}
+            <ul class="messages">
+              {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="box">
+              <h2>Welcome to Hicks Canyon Husky Hustle</h2>
+              <img class="image alignleft" src="/static/images/welcome1.jpg" width="215" height="150" alt="Welcome" />
+              {% include "include/thermometer.html" %}
+              {{ content.content|safe }}
+            </div>
+            <br class="clearfix" />
+            <div class="box col1">
+              <h3>Dates to Remember</h3>
+              <ul class="list">
+                {% for entry in calendar.entry %}
+                <li style="font-size: 0.85em;"><a href="{{ entry.link.0.href }}">{{ entry.title.text }} on {{ entry.when.0.start|date_format }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="box col2">
+              <h3>Message of the Week</h3>
+              <img class="image aligntop full" src="/static/images/welcome2.jpg" width="430" height="155" alt="" />
+              <p>
+                <div class="title">{{ motd.title }}</div>
+                <div class="content">{{ motd.content|safe }}</div>
+                <div class="author">by {{ motd.author }} on {{ motd.date_added }}</div>
+              </p>
+            </div>
+            <br class="clearfix" />
+          </div>
+        </div>
+      </div>
+      <div id="page-bottom">
+        {% include "include/page-bottom.html" %}
+      </div>
+    </div>
+    <div id="footer">
+      {% include "include/page-footer.html" %}
+    </div>
+        {% include "include/page-script.html" %}
+  </body>
+</html>

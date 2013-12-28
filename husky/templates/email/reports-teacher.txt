@@ -1,0 +1,14 @@
+{% autoescape off %}
+Dear {{ teacher_name }},
+
+Here is the list of Student Sponsors as of today:
+
+{% for sponsor in sponsors %}{{ sponsor }}
+{% endfor %}
+
+----------------------------
+The Husky Hustle Team
+
+http://www.huskyhustle.com
+husky@huskyhustle.com
+{% endautoescape %}

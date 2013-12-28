@@ -1,0 +1,46 @@
+{% load humanize %}
+<style>
+	.search-results, .child-list {
+		border-collapse: collapse;
+		text-align: left;
+	}
+	.search-results tr:nth-child(even) {
+		background-color: #eee;
+	}
+	.search-results td, th {
+		width: 175px;
+		padding: 3px 3px 3px 10px;
+	}
+</style>
+<div id="content-main">
+	<div>
+		<table class="search-results" border="2">
+			<tr>
+				<th width="10">#</th>
+				<th width="350">Date</th>
+				<th width="350" align="left" nowrap="nowrap">Name</th>
+				<th width="350" align="left" nowrap="nowrap">Parent</th>
+				<th width="350" align="left" nowrap="nowrap">Child</th>
+				<th width="350" align="left" nowrap="nowrap">Teacher</th>
+				<th width="350" align="left">Item ID</th>
+				<th width="350" align="right">Amount</th>
+				<th width="350" align="right">Donation</th>
+				<th width="350" align="center">Paid</th>
+			</tr>
+			{% for result in results %}
+			<tr>
+				<td>{{ result.id|safe }}</td>
+				<td>{{ result.date|safe }}</td>
+				<td>{{ result.name|safe }}{% if result.email %} ({{ result.email }}){% endif %}</td>
+				<td>{{ result.parent|safe }}</td>
+				<td>{{ result.child|safe }}</td>
+				<td>{{ result.teacher|safe }}</td>
+				<td>{{ result.item|safe }}</td>
+				<td align="right">${{ result.gross|floatformat:2|intcomma }}</td>
+				<td align="right">${{ result.donation|floatformat:2|intcomma }}</td>
+				<td>{{ result.paid|safe }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>

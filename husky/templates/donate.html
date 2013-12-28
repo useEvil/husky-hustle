@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		{% include "include/page-header.html" %}
+	</head>
+	<body>
+		<div class="background-cover"></div>
+		<div class="background-cover-top">
+			<img src="/static/images/loading_circle_lg.gif" class="centered" />
+		</div>
+		<div id="wrapper">
+			{% include "include/menu.html" %}
+			<div id="inner">
+				<div id="page">
+					<div id="content">
+						{% if messages %}
+						<ul class="messages">
+							{% for message in messages %}
+							<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+							{% endfor %}
+							{% if success %}
+							{% if is_per_lap %}
+							<li class="success">You will be notified via email at a later date on how to make your payment.</li>
+							{% else %}
+							<li class="success">You can now make your payment using this link: <a href="{{ payment_url }}">Make your Payment of ${{ amount }}</a>.</li>
+							{% endif %}
+							{% endif %}
+						</ul>
+						{% endif %}
+						{% if make_donation %}
+							{% if not error %}
+								{% if search %}
+								{% include "include/search-form.html" %}
+								{% elif teacher_donation %}
+								<h3>Make a Donation to a Teacher{% if child %} for: {{ child }}{% else %}:{% endif %}</h3>
+								{% include "include/donation-form-teachers.html" %}
+								{% else %}
+								<h3>Make a Pledge to: {{ child }}</h3>
+								{% include "include/donation-form.html" %}
+								{% include "include/search-form.html" %}
+								<h3><a href="/teacher-donation/{{ child.identifier }}">Make a Donation to a Teacher</a></h3>
+								{% endif %}
+							{% else %}
+								{% include "include/search-form.html" %}
+								<br class="clearfix" />
+								<h4>Make a Donation Directly</h4>
+								<div class="box">
+									<form>
+										<a href="/make-donation/">Make a Donation to a Student</a><br />
+										<a href="/teacher-donation/">Make a Donation to a Teacher</a>
+									</form>
+								</div>
+							{% endif %}
+						{% elif form and not error %}
+						<h4>What to do Next:</h4>
+						<ul style="padding-left: 30px;">
+							<li><span src="{{ child.facebook_share_url }}" class="post-to-social post">Share with your Family/Friends on Facebook<span></li>
+							<li><span src="{{ child.twitter_share_url }}" class="post-to-social post">Share with your Family/Friends on Twitter</span></li>
+							<li><span src="{{ child.google_share_url }}" class="post-to-social post">Share with your Family/Friends on Google+</span></li>
+							<li><span class="send-email post">Share with your Family/Friends via Email</span></li>
+							<li><a href="/donation_sheet/" title="Print Form" target="_print">Print a Donation sheet</a></li>
+							<li><a href="/teacher-donation/{{ child.identifier }}">Make a Donation to a Teacher</a></li>
+							<li>
+								<span src="{{ child.facebook_share_url }}" class="post-to-social post"><img src="/static/images/facebook-share-button.png" width="60" /></span>
+								<a href="{{ child.twitter_share_url }}" class="twitter-hashtag-button" data-related="HuskyHustle" data-url="{{ child.donate_url }}">Post to Twitter #HuskyHustle</a>
+								<g:plus action="share" annotation="none"></g:plus>
+								<a href="/donation_sheet/" title="Print Form" target="_print"><img src="/static/images/print-icon.png" width="24" alt="Print Form" /></a>
+							</li>
+						</ul>
+						{% else %}
+						<h3>Add Sponsor for: {{ child }}</h3>
+						{% include "include/donation-form.html" %}
+						<h3><a href="/teacher-donation/{{ child.identifier }}">Make a Donation to a Teacher</a></h3>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div id="page-bottom">
+				{% include "include/page-bottom.html" %}
+			</div>
+		</div>
+		<div id="overlay-box-email" class="overlay-box">
+			<div class="overlay-content">
+				<form id="email_form" action="/emails" action="post">
+					{% csrf_token %}
+					<input type="hidden" id="child_first_name" name="child_first_name" value="{{ child.first_name }}">
+					<fieldset class="form">
+					<legend id="title">Send Email to Family/Friends</legend>
+					<div class="wrapper">
+						<ul>
+							<li>
+								<label for="email_addresses" id="email_addresses_label">Email Addresses</label><br />
+								<input type="text" class="input" id="email_addresses" name="email_addresses" value="" size="200" placeholder="(comma separated)" />
+							</li>
+								<label for="custom_message" id="custom_message_label">Custom Message</label><br />
+								<textarea class="input" id="custom_message" name="custom_message" cols="200" rows="15"></textarea>
+							</li>
+							<li>
+								<input type="button" style="width: 8em;" class="control input submit_button" id="submit_email" value=" Submit " />
+								<input type="button" style="width: 8em;" class="control input cancel_button" id="cancel_email" value=" Cancel " />
+							</li>
+						</ul>
+					</div>
+					</fieldset>
+				</form>
+				<span id="message" class="hidden">Dear Friends and Family,
+
+Please help support {{ child.full_name }} in this year's Husky Hustle Jog-A-Thon.  Our goal is to reach $80,000 to raise money for Hicks Canyon Elementary School.  Last year we were able to raise over $60,000 and we're hoping this year will be even better.
+
+Thank you for your support,
+
+{% if full_name %}{{ full_name }}{% else %}&lt;&lt;Your Name Here&gt;&gt;{% endif %}
+
+You can use the following url to donate directly to {{ child.first_name }}:
+
+{{ child.donate_url }}
+				</span>
+			</div>
+		</div>
+		<div id="footer">
+			{% include "include/page-footer.html" %}
+		</div>
+	</body>
+	<script type="text/javascript" src="/static/js/jquery-1.8.2.js"></script>
+	<script type="text/javascript" src="/static/js/jquery-ui-1.9.0.custom.min.js"></script>
+	<script type="text/javascript" src="/static/js/husky-hustle.js"></script>
+	<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+	<script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+</html>

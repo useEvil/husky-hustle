@@ -1,0 +1,50 @@
+<header class="clearfix" id="mobile">
+	<div class="container">
+		<div id="logo">
+			<h1><a href="#">Husky Hustle</a></h1>
+		</div>
+		<nav class="clearfix">
+			{% if request.user.is_authenticated %}
+			<div style="float: right;padding-right: 10px;font-size: 0.75em;line-height: 1.5em;">Logged in as: {{ parent.full_name }}<br /><a href="/accounts/logout/">Logout</a></div>
+			<br class="clearfix" />
+			{% endif %}
+			<ul role="navigation">
+				<li class="first"><a href="/">Home</a></li>
+				<!--li{% if 'results' in request.path %} class="current_page_item"{% endif %}><a href="/results">Results</a></li-->
+				<li{% if 'photos' in request.path %} class="current_page_item"{% endif %}><a href="/nav/photos">Photos</a></li>
+				<li{% if 'blog' in request.path %} class="current_page_item"{% endif %}><a href="/nav/blog">Blog</a></li>
+				<li{% if 'links' in request.path %} class="current_page_item"{% endif %}><a href="/nav/links">Links</a></li>
+				<li{% if 'contact' in request.path %} class="current_page_item"{% endif %}><a href="/nav/contact">Contact</a></li>
+				{% if request.user.is_authenticated %}
+				<li {% if 'account' in request.path %}class="current_page_item"{% endif %}><a href="/accounts/profile/">Profile</a></li>
+				{% else %}
+				<li class="last"><a href="/accounts/login">Login / Register</a></li>
+				{% endif %}
+			</ul>
+		</nav>
+	</div>
+</header>
+<div id="header">
+	{% if request.user.is_authenticated %}
+	<div style="float: right;font-size: 0.75em;line-height: 1.5em;">Logged in as: {{ parent.full_name }}<br /><a href="/accounts/logout/">Logout</a></div>
+	{% endif %}
+	<div id="logo">
+		<h1><a href="#">Husky Hustle</a></h1>
+	</div>
+	<div id="menu">
+		<ul>
+			<li class="first"><a href="/">Home</a></li>
+			<!--li{% if 'results' in request.path %} class="current_page_item"{% endif %}><a href="/results">Results</a></li-->
+			<li{% if 'photos' in request.path %} class="current_page_item"{% endif %}><a href="/nav/photos">Photos</a></li>
+			<li{% if 'blog' in request.path %} class="current_page_item"{% endif %}><a href="/nav/blog">Blog</a></li>
+			<li{% if 'links' in request.path %} class="current_page_item"{% endif %}><a href="/nav/links">Links</a></li>
+			<li{% if 'contact' in request.path %} class="current_page_item"{% endif %}><a href="/nav/contact">Contact</a></li>
+			{% if request.user.is_authenticated %}
+			<li {% if 'account' in request.path %}class="current_page_item"{% endif %}><a href="/accounts/profile/">Profile</a></li>
+			{% else %}
+			<li class="last"><a href="/accounts/login">Login / Register</a></li>
+			{% endif %}
+		</ul>
+		<br class="clearfix" />
+	</div>
+</div>

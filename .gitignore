@@ -1,0 +1,13 @@
+*~
+.DS_Store
+*.pyc
+*-local*
+*-dev*
+*-prod*
+
+devlop/
+certs/
+it-fits/
+fabfile.py
+manage.py
+husky-hustle.db
