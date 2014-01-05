@@ -35,20 +35,22 @@ from husky.helpers import *
 @checkUser
 def index(request):
     c = Context(dict(
-            page_title='Home',
-            motd=Message.objects.latest('date_added'),
-            content=Content.objects.filter(page='index').get(),
-            bar_height=Donation().bar_height(),
-            arrow_height=Donation().arrow_height(),
-            calendar=Calendar().get_events(),
+        page_title='Home',
+        motd=Message.objects.latest('date_added'),
+        content=Content.objects.filter(page='index').get(),
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
+        calendar=Calendar().get_events(),
+        path=request.path,
     ))
     return render_to_response('index.html', c, context_instance=RequestContext(request))
 
 def nav(request, page='index', id=None):
     c = Context(dict(
-            page_title=page.title(),
-            bar_height=Donation().bar_height(),
-            arrow_height=Donation().arrow_height(),
+        page_title=page.title(),
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
+        path=request.path,
     ))
     if page == 'photos':
         c['albums'] = Album()
@@ -67,8 +69,9 @@ def nav(request, page='index', id=None):
 
 def donation_sheet(request, identifier=None, final=None):
     c = Context(dict(
-            page_title='Pledge Sheet',
-            final=final,
+        page_title='Pledge Sheet',
+        path=request.path,
+        final=final,
     ))
     if identifier and identifier == 'pdf':
         response = HttpResponse(mimetype='application/pdf')
@@ -88,9 +91,12 @@ def donation_sheet(request, identifier=None, final=None):
 
 def student_donation(request, identifier=None):
     c = Context(dict(
-            page_title='Donate',
-            teachers=Teacher().get_donate_list(),
-            make_donation=True,
+        page_title='Donate',
+        path=request.path,
+        teachers=Teacher().get_donate_list(),
+        make_donation=True,
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
     ))
     if identifier == 'search':
         c['search'] = True
@@ -117,11 +123,14 @@ def student_donation(request, identifier=None):
 
 def teacher_donation(request, identifier=None):
     c = Context(dict(
-            page_title='Donate',
-            teachers=Teacher().get_list(),
-            teachers_donate=Teacher().get_donate_list(),
-            teacher_donation=True,
-            make_donation=True,
+        page_title='Donate',
+        path=request.path,
+        teachers=Teacher().get_list(),
+        teachers_donate=Teacher().get_donate_list(),
+        teacher_donation=True,
+        make_donation=True,
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
     ))
     if not identifier: 
         return render_to_response('donate.html', c, context_instance=RequestContext(request))
@@ -135,7 +144,10 @@ def teacher_donation(request, identifier=None):
 
 def payment(request, identifier=None, id=None):
     c = Context(dict(
-            page_title='Payment',
+        page_title='Payment',
+        path=request.path,
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
     ))
     try:
         c['student'] = Student.objects.get(identifier=identifier)
@@ -169,10 +181,11 @@ def donate(request, student_id=None):
     make_donation = None
     teacher_donation = None
     c = Context(dict(
-            page_title='Donator',
-            teachers=Teacher().get_donate_list(),
-            student=student,
-            donate=True,
+        page_title='Donator',
+        path=request.path,
+        teachers=Teacher().get_donate_list(),
+        student=student,
+        donate=True,
     ))
     if request.POST:
         from_account = request.POST.get('from_account')
@@ -226,8 +239,9 @@ def donate_direct(request):
     make_donation = None
     teacher_donation = None
     c = Context(dict(
-            page_title='Donator',
-            donate=True,
+        page_title='Donator',
+        path=request.path,
+        donate=True,
     ))
     if request.POST:
         make_donation = request.POST.get('make_donation')
@@ -288,8 +302,11 @@ def donate_direct(request):
 def album(request, album_id=None):
     album = Album().get_album(album_id)
     c = Context(dict(
-            page_title=album.title.text,
-            album=album,
+        page_title=album.title.text,
+        path='/nav/photos',
+        album=album,
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
     ))
     return render_to_response('photos.html', c, context_instance=RequestContext(request))
 
@@ -297,18 +314,24 @@ def photo(request, album_id=None, photo_id=None):
     album = Album().get_album(album_id)
     photo = Photo().get_photo(album_id, photo_id)
     c = Context(dict(
-            page_title=photo.title.text,
-            photo_album=album,
-            photo=photo,
-            prev=prevPhoto(album.entry, request.GET.get('index')),
-            next=nextPhoto(album.entry, request.GET.get('index')),
-            index=int(request.GET.get('index')),
+        page_title=photo.title.text,
+        path='/nav/photos',
+        photo_album=album,
+        photo=photo,
+        prev=prevPhoto(album.entry, request.GET.get('index')),
+        next=nextPhoto(album.entry, request.GET.get('index')),
+        index=int(request.GET.get('index')),
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
     ))
     return render_to_response('photos.html', c, context_instance=RequestContext(request))
 
 def contact(request):
     c = Context(dict(
-            page_title='Contact',
+        page_title='Contact',
+        path=request.path,
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
     ))
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -330,9 +353,12 @@ def contact(request):
 
 def results(request, type=None, grade=None):
     c = Context(dict(
-            page_title='Results',
-            type=type or 'all',
-            id=request.GET.get('id') or 0,
+        page_title='Results',
+        path='/nav/results',
+        type=type or 'all',
+        id=request.GET.get('id') or 0,
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
     ))
     if 'admin' in request.path:
         if request.GET.get('id'):
@@ -351,17 +377,18 @@ def results(request, type=None, grade=None):
 
 def reporting(request, type=None):
     c = Context(dict(
-            page_title='Reporting',
-            type=type,
-            id=request.GET.get('id') or 0,
+        page_title='Reporting',
+        path=request.path,
+        type=type,
+        id=request.GET.get('id') or 0,
     ))
     return render_to_response('admin/chart.html', c, context_instance=RequestContext(request))
 
 def emails(request):
     c = Context(dict(
-            subject='Hicks Canyon Jog-A-Thon: Help Support %s' % request.POST.get('student_first_name'),
-            body=request.POST.get('custom_message'),
-            reply_to=settings.EMAIL_HOST_USER,
+        subject='Hicks Canyon Jog-A-Thon: Help Support %s' % request.POST.get('student_first_name'),
+        body=request.POST.get('custom_message'),
+        reply_to=settings.EMAIL_HOST_USER,
     ))
     addresses = request.POST.get('email_addresses')
     if not addresses:
@@ -379,9 +406,9 @@ def emails(request):
 
 def reminders(request):
     c = Context(dict(
-            subject='Hicks Canyon Jog-A-Thon: Payment Reminder',
-            domain=Site.objects.get_current().domain,
-            reply_to=settings.EMAIL_HOST_USER,
+        subject='Hicks Canyon Jog-A-Thon: Payment Reminder',
+        domain=Site.objects.get_current().domain,
+        reply_to=settings.EMAIL_HOST_USER,
     ))
     donators = request.POST.getlist('donators')
     if request.POST.get('custom_message'):
@@ -403,9 +430,9 @@ def reminders(request):
 
 def thanks(request):
     c = Context(dict(
-            subject='Hicks Canyon Jog-A-Thon: Thank You',
-            domain=Site.objects.get_current().domain,
-            reply_to=settings.EMAIL_HOST_USER,
+        subject='Hicks Canyon Jog-A-Thon: Thank You',
+        domain=Site.objects.get_current().domain,
+        reply_to=settings.EMAIL_HOST_USER,
     ))
     donators = request.POST.getlist('donators')
     if request.POST.get('custom_message'):
@@ -474,7 +501,10 @@ def paid(request, donation_id=None):
 @csrf_exempt
 def thank_you(request, donation_id=None):
     c = Context(dict(
-            page_title='Thank You',
+        page_title='Thank You',
+        path=request.path,
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
     ))
     if donation_id:
         try:
@@ -648,8 +678,8 @@ def send_unpaid_reports(request):
 
 def send_unpaid_reminders(request, type=None, donation_id=None):
     c = Context(dict(
-            subject='Hicks Canyon Jog-A-Thon: Pledge Reminder',
-            reply_to=settings.EMAIL_HOST_USER,
+        subject='Hicks Canyon Jog-A-Thon: Pledge Reminder',
+        reply_to=settings.EMAIL_HOST_USER,
     ))
     if donation_id:
         donations = [Donation.objects.filter(id=donation_id).order_by('student__last_name', 'student__first_name').get()]

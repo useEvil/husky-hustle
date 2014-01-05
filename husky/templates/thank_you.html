@@ -1,27 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		{% include "include/page-header.html" %}
-	</head>
-	<body>
-		<div id="wrapper">
-			{% include "include/menu.html" %}
-			<div id="inner">
-				<div id="page">
-					<div id="content">
-						<div class="box col1">
-							<h3>Thank You for your Donation!</h3>
-						</div>
-						<br class="clearfix" />
-					</div>
-				</div>
-			</div>
-			<div id="page-bottom">
-				{% include "include/page-bottom.html" %}
-			</div>
-		</div>
-		<div id="footer">
-			{% include "include/page-footer.html" %}
-		</div>
-	</body>
+  <head>
+    {% include "include/page-header.html" %}
+  </head>
+  <body>
+    {% include "include/menu.html" %}
+
+    <div class="container">
+      <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-12 col-sm-9 col-lg-10">
+          <h2>Success</h2>
+          <div class="row box-shadow" style="height: 340px;">
+            <div class="col-lg-6">
+              <h3>Thank You for your Donation!</h3>
+            </div>
+          </div><!--/row-->
+        </div><!--/span-->
+
+        {% include "include/thermometer.html" %}
+      </div><!--/row-offcanvas-->
+
+      <!-- Stay Connected -->
+      <div id="page-bottom">
+        {% include "include/page-bottom.html" %}
+      </div>
+
+      <!-- Site footer -->
+      <div class="footer">
+        {% include "include/page-footer.html" %}
+      </div>
+    </div><!--/.container-->
+    {% include "include/page-script.html" %}
+  </body>
 </html>

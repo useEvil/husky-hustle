@@ -1,5 +1,9 @@
 {% load custom_filters %}
-<div id="thermometer" class="alignright">
-	<div id="arrow" style="bottom: {{ arrow_height }}px;{{ arrow_height|goal_reached }}"><img src="/static/images/arrow-right-sm.jpg" /></div>
-	<div id="level" style="height: {{ bar_height }}px;"></div>
+<div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation" style="float: right;margin-top: 20px;">
+  <div class="list-group">
+    <div id="thermometer" class="alignright box-shadow">
+      <div id="arrow" style="bottom: {{ arrow_height }}px;{{ arrow_height|goal_reached }}"><img src="/static/images/arrow-right-sm.jpg" /></div>
+      <div id="level" style="height: {{ bar_height }}px;"></div>
+    </div>
+  </div>
 </div>

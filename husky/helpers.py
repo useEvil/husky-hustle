@@ -78,7 +78,7 @@ def checkUser(view_func):
 def prevPhoto(list, index=0):
     index = int(index) - 1
     try:
-        if index > 0:
+        if index >= 0:
             return list[index]
     except:
         pass

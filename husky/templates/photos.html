@@ -1,70 +1,78 @@
 {% load custom_filters %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		{% include "include/page-header.html" %}
-	</head>
-	<body>
-		<div id="wrapper">
-			{% include "include/menu.html" %}
-			<div id="inner">
-				<div id="content">
-					<div class="box">
-						{% if albums %}
-						<h2>Albums</h2>
-						{{ content.content|safe }}
-						<ul class="gallery">
-						{% for album in albums.get_albums.entry %}
-							{% if album.access.text == 'public' %}
-							<li>
-								<a href="/archive/album/{{ album.gphoto_id.text }}">
-									<span></span><em>{{ album.title.text }} ({{ album.numphotos.text }})</em>
-									<img src="{{ album.media.thumbnail.0.url }}" alt="{{ album.title.text }}" width="{{ album.media.thumbnail.0.width }}" height="{{ album.media.thumbnail.0.height }}" />
-								</a>
-							</li>
-							{% endif %}
-						{% endfor %}
-						</ul>
-						{% endif %}
-						{% if album %}
-						<h2><a href="/nav/photos">Albums</a>: {{ album.title.text }}</h2>
-						<ul class="hoverbox">
-						{% for photo in album.entry %}
-							<li>
-								<a href="/archive/photo/{{ album.gphoto_id.text }}/{{ photo.gphoto_id.text }}?index={{ forloop.counter0 }}">
-									<img src="{{ photo.media.thumbnail.2.url }}" alt="{{ photo.title.text }}" />
-									<img src="{{ photo.content.src }}" alt="{{ photo.title.text }}" class="preview" />
-								</a>
-							</li>
-						{% endfor %}
-						</ul>
-						{% endif %}
-						{% if photo %}
-						<a href="/archive/album/{{ photo_album.gphoto_id.text }}"><h4>Back to {{ photo_album.title.text }}</h4></a>
-						<ul style="text-align: center;">
-							<li>
-								{% if prev %}<a href="/archive/photo/{{ photo_album.gphoto_id.text }}/{{ prev.gphoto_id.text }}{{ photo_album.entry|prev_index:index }}"><img src="{{ prev.media.thumbnail.1.url }}" alt="{{ prev.title.text }}" class="prev" /></a>{% endif %}
-								<img src="{{ photo.media.content.0.url }}" alt="{{ photo.title.text }}" width="{{ photo.width.text }}" height="{{ photo.height.text }}" />
-								{% if next %}<a href="/archive/photo/{{ photo_album.gphoto_id.text }}/{{ next.gphoto_id.text }}{{ photo_album.entry|next_index:index }}"><img src="{{ next.media.thumbnail.1.url }}" alt="{{ next.title.text }}" class="next" /></a>{% endif %}
-								<div style="width: {{ photo.width.text|add:"100" }}px;margin-left: auto;margin-right: auto;" class="hoverbox">
-									{% if prev %}<a href="/archive/photo/{{ photo_album.gphoto_id.text }}/{{ prev.gphoto_id.text }}{{ photo_album.entry|prev_index:index }}" class="prev" style="float: left;">&nbsp;</a>{% endif %}
-									<span class="description">{{ photo.title.text }}</span>
-									{% if next  %}<a href="/archive/photo/{{ photo_album.gphoto_id.text }}/{{ next.gphoto_id.text }}{{ photo_album.entry|next_index:index }}" class="next" style="float: right;">&nbsp;</a>{% endif %}
-								</div>
-							</li>
-						</ul>
-						{% endif %}
-					</div>
-					<br class="clearfix" />
-					<br class="clearfix" />
-				</div>
-			</div>
-			<div id="page-bottom">
-				{% include "include/page-bottom.html" %}
-			</div>
-		</div>
-		<div id="footer">
-			{% include "include/page-footer.html" %}
-		</div>
-	</body>
+  <head>
+    {% include "include/page-header.html" %}
+  </head>
+  <body>
+    {% include "include/menu.html" %}
+
+    <div class="container">
+      <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-12 col-sm-9 col-lg-10">
+          {% if albums %}
+          <h2>Albums</h2>
+          <div class="row gallery box-shadow">
+          {% for album in albums.get_albums.entry %}
+            {% if album.access.text == 'public' %}
+            <div class="col-6 col-sm-6 col-lg-4">
+              <a href="/archive/album/{{ album.gphoto_id.text }}">
+                <span></span><em>{{ album.title.text }} ({{ album.numphotos.text }})</em>
+                <img src="{{ album.media.thumbnail.0.url }}" alt="{{ album.title.text }}" width="{{ album.media.thumbnail.0.width }}" height="{{ album.media.thumbnail.0.height }}" />
+              </a>
+            </div><!--/col-->
+            {% endif %}
+          {% endfor %}
+          </div><!--/row-->
+          {% endif %}
+
+          {% if album %}
+          <h2><a href="/nav/photos">Albums</a>: {{ album.title.text }}</h2>
+          <div class="row hoverbox box-shadow">
+          {% for photo in album.entry %}
+            <div class="col-2 col-sm-4 col-lg-2">
+              <a href="/archive/photo/{{ album.gphoto_id.text }}/{{ photo.gphoto_id.text }}?index={{ forloop.counter0 }}">
+                <img src="{{ photo.media.thumbnail.2.url }}" alt="{{ photo.title.text }}" />
+                <img src="{{ photo.content.src }}" alt="{{ photo.title.text }}" class="preview" />
+              </a>
+            </div><!--/col-->
+          {% endfor %}
+          </div><!--/row-->
+          {% endif %}
+
+          {% if photo %}
+          <h2>
+            <a href="/nav/photos">Albums</a>: 
+            <a href="/archive/album/{{ photo_album.gphoto_id.text }}">{{ photo_album.title.text }}</a>
+          </h2>
+          <div class="row photo box-shadow" style="text-align: center;">
+            <div class="col-2 col-sm-4 col-lg-12">
+              {% if prev %}<a href="/archive/photo/{{ photo_album.gphoto_id.text }}/{{ prev.gphoto_id.text }}{{ photo_album.entry|prev_index:index }}"><img src="{{ prev.media.thumbnail.1.url }}" alt="{{ prev.title.text }}" class="prev" /></a>{% endif %}
+              <img src="{{ photo.media.content.0.url }}" alt="{{ photo.title.text }}" />
+              {% if next %}<a href="/archive/photo/{{ photo_album.gphoto_id.text }}/{{ next.gphoto_id.text }}{{ photo_album.entry|next_index:index }}"><img src="{{ next.media.thumbnail.1.url }}" alt="{{ next.title.text }}" class="next" /></a>{% endif %}
+              <div style="text-align: center;">
+                {% if prev %}<a href="/archive/photo/{{ photo_album.gphoto_id.text }}/{{ prev.gphoto_id.text }}{{ photo_album.entry|prev_index:index }}" class="prev pull-left">&nbsp;</a>{% endif %}
+                <span class="description">{{ photo.title.text }}</span>
+                {% if next  %}<a href="/archive/photo/{{ photo_album.gphoto_id.text }}/{{ next.gphoto_id.text }}{{ photo_album.entry|next_index:index }}" class="next pull-right">&nbsp;</a>{% endif %}
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div><!--/span-->
+
+        {% include "include/thermometer.html" %}
+      </div><!--/row-offcanvas-->
+
+      <!-- Stay Connected -->
+      <div id="page-bottom">
+        {% include "include/page-bottom.html" %}
+      </div>
+
+      <!-- Site footer -->
+      <div class="footer">
+        {% include "include/page-footer.html" %}
+      </div>
+    </div><!--/.container-->
+    {% include "include/page-script.html" %}
+  </body>
 </html>

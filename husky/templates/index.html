@@ -5,56 +5,66 @@
     {% include "include/page-header.html" %}
   </head>
   <body>
-    <div id="wrapper">
-      {% include "include/menu.html" %}
-      <div id="inner">
-        <div id="splash" class="full" style="text-align: center;">
-          <img class="image" src="/static/images/hicks-logo-banner.jpg" height="260" alt="" />
-        </div>
-        <div id="page">
-          <div id="content">
-            {% if messages %}
-            <ul class="messages">
-              {% for message in messages %}
-              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-              {% endfor %}
-            </ul>
-            {% endif %}
-            <div class="box">
-              <h2>Welcome to Hicks Canyon Husky Hustle</h2>
-              <img class="image alignleft" src="/static/images/welcome1.jpg" width="215" height="150" alt="Welcome" />
-              {% include "include/thermometer.html" %}
-              {{ content.content|safe }}
-            </div>
-            <br class="clearfix" />
-            <div class="box col1">
-              <h3>Dates to Remember</h3>
-              <ul class="list">
-                {% for entry in calendar.entry %}
-                <li style="font-size: 0.85em;"><a href="{{ entry.link.0.href }}">{{ entry.title.text }} on {{ entry.when.0.start|date_format }}</a></li>
-                {% endfor %}
-              </ul>
-            </div>
-            <div class="box col2">
-              <h3>Message of the Week</h3>
-              <img class="image aligntop full" src="/static/images/welcome2.jpg" width="430" height="155" alt="" />
+    {% include "include/menu.html" %}
+
+    <div class="container">
+      <!-- Jumbotron -->
+      {% if messages %}
+      <div class="jumbotron">
+        <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-12 col-sm-9">
+          <!--p class="pull-right visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+          </p-->
+          <div class="jumbotron">
+            <h2>Welcome to Hicks Canyon Husky Hustle</h2>
+            <p>Congratulations Parents, this Year's Jog-A-Thon was a huge success. It couldn't have happened without your help. Now that the event is over, we're hoping to collect all outstanding donations. If you're a Parent or a Sponsor and would like to make a payment online, please follow these instructions.</p>
+            <!--img class="image" src="/static/images/hicks-logo-banner.jpg" height="260" alt="" /-->
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+            {{ content.content|safe }}
+            </div><!--/span-->
+            <div class="col-lg-6">
+              <h2>Message of the Week</h2>
               <p>
                 <div class="title">{{ motd.title }}</div>
                 <div class="content">{{ motd.content|safe }}</div>
                 <div class="author">by {{ motd.author }} on {{ motd.date_added }}</div>
               </p>
             </div>
-            <br class="clearfix" />
-          </div>
-        </div>
-      </div>
+            <div class="col-lg-6">
+              <h2>Dates to Remember</h2>
+              <ul class="list">
+                {% for entry in calendar.entry %}
+                <li style="font-size: 0.85em;"><a href="{{ entry.link.0.href }}">{{ entry.title.text }} on {{ entry.when.0.start|date_format }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div><!--/row-->
+        </div><!--/span-->
+
+        {% include "include/thermometer.html" %}
+      </div><!--/row-offcanvas-->
+
+      <!-- Stay Connected -->
       <div id="page-bottom">
         {% include "include/page-bottom.html" %}
       </div>
-    </div>
-    <div id="footer">
-      {% include "include/page-footer.html" %}
-    </div>
-        {% include "include/page-script.html" %}
+
+      <!-- Site footer -->
+      <div class="footer">
+        {% include "include/page-footer.html" %}
+      </div>
+    </div><!--/.container-->
+    {% include "include/page-script.html" %}
   </body>
 </html>

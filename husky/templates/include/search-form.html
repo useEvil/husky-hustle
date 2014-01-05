@@ -7,11 +7,6 @@
 	</tr>
 	{% for child in children %}
 	<tr>
-		{% if child|is_linked:parent or child.parent.id == parent.id %}
-		<td>{{ child.parent.full_name }}</td>
-		{% else %}
-		<td>{% if request.user.is_authenticated %}<a id="link_to" href="/request/link/{{ child.parent.id }}">{{ child.parent.full_name }}</a>{% else %}{{ child.parent.full_name }}{% endif %}</td>
-		{% endif %}
 		<td><a href="{{ child.donate_url }}">{{ child.full_name }}</a></td>
 		<td>{{ child.teacher.grade }}</td>
 		<td>{{ child.teacher.full_name }} ({{ child.teacher.room_number }})</td>
@@ -47,12 +42,6 @@
 		<li><label style="width: 200px;" for="student_first_name"{% if form.student_first_name.errors %} class="error"{% endif %}>Student First Name:</label><input id="student_first_name" type="text" name="student_first_name" value="{{ form.student_first_name.value }}" size="30" /></li>
 		<li style="display: inline;"><label style="width: 200px;" for="student_last_name"{% if form.student_last_name.errors %} class="error"{% endif %}>Last Name:</label><input id="student_last_name" type="text" name="student_last_name" value="{{ form.student_last_name.value }}" size="30" /></li>
 		<li style="display: inline;padding-left: 15px;"><input type="button" style="width: 8em;" id="submit_child_search" class="control input submit" value=" Search " /></li>
-		<li><br /><h4 style="padding-left: 300px;"> - OR - </h4></li>
-	</ol>
-	<ol>
-		<li><label style="width: 200px;" for="parent_first_name"{% if form.parent_first_name.errors %} class="error"{% endif %}>Parent First Name:</label><input id="parent_first_name" type="text" name="parent_first_name" value="{{ form.parent_first_name.value }}" size="30" /></li>
-		<li style="display: inline;"><label style="width: 200px;" for="parent_last_name"{% if form.parent_last_name.errors %} class="error"{% endif %}>Last Name:</label><input id="parent_last_name" type="text" name="parent_last_name" value="{{ form.parent_last_name.value }}" size="30" /></li>
-		<li style="display: inline;padding-left: 15px;"><input type="button" style="width: 8em;" id="submit_parent_search" class="control input submit" value=" Search " /></li>
 	</ol>
 </form>
 {% endif %}
