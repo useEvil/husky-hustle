@@ -5,10 +5,6 @@
 	</head>
 	<body>
     {% include "include/menu.html" %}
-		<div class="background-cover"></div>
-		<div class="background-cover-top">
-			<img src="/static/images/loading_circle_lg.gif" class="centered" />
-		</div>
 
     <div class="container">
       <div class="row row-offcanvas row-offcanvas-right">
@@ -17,28 +13,26 @@
           <div class="row box-shadow">
             <div class="col-lg-12">
 
-              {% if messages %}
               <ul class="messages">
                 {% for message in messages %}
                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                 {% endfor %}
               </ul>
-              {% endif %}
-              <div class="box">
+              <div class="form">
                 {% if form.non_field_errors %}
                 <span class="error">{{ form.non_field_errors }}</span>
                 {% endif %}
-                <form action="/contact" method="post" id="contact_form" class="form-horizontal" role="form">
+                <form action="/contact?format=ajax" method="post" id="contact_form" class="form-horizontal" role="form">
                   {% csrf_token %}
                   <div class="form-group">
                     <label class="col-sm-2 control-label" for="id_subject"{% if form.subject.errors %} class="error"{% endif %}>Subject:</label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-4">
                       <input id="id_subject" type="text" name="subject" value="{{ form.subject.value }}" size="30" class="form-control required" placeholder="Subject" />{% if form.subject.errors %}<span class="pad-left10 error">* required</span>{% endif %}
                     </div>
                   </div>
                   <div class="form-group">
                     <label class="col-sm-2 control-label" for="id_sender"{% if form.sender.errors %} class="error"{% endif %}>Your Email:</label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-4">
                       <input id="id_sender" type="text" name="sender" value="{{ form.sender.value }}" size="30" class="form-control required" placeholder="email@example.com" />{% if form.sender.errors %}<span class="pad-left10 error">* required</span>{% endif %}
                     </div>
                   </div>
@@ -54,7 +48,7 @@
                       <input id="id_cc_myself" type="checkbox" name="cc_myself" value="" />
                     </div>
                   </div>
-                  <input type="button" class="btn btn-primary submit_form pull-right" id="submit_contact" value=" Submit " />
+                  <input type="button" class="btn btn-primary submit-form pull-right" id="submit_contact" value=" Submit " data-loading-text=" Sending... " />
                 </form>
               </div>
             </div><!--/col-->

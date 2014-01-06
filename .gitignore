@@ -6,8 +6,5 @@
 *-prod*
 
 devlop/
-certs/
 it-fits/
-fabfile.py
-manage.py
 husky-hustle.db

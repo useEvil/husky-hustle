@@ -164,10 +164,12 @@ class Grade(models.Model):
         return Grade.objects.exclude(grade=-1).all()
 
     def most_donations_avg(self):
+        if not self.total_students(): return 0
         avg = self.total_collected() / self.total_students()
         return round(avg, 2)
 
     def most_laps_avg(self):
+        if not self.total_students(): return 0
         avg = float(self.total_laps()) / self.total_students()
         return round(avg, 2)
 
@@ -385,6 +387,7 @@ class Student(models.Model):
         return total_due
 
     def total_raffle_tickets(self):
+        if not self.collected: return 0
         tickets = int(self.collected / settings.RAFFLE_TICKET_AMT)
         return tickets
 

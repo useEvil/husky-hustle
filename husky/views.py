@@ -2,6 +2,7 @@ import csv
 import pytz
 import base64
 import random
+import logging
 import django.contrib.staticfiles
 import gdata.photos.service as gdata
 import husky.helpers as h
@@ -27,17 +28,18 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.conf import settings
 
-from husky.models import Student, Donation, Teacher, Grade, Album, Photo, Content, Blog, Message, Link, Calendar
-from husky.models import ContactForm, DonationForm
+from husky.models import Student, Donation, Teacher, Grade, Album, Photo, Content, Blog, Message, Link, Calendar, ContactForm, DonationForm
 from husky.helpers import *
 
+logger = logging.getLogger(__name__)
+
 # Create your views here.
-@checkUser
 def index(request):
     c = Context(dict(
         page_title='Home',
         motd=Message.objects.latest('date_added'),
         content=Content.objects.filter(page='index').get(),
+        jumbotron=Content.objects.filter(page='jumbotron').get(),
         bar_height=Donation().bar_height(),
         arrow_height=Donation().arrow_height(),
         calendar=Calendar().get_events(),
@@ -51,6 +53,7 @@ def nav(request, page='index', id=None):
         bar_height=Donation().bar_height(),
         arrow_height=Donation().arrow_height(),
         path=request.path,
+        messages=messages.get_messages(request),
     ))
     if page == 'photos':
         c['albums'] = Album()
@@ -108,13 +111,13 @@ def student_donation(request, identifier=None):
             else:
                 c['search'] = first_name or last_name
             try:
-                c['student'] = Student().find(first_name, last_name)
+                c['students'] = Student().find(first_name, last_name)
             except Exception, e:
                 messages.error(request, 'Could not find Records matching: %s' % (c['search']))
                 c['error'] = True
     elif identifier:
         try:
-            c['student'] = Student.objects.get(identifier=identifier)
+            c['students'] = Student.objects.get(identifier=identifier)
         except:
             messages.error(request, 'Could not find Student for identity: %s' % identifier)
             c['error'] = True
@@ -142,9 +145,9 @@ def teacher_donation(request, identifier=None):
     c['messages'] = messages.get_messages(request)
     return render_to_response('donate.html', c, context_instance=RequestContext(request))
 
-def payment(request, identifier=None, id=None):
+def donation(request, identifier=None, id=None):
     c = Context(dict(
-        page_title='Payment',
+        page_title='Make a Donation',
         path=request.path,
         bar_height=Donation().bar_height(),
         arrow_height=Donation().arrow_height(),
@@ -173,7 +176,7 @@ def payment(request, identifier=None, id=None):
             messages.error(request, 'Could not find Donation for ID: %s' % id)
             c['error'] = True
     c['messages'] = messages.get_messages(request)
-    return render_to_response('payment.html', c, context_instance=RequestContext(request))
+    return render_to_response('donation.html', c, context_instance=RequestContext(request))
 
 def donate(request, student_id=None):
     student = Student.objects.get(identifier=student_id)
@@ -344,7 +347,11 @@ def contact(request):
             if cc_myself:
                 recipients.append(sender)
             mail.send_mail(subject, "%s\n\nSender: %s" % (message, sender), sender, recipients)
-            messages.success(request, 'Successfully Sent')
+            # set message or return json message
+            if request.GET.get('format') == 'ajax':
+                return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Sent'}), mimetype='application/json')
+            else:
+                messages.success(request, 'Successfully Sent')
     else:
         form = ContactForm()
     c['form'] = form

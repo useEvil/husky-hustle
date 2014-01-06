@@ -25,11 +25,9 @@
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
           </p-->
           <div class="jumbotron">
-            <h2>Welcome to Hicks Canyon Husky Hustle</h2>
-            <p>Congratulations Parents, this Year's Jog-A-Thon was a huge success. It couldn't have happened without your help. Now that the event is over, we're hoping to collect all outstanding donations. If you're a Parent or a Sponsor and would like to make a payment online, please follow these instructions.</p>
-            <!--img class="image" src="/static/images/hicks-logo-banner.jpg" height="260" alt="" /-->
+            {{ jumbotron.content|safe }}
           </div>
-          <div class="row">
+          <div class="row box-shadow">
             <div class="col-lg-12">
             {{ content.content|safe }}
             </div><!--/span-->

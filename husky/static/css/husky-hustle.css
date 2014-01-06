@@ -17,13 +17,13 @@ a:hover {
 }
 
 ol {
-	margin-bottom: 1.5em;
-	list-style: none;
+    margin-bottom: 1.5em;
+    list-style: none;
 }
 
 ul {
-	margin-bottom: 1.5em;
-	list-style: none;
+    margin-bottom: 1.5em;
+    list-style: none;
 }
 
 .footer {
@@ -444,12 +444,12 @@ div.box-shadow {
 }
 
 #links ul {
-	margin-bottom: 1.5em;
-	list-style: none;
+    margin-bottom: 1.5em;
+    list-style: none;
 }
 
 #links ul li {
-	padding: 10px 0 10px 0;
+    padding: 10px 0 10px 0;
 }
 
 .social-links {
@@ -463,76 +463,80 @@ div.box-shadow {
 }
 
 .center {
-	text-align: center;
+    text-align: center;
 }
 
 .centered {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	margin-top: -50px;
-	margin-left: -100px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -100px;
 }
 
 .hidden {
-	display: none;
+    display: none;
+}
+
+.messages {
+    color: green;
 }
 
 /* background and overlay styles */
 .background-cover {
-	background: #000;
-	position: absolute;
-	left: 0;
-	top: 0;
-	display: none;
-	overflow: hidden;
-	z-index: 50;
+    background: #000;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: none;
+    overflow: hidden;
+    z-index: 50;
 }
 
 .background-cover-top {
-	background: #000;
-	position: absolute;
-	left: 0;
-	top: 0;
-	display: none;
-	overflow: hidden;
-	z-index: 125;
+    background: #000;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: none;
+    overflow: hidden;
+    z-index: 125;
 }
 
 .overlay-box {
-	position: absolute;
-	display: none;
-	padding: 5px 5px 5px 5px;
-	z-index: 100;
+    position: absolute;
+    display: none;
+    padding: 5px 5px 5px 5px;
+    z-index: 100;
 }
 
 .overlay-image {
-	border: 5px solid #373839;
-	position: relative;
-	display: none;
-	min-width: 600px;
-	min-height: 200px;
-	background: #fff;
-	padding: 5px 5px 5px 5px;
-	z-index: 500;
-	text-align: center;
+    border: 5px solid #373839;
+    position: relative;
+    display: none;
+    min-width: 600px;
+    min-height: 200px;
+    background: #fff;
+    padding: 5px 5px 5px 5px;
+    z-index: 500;
+    text-align: center;
 }
 
 .overlay-loading {
-	background-color: #FFFFFF;
-	border: 2px solid #000000;
-	display: none;
-	margin-top: 200px;
-	z-index: 600;
-	padding: 25px 25px 25px 25px;
-	font-weight: bold;
-	text-align: center;
-	min-width: 300px;
-	border-top-left-radius: 10px 10px;
-	border-top-right-radius: 10px 10px;
-	border-bottom-left-radius: 10px 10px;
-	border-bottom-right-radius: 10px 10px;
-	z-index: 250;
+    background-color: #FFFFFF;
+    border: 2px solid #000000;
+    display: none;
+    margin-top: 200px;
+    z-index: 600;
+    padding: 25px 25px 25px 25px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 300px;
+    border-top-left-radius: 10px 10px;
+    border-top-right-radius: 10px 10px;
+    border-bottom-left-radius: 10px 10px;
+    border-bottom-right-radius: 10px 10px;
+    z-index: 250;
 }
 
 

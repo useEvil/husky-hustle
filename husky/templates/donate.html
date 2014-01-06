@@ -1,15 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		{% include "include/page-header.html" %}
-	</head>
-	<body>
+  <head>
+    {% include "include/page-header.html" %}
+  </head>
+  <body>
     {% include "include/menu.html" %}
-		<div class="background-cover"></div>
-		<div class="background-cover-top">
-			<img src="/static/images/loading_circle_lg.gif" class="centered" />
-		</div>
 
+    <div class="background-cover"></div>
+    <div class="background-cover-top">
+      <img src="/static/images/loading_circle_lg.gif" class="centered" />
+    </div>
     <div class="container">
       <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-9 col-lg-10">
@@ -17,20 +17,18 @@
           <div class="row box-shadow">
             <div class="col-lg-12">
 
-              {% if messages %}
               <ul class="messages">
                 {% for message in messages %}
                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                 {% endfor %}
                 {% if success %}
-                {% if is_per_lap %}
-                <li class="success">You will be notified via email at a later date on how to make your payment.</li>
-                {% else %}
-                <li class="success">You can now make your payment using this link: <a href="{{ payment_url }}">Make your Payment of ${{ amount }}</a>.</li>
-                {% endif %}
+                  {% if is_per_lap %}
+                  <li class="success">You will be notified via email at a later date on how to make your payment.</li>
+                  {% else %}
+                  <li class="success">You can now make your payment using this link: <a href="{{ payment_url }}">Make your Payment of ${{ amount }}</a>.</li>
+                  {% endif %}
                 {% endif %}
               </ul>
-              {% endif %}
               {% if make_donation %}
                 {% if not error %}
                   {% if search %}

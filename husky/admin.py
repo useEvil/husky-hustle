@@ -67,7 +67,7 @@ class MostDonationsListFilter(SimpleListFilter):
 
 class StudentAdmin(admin.ModelAdmin):
     fields = ['first_name', 'last_name', 'teacher', 'identifier', 'age', 'gender', 'laps', 'disqualify', 'date_added']
-    list_display = ['first_name', 'last_name', 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_due', 'total_got', 'total_raffle_tickets']
+    list_display = ['last_name', 'first_name', 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_due', 'total_got', 'total_raffle_tickets']
 #    list_display = ['first_name', 'last_name', 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_for_flat', 'total_due', 'total_got', 'total_raffle_tickets']
     search_fields = ['teacher__last_name', 'first_name', 'last_name', 'teacher__last_name']
     list_editable = ['laps', 'gender', 'disqualify']
@@ -123,6 +123,7 @@ class TeacherAdmin(admin.ModelAdmin):
     fields = ['grade', 'list_type', 'title', 'first_name', 'last_name', 'room_number', 'email_address', 'phone_number', 'website']
     list_display = ['grade', 'list_type', 'title', 'last_name', 'room_number', 'email_address', 'get_donations', 'total_students', 'total_participation']
     list_editable = ['list_type', 'last_name', 'room_number', 'email_address']
+#     ordering = ('grade', 'last_name')
 
 class GradeAdmin(admin.ModelAdmin):
     fields = ['grade', 'title']
