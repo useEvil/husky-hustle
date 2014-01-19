@@ -103,15 +103,16 @@ def student_donation(request, identifier=None):
     ))
     if identifier == 'search':
         c['search'] = True
-        first_name = request.GET.get('student_first_name')
-        last_name = request.GET.get('student_last_name')
-        if first_name or last_name:
+        first_name = request.GET.get('student_first_name') or None
+        last_name = request.GET.get('student_last_name') or None
+        teacher_name = request.GET.get('teacher_last_name') or None
+        if first_name or last_name or teacher_name:
             if first_name and last_name:
                 c['search'] = '%s %s' % (first_name, last_name)
             else:
-                c['search'] = first_name or last_name
+                c['search'] = first_name or last_name or teacher_name
             try:
-                c['students'] = Student().find(first_name, last_name)
+                c['students'] = Student().find(first_name, last_name, teacher_name)
             except Exception, e:
                 messages.error(request, 'Could not find Records matching: %s' % (c['search']))
                 c['error'] = True
@@ -145,7 +146,7 @@ def teacher_donation(request, identifier=None):
     c['messages'] = messages.get_messages(request)
     return render_to_response('donate.html', c, context_instance=RequestContext(request))
 
-def donation(request, identifier=None, id=None):
+def payment(request, identifier=None, id=None):
     c = Context(dict(
         page_title='Make a Donation',
         path=request.path,
@@ -186,6 +187,8 @@ def donate(request, student_id=None):
     c = Context(dict(
         page_title='Donator',
         path=request.path,
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
         teachers=Teacher().get_donate_list(),
         student=student,
         donate=True,
@@ -244,6 +247,8 @@ def donate_direct(request):
     c = Context(dict(
         page_title='Donator',
         path=request.path,
+        bar_height=Donation().bar_height(),
+        arrow_height=Donation().arrow_height(),
         donate=True,
     ))
     if request.POST:

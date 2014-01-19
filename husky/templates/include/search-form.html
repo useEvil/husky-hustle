@@ -3,82 +3,79 @@
 <span>Your search for <strong>"{{ search|safe }}"</strong> found <strong>{{ students|length }}</strong> results:</span>
 <table class="table table-hover table-striped">
   <tr>
-    <th>Parent</th><th>Student</th><th>Grade</th><th>Teacher</th>
+    <th>Student</th><th>Grade</th><th>Teacher</th><th colspan="2">&nbsp;</th>
   </tr>
   {% for student in students %}
   <tr>
     <td><a href="{{ student.donate_url }}">{{ student.full_name }}</a></td>
     <td>{{ student.teacher.grade }}</td>
     <td>{{ student.teacher.full_name }} ({{ student.teacher.room_number }})</td>
-    <td><a href="#" class="make-donation" id="{{ student.identifier }}" data-toggle="modal" data-target="#overlay-box-donation">Make a Donation</a></td>
+    <td><a href="/donate/{{ student.identifier }}" class="make-donation">Make a Pledge</a></td>
+    <td><a href="#" class="make-payment" id="{{ student.identifier }}" data-toggle="modal" data-target="#modal-box-donation">Make Payment</a></td>
   </tr>
   {% endfor %}
 </table>
-
-
-
-<div class="modal fade" id="overlay-box-donation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-box-donation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Modal title</h4>
-      </div>
-      <div class="modal-body">
-        <p>One fine body&hellip;</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+      <form id="donation_form" action="/payment" method="GET">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Make a Donation</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-4 control-label" for="donation_amount"{% if form.donation_amount.errors %} class="error"{% endif %}>Donation Amount:</label>
+            <div class="col-sm-4">
+              <input type="hidden" id="donation_id" name="id" value="">
+              <input type="text" class="form-control" id="donation_amount" name="amount" value="" placeholder="0.00" />
+            </div>
+          </div>
+        </div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary make-donation" id="submit_donation">Donate</button>
+        </div>
+      </form>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-
-
-<div id="overlay-box-donation-old" class="overlay-box" title="Make a Donation" style="z-index: 1010;">
-  <div class="overlay-content">
-    <form id="donation_form" action="/donation" method="GET">
-      <div class="wrapper">
-        <ul>
-          <li>
-            <label for="donation_amount" id="donation_amount_label">Amount To Pay</label><br /><br />
-            <input type="hidden" id="donation_id" name="id" value="">
-            <input type="text" class="pad-left5" style="margin-left: 30px;" id="donation_amount" name="amount" value="" size="10" placeholder="0.00" />
-          </li>
-          <li>&nbsp;</li>
-          <li>
-            <input type="submit" class="btn btn-primary make-donation" id="submit_donation" value=" Make a Donation " />
-          </li>
-        </ul>
-      </div>
-    </form>
-  </div>
-</div>
 {% endif %}
 <div class="clearfix">&nbsp;</div>
 {% if form.non_field_errors %}
-<span class="error">{{ form.non_field_errors }}</span>
+<div class="alert alert-warning">{{ form.non_field_errors }}</dib>
 {% endif %}
 
 <div class="panel panel-default">
   <div class="panel-heading"><strong>Search for a Student</strong></div>
   <div class="panel-body">
-    <form action="/student-donation/search" method="get" id="search_form" class="form-horizontal" role="form">
+    <form action="/student-donation/search" method="get" id="student_search_form" class="form-horizontal" role="form">
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="student_first_name"{% if form.student_first_name.errors %} class="error"{% endif %}>First Name:</label>
+        <label class="col-sm-3 control-label" for="student_first_name"{% if form.student_first_name.errors %} class="error"{% endif %}>By First Name:</label>
         <div class="col-sm-3">
-          <input id="student_first_name" type="text" name="student_first_name" value="{{ form.student_first_name.value }}" size="30" class="form-control required" placeholder="First Name" />{% if form.student_first_name.errors %}<span class="pad-left10 error">* required</span>{% endif %}
+          <input id="student_first_name" type="text" name="student_first_name" value="{{ form.student_first_name.value }}" class="form-control required" placeholder="First Name" />{% if form.student_first_name.errors %}<span class="pad-left10 error">* required</span>{% endif %}
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="student_last_name"{% if form.student_last_name.errors %} class="error"{% endif %}>Last Name:</label>
+        <label class="col-sm-3 control-label" for="student_last_name"{% if form.student_last_name.errors %} class="error"{% endif %}>By Last Name:</label>
         <div class="col-sm-3">
-          <input id="student_last_name" type="text" name="student_last_name" value="{{ form.student_last_name.value }}" size="30" class="form-control required" placeholder="Last Name" />{% if form.student_last_name.errors %}<span class="pad-left10 error">* required</span>{% endif %}
+          <input id="student_last_name" type="text" name="student_last_name" value="{{ form.student_last_name.value }}" class="form-control required" placeholder="Last Name" />{% if form.student_last_name.errors %}<span class="pad-left10 error">* required</span>{% endif %}
         </div>
         <div class="col-sm-2">
-          <input type="submit" class="btn btn-primary pull-right" id="submit_search" value=" Submit " data-loading-text=" Searching... " />
+          <input type="submit" class="btn btn-primary pull-right" id="submit_student_search" value=" Search " data-loading-text=" Searching... " />
+        </div>
+      </div>
+    </form>
+    <div class="clearfix">&nbsp;</div>
+    <form action="/student-donation/search" method="get" id="teacher_search_form" class="form-horizontal" role="form">
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="teacher_last_name"{% if form.teacher_last_name.errors %} class="error"{% endif %}>Or Teacher Name:</label>
+        <div class="col-sm-3">
+          <input id="teacher_last_name" type="text" name="teacher_last_name" value="{{ form.teacher_last_name.value }}" class="form-control required" placeholder="Last Name" />{% if form.teacher_last_name.errors %}<span class="pad-left10 error">* required</span>{% endif %}
+        </div>
+        <div class="col-sm-2">
+          <input type="submit" class="btn btn-primary pull-right" id="submit_teacher_search" value=" Search " data-loading-text=" Searching... " />
         </div>
       </div>
     </form>

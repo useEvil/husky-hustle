@@ -1,0 +1,38 @@
+<div id="overlay-box-email" class="overlay-box">
+  <div class="overlay-content">
+    <form id="email_form" action="/emails" action="post">
+      {% csrf_token %}
+      <input type="hidden" id="child_first_name" name="child_first_name" value="{{ child.first_name }}">
+      <fieldset class="form">
+      <legend id="title">Send Email to Family/Friends</legend>
+      <div class="wrapper">
+        <ul>
+          <li>
+            <label for="email_addresses" id="email_addresses_label">Email Addresses</label><br />
+            <input type="text" class="input" id="email_addresses" name="email_addresses" value="" size="200" placeholder="(comma separated)" />
+          </li>
+            <label for="custom_message" id="custom_message_label">Custom Message</label><br />
+            <textarea class="input" id="custom_message" name="custom_message" cols="200" rows="15"></textarea>
+          </li>
+          <li>
+            <input type="button" style="width: 8em;" class="control input submit_button" id="submit_email" value=" Submit " />
+            <input type="button" style="width: 8em;" class="control input cancel_button" id="cancel_email" value=" Cancel " />
+          </li>
+        </ul>
+      </div>
+      </fieldset>
+    </form>
+    <span id="message" class="hidden">Dear Friends and Family,
+
+Please help support {{ child.full_name }} in this year's Husky Hustle Jog-A-Thon.  Our goal is to reach $80,000 to raise money for Hicks Canyon Elementary School.  Last year we were able to raise over $60,000 and we're hoping this year will be even better.
+
+Thank you for your support,
+
+{% if full_name %}{{ full_name }}{% else %}&lt;&lt;Your Name Here&gt;&gt;{% endif %}
+
+You can use the following url to donate directly to {{ child.first_name }}:
+
+{{ child.donate_url }}
+    </span>
+  </div>
+</div>

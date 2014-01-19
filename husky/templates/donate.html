@@ -6,10 +6,6 @@
   <body>
     {% include "include/menu.html" %}
 
-    <div class="background-cover"></div>
-    <div class="background-cover-top">
-      <img src="/static/images/loading_circle_lg.gif" class="centered" />
-    </div>
     <div class="container">
       <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-9 col-lg-10">
@@ -17,62 +13,65 @@
           <div class="row box-shadow">
             <div class="col-lg-12">
 
-              <ul class="messages">
+              {% if messages %}
+              <div class="alert alert-success">
+                <ul>
                 {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><strong>{{ message }}</strong></li>
                 {% endfor %}
                 {% if success %}
                   {% if is_per_lap %}
-                  <li class="success">You will be notified via email at a later date on how to make your payment.</li>
+                  <li>You will be notified via email at a later date on how to make your payment.</li>
                   {% else %}
-                  <li class="success">You can now make your payment using this link: <a href="{{ payment_url }}">Make your Payment of ${{ amount }}</a>.</li>
+                  <li>You can now make your payment using this link: <a href="{{ payment_url }}">Make your Payment of ${{ amount }}</a>.</li>
                   {% endif %}
                 {% endif %}
-              </ul>
+                </ul>
+              </div>
+              {% endif %}
               {% if make_donation %}
                 {% if not error %}
                   {% if search %}
                   {% include "include/search-form.html" %}
                   {% elif teacher_donation %}
-                  <h3>Make a Donation to a Teacher{% if child %} for: {{ child }}{% else %}:{% endif %}</h3>
+                  <h3>Make a Donation to a Teacher{% if student %} for: {{ student }}{% else %}:{% endif %}</h3>
                   {% include "include/donation-form-teachers.html" %}
                   {% else %}
-                  <h3>Make a Pledge to: {{ child }}</h3>
+                  <h3>Make a Pledge to: {{ student }}</h3>
                   {% include "include/donation-form.html" %}
                   {% include "include/search-form.html" %}
-                  <h3><a href="/teacher-donation/{{ child.identifier }}">Make a Donation to a Teacher</a></h3>
+                  <h3><a href="/teacher-donation/{{ student.identifier }}">Make a Donation to a Teacher</a></h3>
                   {% endif %}
                 {% else %}
                   {% include "include/search-form.html" %}
                   <br class="clearfix" />
-                  <h4>Make a Donation Directly</h4>
-                  <div class="box">
-                    <form>
-                      <a href="/make-donation/">Make a Donation to a Student</a><br />
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Make a Donation Directly</strong></div>
+                    <div class="panel-body">
+                      <a href="/student-donation/">Make a Donation to a Student</a><br />
                       <a href="/teacher-donation/">Make a Donation to a Teacher</a>
-                    </form>
+                    </div>
                   </div>
                 {% endif %}
               {% elif form and not error %}
               <h4>What to do Next:</h4>
               <ul style="padding-left: 30px;">
-                <li><span src="{{ child.facebook_share_url }}" class="post-to-social post">Share with your Family/Friends on Facebook<span></li>
-                <li><span src="{{ child.twitter_share_url }}" class="post-to-social post">Share with your Family/Friends on Twitter</span></li>
-                <li><span src="{{ child.google_share_url }}" class="post-to-social post">Share with your Family/Friends on Google+</span></li>
+                <li><span src="{{ student.facebook_share_url }}" class="post-to-social post">Share with your Family/Friends on Facebook<span></li>
+                <li><span src="{{ student.twitter_share_url }}" class="post-to-social post">Share with your Family/Friends on Twitter</span></li>
+                <li><span src="{{ student.google_share_url }}" class="post-to-social post">Share with your Family/Friends on Google+</span></li>
                 <li><span class="send-email post">Share with your Family/Friends via Email</span></li>
                 <li><a href="/donation_sheet/" title="Print Form" target="_print">Print a Donation sheet</a></li>
-                <li><a href="/teacher-donation/{{ child.identifier }}">Make a Donation to a Teacher</a></li>
+                <li><a href="/teacher-donation/{{ student.identifier }}">Make a Donation to a Teacher</a></li>
                 <li>
-                  <span src="{{ child.facebook_share_url }}" class="post-to-social post"><img src="/static/images/facebook-share-button.png" width="60" /></span>
-                  <a href="{{ child.twitter_share_url }}" class="twitter-hashtag-button" data-related="HuskyHustle" data-url="{{ child.donate_url }}">Post to Twitter #HuskyHustle</a>
+                  <span src="{{ student.facebook_share_url }}" class="post-to-social post"><img src="/static/images/facebook-share-button.png" width="60" /></span>
+                  <a href="{{ student.twitter_share_url }}" class="twitter-hashtag-button" data-related="HuskyHustle" data-url="{{ student.donate_url }}">Post to Twitter #HuskyHustle</a>
                   <g:plus action="share" annotation="none"></g:plus>
                   <a href="/donation_sheet/" title="Print Form" target="_print"><img src="/static/images/print-icon.png" width="24" alt="Print Form" /></a>
                 </li>
               </ul>
               {% else %}
-              <h3>Add Sponsor for: {{ child }}</h3>
               {% include "include/donation-form.html" %}
-              <h3><a href="/teacher-donation/{{ child.identifier }}">Make a Donation to a Teacher</a></h3>
+              <h3><a href="/teacher-donation/{{ student.identifier }}">Make a Donation to a Teacher</a></h3>
               {% endif %}
 
             </div><!--/col-->

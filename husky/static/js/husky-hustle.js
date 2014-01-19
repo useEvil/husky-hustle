@@ -6,10 +6,7 @@ var formID  = '';
 var tID     = '';
 
 $('.submit-form').bind('click', submitForm);
-// $('.make-donation').bind('click', makeDonation);
-$('#overlay-box-donation').on('hidden.bs.modal', function (e) { makeDonation() });
-
-$('body').keyup(cancelOverlay);
+$('#modal-box-donation').on('show.bs.modal', function(e){ makeDonation(e.relatedTarget) });
 
 /* Overlay Functions */
 function clearMessage(out) {
@@ -454,19 +451,9 @@ function makePayment(event) {
     }
 };
 
-function makeDonation(event, id) {
-    $('#donation_form').show();
-    $('#donation_form').attr('action', '/donation/' + this.id);
-    $('#donation_id').val(this.id);
-    $('#overlay-box-donation').dialog({
-        closeOnEscape: true,
-        minWidth: 350,
-        minHeight: 150,
-        modal: true,
-        dialogClass: 'tooltip',
-        resizable: false,
-        close: function(event, ui) { cancelForm(event, ui); }
-    });
+function makeDonation(object) {
+    $('#donation_form').attr('action', '/donation/' + object.id);
+    $('#donation_id').val(object.id);
 };
 
 function disconnectSocial(event) {

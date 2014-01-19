@@ -11,7 +11,8 @@
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li{% if not '/nav' in path %} class="active"{% endif %}><a href="/">Home</a></li>
+        <li{% if path == '/' %} class="active"{% endif %}><a href="/">Home</a></li>
+        <li{% if 'donat' in path %} class="active"{% endif %}><a href="/student-donation/search">Donate</a></li>
         <li{% if 'results' in path %} class="active"{% endif %}><a href="/results">Results</a></li>
         <li{% if 'photos' in path %} class="active"{% endif %}><a href="/nav/photos">Photos</a></li>
         <li{% if 'blog' in path %} class="active"{% endif %}><a href="/nav/blog">Blog</a></li>

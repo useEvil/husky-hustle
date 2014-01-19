@@ -482,6 +482,15 @@ div.box-shadow {
     color: green;
 }
 
+.post {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.social-links {
+    float: right;
+}
+
 /* background and overlay styles */
 .background-cover {
     background: #000;

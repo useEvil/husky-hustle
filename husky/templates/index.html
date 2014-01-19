@@ -32,20 +32,26 @@
             {{ content.content|safe }}
             </div><!--/span-->
             <div class="col-lg-6">
-              <h2>Message of the Week</h2>
-              <p>
-                <div class="title">{{ motd.title }}</div>
-                <div class="content">{{ motd.content|safe }}</div>
-                <div class="author">by {{ motd.author }} on {{ motd.date_added }}</div>
-              </p>
+              <div class="panel panel-danger" style="min-height: 225px;">
+                <div class="panel-heading"><strong>Message of the Week</strong></div>
+                  <div class="panel-body">
+                      <div class="title">{{ motd.title }}</div>
+                      <div class="content">{{ motd.content|safe }}</div>
+                      <div class="author">by {{ motd.author }} on {{ motd.date_added }}</div>
+                  <div class="clearfix">&nbsp;</div>
+                </div>
+              </div>
             </div>
             <div class="col-lg-6">
-              <h2>Dates to Remember</h2>
-              <ul class="list">
-                {% for entry in calendar.entry %}
-                <li style="font-size: 0.85em;"><a href="{{ entry.link.0.href }}">{{ entry.title.text }} on {{ entry.when.0.start|date_format }}</a></li>
-                {% endfor %}
-              </ul>
+              <div class="panel panel-danger" style="min-height: 225px;">
+                <div class="panel-heading"><strong>Dates to Remember</strong></div>
+                  <div class="panel-body">
+                  {% for entry in calendar.entry %}
+                  <p style="font-size: 0.85em;"><a href="{{ entry.link.0.href }}">{{ entry.title.text }} on {{ entry.when.0.start|date_format }}</a></p>
+                  {% endfor %}
+                  <div class="clearfix">&nbsp;</div>
+                </div>
+              </div>
             </div>
           </div><!--/row-->
         </div><!--/span-->

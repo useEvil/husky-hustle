@@ -4,6 +4,7 @@ import pytz
 import math
 import base64
 import urllib
+import logging
 import re as regexp
 import datetime as date
 import husky.bitly as bitly
@@ -21,12 +22,13 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.sites.models import Site
 from django import forms
 
-#from paypal import PayPal
+from paypal import PayPal
 from picasa import  PicasaField, PicasaStorage
 from decimal import Decimal
 
 from husky.helpers import *
 
+logger = logging.getLogger(__name__)
 
 # Field Classes
 class CurrencyField(models.DecimalField):
@@ -303,7 +305,7 @@ class Student(models.Model):
     def full_name(self):
         return '%s %s' % (self.first_name, self.last_name)
 
-    def find(self, first_name=None, last_name=None):
+    def find(self, first_name=None, last_name=None, teacher_name=None):
         try:
             if first_name and last_name:
                 return Student.objects.filter(first_name__icontains=first_name, last_name__icontains=last_name).distinct().all()
@@ -311,7 +313,10 @@ class Student(models.Model):
                 return Student.objects.filter(first_name__icontains=first_name).distinct().all()
             elif last_name:
                 return Student.objects.filter(last_name__icontains=last_name).distinct().all()
+            elif teacher_name:
+                return Student.objects.filter(teacher__last_name__icontains=teacher_name).distinct().all()
         except ObjectDoesNotExist, e:
+            logger.debug('==== e [%s]'%(e))
             return
 
     def get_collected_list(self):
@@ -790,14 +795,13 @@ class Donation(models.Model):
 
     def thank_you_url(self):
         site = Site.objects.get_current()
-        thank_you_url = 'http://%s/thank_you' % (site.domain)
+        thank_you_url = 'http://%s/thank-you' % (site.domain)
         return thank_you_url
 
     def payment_url(self, ids=None):
         site = Site.objects.get_current()
         if not ids: ids = self.id
-        payment_url = 'http://%s/payment/%s/%s' % (site.domain, self.student.identifier, ids)
-        return payment_url
+        return 'http://%s/make-donation/%s/%s' % (site.domain, self.student.identifier, ids)
 
     def button_data(self, amount=None, ids=None):
         if not amount: amount = self.total()
@@ -812,8 +816,8 @@ class Donation(models.Model):
             'currency_code': 'USD',
             'business': settings.PAYPAL_BUS_ID,
             'item_number': 'husky-hustle-donation-%s' % (ids),
-            'item_name': 'Husky Hustle Online Donations',
-            'return': 'http://%s/thank_you' % (site.domain),
+            'item_name': 'Husky Hustle Online Donations 2014',
+            'return': 'http://%s/thank-you' % (site.domain),
             'notify_url': 'http://%s/paid/%s' % (site.domain, ids),
             'cert_id': settings.PAYPAL_CERT_ID,
             'amount': amount,

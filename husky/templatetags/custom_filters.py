@@ -22,6 +22,7 @@ def date_format(value, format='%m/%d/%Y @ %I:%M%p'):
 
 @register.filter(name='goal_reached')
 def goal_reached(value):
+    if not value: return ''
     percentage = float(value) / settings.MAX_ARROW_HEIGHT
     if percentage > 1:
         return 'display: none;'
