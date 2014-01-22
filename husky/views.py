@@ -40,19 +40,13 @@ def index(request):
         motd=Message.objects.latest('date_added'),
         content=Content.objects.filter(page='index').get(),
         jumbotron=Content.objects.filter(page='jumbotron').get(),
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
         calendar=Calendar().get_events(),
-        path=request.path,
     ))
     return render_to_response('index.html', c, context_instance=RequestContext(request))
 
 def nav(request, page='index', id=None):
     c = Context(dict(
         page_title=page.title(),
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
-        path=request.path,
         messages=messages.get_messages(request),
     ))
     if page == 'photos':
@@ -73,7 +67,6 @@ def nav(request, page='index', id=None):
 def donation_sheet(request, identifier=None, final=None):
     c = Context(dict(
         page_title='Pledge Sheet',
-        path=request.path,
         final=final,
     ))
     if identifier and identifier == 'pdf':
@@ -95,11 +88,8 @@ def donation_sheet(request, identifier=None, final=None):
 def student_donation(request, identifier=None):
     c = Context(dict(
         page_title='Donate',
-        path=request.path,
         teachers=Teacher().get_donate_list(),
         make_donation=True,
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
     ))
     if identifier == 'search':
         c['search'] = True
@@ -128,13 +118,10 @@ def student_donation(request, identifier=None):
 def teacher_donation(request, identifier=None):
     c = Context(dict(
         page_title='Donate',
-        path=request.path,
         teachers=Teacher().get_list(),
         teachers_donate=Teacher().get_donate_list(),
         teacher_donation=True,
         make_donation=True,
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
     ))
     if not identifier: 
         return render_to_response('donate.html', c, context_instance=RequestContext(request))
@@ -149,9 +136,6 @@ def teacher_donation(request, identifier=None):
 def payment(request, identifier=None, id=None):
     c = Context(dict(
         page_title='Make a Donation',
-        path=request.path,
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
     ))
     try:
         c['student'] = Student.objects.get(identifier=identifier)
@@ -246,9 +230,6 @@ def donate_direct(request):
     teacher_donation = None
     c = Context(dict(
         page_title='Donator',
-        path=request.path,
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
         donate=True,
     ))
     if request.POST:
@@ -313,8 +294,6 @@ def album(request, album_id=None):
         page_title=album.title.text,
         path='/nav/photos',
         album=album,
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
     ))
     return render_to_response('photos.html', c, context_instance=RequestContext(request))
 
@@ -337,9 +316,6 @@ def photo(request, album_id=None, photo_id=None):
 def contact(request):
     c = Context(dict(
         page_title='Contact',
-        path=request.path,
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
     ))
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -369,8 +345,6 @@ def results(request, type=None, grade=None):
         path='/nav/results',
         type=type or 'all',
         id=request.GET.get('id') or 0,
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
     ))
     if 'admin' in request.path:
         if request.GET.get('id'):
@@ -390,7 +364,6 @@ def results(request, type=None, grade=None):
 def reporting(request, type=None):
     c = Context(dict(
         page_title='Reporting',
-        path=request.path,
         type=type,
         id=request.GET.get('id') or 0,
     ))
@@ -514,9 +487,6 @@ def paid(request, donation_id=None):
 def thank_you(request, donation_id=None):
     c = Context(dict(
         page_title='Thank You',
-        path=request.path,
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
     ))
     if donation_id:
         try:

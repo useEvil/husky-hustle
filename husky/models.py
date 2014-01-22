@@ -267,6 +267,12 @@ class Teacher(models.Model):
             sponsors.append({'name': student, 'total': float(total or 0)})
         return donators, sponsors
 
+    def donate_url(self, identifier=None):
+        if not identifier: return
+        site = Site.objects.get_current()
+        donate_url = 'http://%s/teacher-donation/%s' % (site.domain, identifier)
+        return donate_url
+
     def shortened(self):
         if not self.shorten:
             api = bitly.Api(login=settings.BITLY_LOGIN, apikey=settings.BITLY_APIKEY)
@@ -324,7 +330,7 @@ class Student(models.Model):
 
     def donate_url(self):
         site = Site.objects.get_current()
-        donate_url = 'http://%s/make-donation/%s' % (site.domain, self.identifier)
+        donate_url = 'http://%s/student-donation/%s' % (site.domain, self.identifier)
         return donate_url
 
     def manage_url(self):

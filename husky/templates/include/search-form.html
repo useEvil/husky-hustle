@@ -10,8 +10,8 @@
     <td><a href="{{ student.donate_url }}">{{ student.full_name }}</a></td>
     <td>{{ student.teacher.grade }}</td>
     <td>{{ student.teacher.full_name }} ({{ student.teacher.room_number }})</td>
-    <td><a href="/donate/{{ student.identifier }}" class="make-donation">Make a Pledge</a></td>
-    <td><a href="#" class="make-payment" id="{{ student.identifier }}" data-toggle="modal" data-target="#modal-box-donation">Make Payment</a></td>
+    <td><a href="{{ student.donate_url }}" class="make-donation">Make a Pledge</a></td>
+    <td><a href="#" class="make-payment" id="{{ student.payment_url }}" data-toggle="modal" data-target="#modal-box-donation">Make Payment</a></td>
   </tr>
   {% endfor %}
 </table>
