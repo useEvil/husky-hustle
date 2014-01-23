@@ -2,9 +2,8 @@
 .DS_Store
 *.pyc
 *-local*
-*-dev*
-*-prod*
 
 devlop/
-it-fits/
+fabfile.py
 husky-hustle.db
+husky-hustle-error.log
