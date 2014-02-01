@@ -7,32 +7,38 @@
   </tr>
   {% for student in students %}
   <tr>
-    <td><a href="{{ student.donate_url }}">{{ student.full_name }}</a></td>
+    <td><a href="{{ student.donate_url }}" id="student-{{ student.identifier }}">{{ student.full_name }}</a></td>
     <td>{{ student.teacher.grade }}</td>
     <td>{{ student.teacher.full_name }} ({{ student.teacher.room_number }})</td>
-    <td><a href="{{ student.donate_url }}" class="make-donation">Make a Pledge</a></td>
-    <td><a href="#" class="make-payment" id="{{ student.payment_url }}" data-toggle="modal" data-target="#modal-box-donation">Make Payment</a></td>
+    <td><a href="{{ student.donate_url }}" class="make-donation" title="Use this option if you want to make a pledge to this student">Make a Pledge</a></td>
+    <td><a href="#" class="make-payment" id="{{ student.identifier }}" action="{{ student.payment_url }}" data-toggle="modal" data-target="#modal-box-donation" title="Use this option if you need to make a payment for pledge you've already made.">Make a Payment</a></td>
   </tr>
   {% endfor %}
 </table>
 <div class="modal fade" id="modal-box-donation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="donation_form" action="/payment" method="GET">
+      <form id="donation_form" action="/make-payment" method="GET" class="form-horizontal" role="form">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Make a Donation</h4>
+          <h4 class="modal-title" id="donation_title">Make a Payment to {student_name}</h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="col-sm-4 control-label" for="donation_amount"{% if form.donation_amount.errors %} class="error"{% endif %}>Donation Amount:</label>
-            <div class="col-sm-4">
+            <label class="col-sm-4 control-label" for="donation_amount"{% if form.donation_amount.errors %} class="error"{% endif %}>Payment Amount:</label>
+            <div class="col-sm-6">
               <input type="hidden" id="donation_id" name="id" value="">
               <input type="text" class="form-control" id="donation_amount" name="amount" value="" placeholder="0.00" />
             </div>
           </div>
+          <div class="form-group">
+            <label class="col-sm-4 control-label" for="donation_email"{% if form.donation_email.errors %} class="error"{% endif %}>Email Address:</label>
+            <div class="col-sm-6">
+              <input type="hidden" id="donation_id" name="id" value="">
+              <input type="text" class="form-control" id="donation_email" name="email" value="" placeholder="example@email.com" />
+            </div>
+          </div>
         </div>
-        <div class="clearfix">&nbsp;</div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary make-donation" id="submit_donation">Donate</button>
@@ -50,7 +56,7 @@
 <div class="panel panel-default">
   <div class="panel-heading"><strong>Search for a Student</strong></div>
   <div class="panel-body">
-    <form action="/student-donation/search" method="get" id="student_search_form" class="form-horizontal" role="form">
+    <form action="/student-donation/search" method="GET" id="student_search_form" class="form-horizontal" role="form">
       <div class="form-group">
         <label class="col-sm-3 control-label" for="student_first_name"{% if form.student_first_name.errors %} class="error"{% endif %}>By First Name:</label>
         <div class="col-sm-3">
@@ -68,7 +74,7 @@
       </div>
     </form>
     <div class="clearfix">&nbsp;</div>
-    <form action="/student-donation/search" method="get" id="teacher_search_form" class="form-horizontal" role="form">
+    <form action="/student-donation/search" method="GET" id="teacher_search_form" class="form-horizontal" role="form">
       <div class="form-group">
         <label class="col-sm-3 control-label" for="teacher_last_name"{% if form.teacher_last_name.errors %} class="error"{% endif %}>Or Teacher Name:</label>
         <div class="col-sm-3">

@@ -452,6 +452,21 @@ div.box-shadow {
     padding: 10px 0 10px 0;
 }
 
+#next-to-do ul {
+    padding-left: 30px;
+    margin-bottom: 1.5em;
+    list-style: none;
+}
+
+#next-to-do li {
+    padding: 3px 0 3px 0;
+}
+
+#next-to-do-social span {
+    float: left;
+    padding-left: 10px;
+}
+
 .social-links {
     float: right;
 }

@@ -1,74 +1,51 @@
+{% extends "base.html" %}
 {% load custom_filters %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    {% include "include/page-header.html" %}
-  </head>
-  <body>
-    {% include "include/menu.html" %}
 
-    <div class="container">
-      <!-- Jumbotron -->
-      {% if messages %}
-      <div class="jumbotron">
-        <ul class="messages">
-          {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-      {% endif %}
+{% block content %}
+  <!-- Jumbotron -->
+  {% if messages %}
+  <div class="jumbotron">
+    <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 
-      <div class="row row-offcanvas row-offcanvas-right">
-        <div class="col-xs-12 col-sm-9">
-          <!--p class="pull-right visible-xs">
-            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
-          </p-->
-          <div class="jumbotron">
-            {{ jumbotron.content|safe }}
+  <div class="col-xs-12 col-sm-9 col-lg-10">
+    <!--p class="pull-right visible-xs">
+      <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+    </p-->
+    <div class="jumbotron" style="margin-top: 25px;">
+      {{ jumbotron.content|safe }}
+    </div>
+    <div class="row box-shadow">
+      <div class="col-lg-12">
+      {{ content.content|safe }}
+      </div><!--/span-->
+      <div class="col-lg-6">
+        <div class="panel panel-danger" style="min-height: 225px;">
+          <div class="panel-heading"><strong>Message of the Week</strong></div>
+            <div class="panel-body">
+                <div class="title">{{ motd.title }}</div>
+                <div class="content">{{ motd.content|safe }}</div>
+                <div class="author">by {{ motd.author }} on {{ motd.date_added }}</div>
+            <div class="clearfix">&nbsp;</div>
           </div>
-          <div class="row box-shadow">
-            <div class="col-lg-12">
-            {{ content.content|safe }}
-            </div><!--/span-->
-            <div class="col-lg-6">
-              <div class="panel panel-danger" style="min-height: 225px;">
-                <div class="panel-heading"><strong>Message of the Week</strong></div>
-                  <div class="panel-body">
-                      <div class="title">{{ motd.title }}</div>
-                      <div class="content">{{ motd.content|safe }}</div>
-                      <div class="author">by {{ motd.author }} on {{ motd.date_added }}</div>
-                  <div class="clearfix">&nbsp;</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="panel panel-danger" style="min-height: 225px;">
-                <div class="panel-heading"><strong>Dates to Remember</strong></div>
-                  <div class="panel-body">
-                  {% for entry in calendar.entry %}
-                  <p style="font-size: 0.85em;"><a href="{{ entry.link.0.href }}">{{ entry.title.text }} on {{ entry.when.0.start|date_format }}</a></p>
-                  {% endfor %}
-                  <div class="clearfix">&nbsp;</div>
-                </div>
-              </div>
-            </div>
-          </div><!--/row-->
-        </div><!--/span-->
-
-        {% include "include/thermometer.html" %}
-      </div><!--/row-offcanvas-->
-
-      <!-- Stay Connected -->
-      <div id="page-bottom">
-        {% include "include/page-bottom.html" %}
+        </div>
       </div>
-
-      <!-- Site footer -->
-      <div class="footer">
-        {% include "include/page-footer.html" %}
+      <div class="col-lg-6">
+        <div class="panel panel-danger" style="min-height: 225px;">
+          <div class="panel-heading"><strong>Dates to Remember</strong></div>
+            <div class="panel-body">
+            {% for entry in calendar.entry %}
+            <p style="font-size: 0.85em;"><a href="{{ entry.link.0.href }}">{{ entry.title.text }} on {{ entry.when.0.start|date_format }}</a></p>
+            {% endfor %}
+            <div class="clearfix">&nbsp;</div>
+          </div>
+        </div>
       </div>
-    </div><!--/.container-->
-    {% include "include/page-script.html" %}
-  </body>
-</html>
+    </div><!--/row-->
+  </div><!--/span-->
+{% endblock %}

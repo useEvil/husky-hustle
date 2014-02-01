@@ -147,6 +147,7 @@ SOCIALREGISTRATION_GENERATE_USERNAME = False
 BITLY_LOGIN = ''
 BITLY_APIKEY = ''
 
+# PayPal BUTTON API CONSTANTS
 PAYPAL_PAYPAL_CERT = 'certs/paypal_cert.pem'
 PAYPAL_PRIVATE_KEY = 'certs/private_key.pem'
 PAYPAL_PUBLIC_KEY = 'certs/public_key.pem'
@@ -154,6 +155,14 @@ PAYPAL_IPN_URL = 'https://www.paypal.com/cgi-bin/webscr'
 PAYPAL_CERT_ID = base64.b64decode('')
 PAYPAL_BUS_ID = base64.b64decode('')
 PAYPAL_CSV_REPORT = 'data/paypal-report.csv'
+
+# PayPal REST API CONSTANTS
+PAYPAL_REST_API_ACCOUNT = ''
+PAYPAL_REST_API_ENDPOINT = 'https://api.paypal.com'
+PAYPAL_REST_API_CLIENT_ID = base64.b64decode('')
+PAYPAL_REST_API_SECTRET = base64.b64decode('')
+PAYPAL_REST_API_ACCESS_TOKEN = base64.b64decode('')
+PAYPAL_REST_API_APP_ID = base64.b64decode('')
 
 PICASA_STORAGE_OPTIONS = {
     'email': 'you@example.com',
@@ -170,22 +179,12 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
-    'socialregistration',
-    'socialregistration.contrib.facebook',
-    'socialregistration.contrib.twitter',
-    # 'socialregistration.contrib.instagram',
-    'socialregistration.contrib.openid',
-    'djangorestframework',
-    # 'django_mobile',
-    'registration',
+    'django.contrib.sites',
+#     'djangorestframework',
+#     'django_mobile',
     'picasa',
     'husky',
 )

@@ -328,29 +328,32 @@ class Student(models.Model):
     def get_collected_list(self):
         return Student.objects.filter(collected__gt=0).order_by('-collected').all()
 
+    def donation_sheet_url(self):
+        site = Site.objects.get_current()
+        return 'http://%s/donation-sheet/%s' % (site.domain, self.identifier)
+
+    def payment_url(self):
+        site = Site.objects.get_current()
+        return 'http://%s/make-payment/%s' % (site.domain, self.identifier)
+
     def donate_url(self):
         site = Site.objects.get_current()
-        donate_url = 'http://%s/student-donation/%s' % (site.domain, self.identifier)
-        return donate_url
+        return 'http://%s/student-donation/%s' % (site.domain, self.identifier)
 
     def manage_url(self):
         site = Site.objects.get_current()
-        manage_url = 'http://%s/account/%s' % (site.domain, self.identifier)
-        return manage_url
+        return 'http://%s/account/%s' % (site.domain, self.identifier)
 
     def facebook_share_url(self):
         site = Site.objects.get_current()
         params = 'app_id=' + settings.FACEBOOK_APP_ID + '&link=' + self.donate_url() + '&picture=' + ('http://%s/static/images/hickslogo-1.jpg' % site.domain) + '&name=' + urllib.quote('Husky Hustle') + '&caption=' + urllib.quote('Donate to %s' % self.full_name()) + '&description=' + urllib.quote("Donate and help further our student's education.") + '&redirect_uri=' + 'http://%s/' % site.domain
-        share_url = 'https://www.facebook.com/dialog/feed?' + params
-        return share_url
+        return 'https://www.facebook.com/dialog/feed?' + params
 
     def twitter_share_url(self):
-        share_url = 'https://twitter.com/intent/tweet?button_hashtag=HuskyHustle&url=%s' % self.donate_url()
-        return share_url
+        return 'https://twitter.com/intent/tweet?button_hashtag=HuskyHustle&url=%s' % self.donate_url()
 
     def google_share_url(self):
-        share_url = 'https://plus.google.com/share?url=%s' % self.donate_url()
-        return share_url
+        return 'https://plus.google.com/share?url=%s' % self.donate_url()
 
     def grades(self):
         return Grade.objects.all()
@@ -468,8 +471,8 @@ class Donation(models.Model):
     student = models.ForeignKey(Student, related_name='sponsors')
     donation = CurrencyField(blank=True, null=True)
     donated = CurrencyField(blank=True, null=True)
-    per_lap = models.BooleanField()
-    paid = models.BooleanField(default=True)
+    per_lap = models.BooleanField(null=False, default=0)
+    paid = models.BooleanField(null=False, default=0)
     date_added = models.DateTimeField(default=date.datetime.now())
     class Meta:
         ordering = ['last_name', 'first_name']
@@ -801,13 +804,12 @@ class Donation(models.Model):
 
     def thank_you_url(self):
         site = Site.objects.get_current()
-        thank_you_url = 'http://%s/thank-you' % (site.domain)
-        return thank_you_url
+        return 'http://%s/thank-you' % (site.domain)
 
     def payment_url(self, ids=None):
         site = Site.objects.get_current()
         if not ids: ids = self.id
-        return 'http://%s/make-donation/%s/%s' % (site.domain, self.student.identifier, ids)
+        return 'http://%s/make-payment/%s/%s' % (site.domain, self.student.identifier, ids)
 
     def button_data(self, amount=None, ids=None):
         if not amount: amount = self.total()

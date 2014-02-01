@@ -1,71 +1,46 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    {% include "include/page-header.html" %}
-  </head>
-  <body>
-    {% include "include/menu.html" %}
-    <div class="background-cover"></div>
-    <div class="background-cover-top"></div>
+{% extends "base.html" %}
 
-    <div class="container">
-      <div class="row row-offcanvas row-offcanvas-right">
-        <div class="col-xs-12 col-sm-9 col-lg-10">
-          <h2>2013 Results</h2>
-          <div class="row box-shadow">
-            <div class="col-lg-12">
+{% block content %}
+  <div class="col-xs-12 col-sm-9 col-lg-10">
+    <h2>2013 Results</h2>
+    <div class="row box-shadow">
+      <div class="col-lg-12">
 
-              {% if type == 'most-laps-by-grade' or type == 'all' %}
-              <h4 class="bold">Total Laps By Grade By Teacher:</h4>
-              <iframe src="/admin/reporting/most-laps-by-grade" height="600" width="900"></iframe>
-              {% endif %}
+        {% if type == 'most-laps-by-grade' or type == 'all' %}
+        <h4 class="bold">Total Laps By Grade By Teacher:</h4>
+        <iframe src="/admin/reporting/most-laps-by-grade" height="600" width="900"></iframe>
+        {% endif %}
 
-              {% if type == 'most-laps-by-grade-avg' or type == 'all' %}
-              <h4 class="bold">Total Laps By Grade By Teacher (Avg):</h4>
-              <iframe src="/admin/reporting/most-laps-by-grade-avg" height="600" width="900"></iframe>
-              {% endif %}
+        {% if type == 'most-laps-by-grade-avg' or type == 'all' %}
+        <h4 class="bold">Total Laps By Grade By Teacher (Avg):</h4>
+        <iframe src="/admin/reporting/most-laps-by-grade-avg" height="600" width="900"></iframe>
+        {% endif %}
 
-              {% if type == 'most-laps-by-child-by-grade' or type == 'all' %}
-              <h4 class="bold">Most Laps By Grade By Student:</h4>
-              <iframe src="/admin/reporting/most-laps-by-child-by-grade" height="600" width="900"></iframe>
-              {% endif %}
+        {% if type == 'most-laps-by-child-by-grade' or type == 'all' %}
+        <h4 class="bold">Most Laps By Grade By Student:</h4>
+        <iframe src="/admin/reporting/most-laps-by-child-by-grade" height="600" width="900"></iframe>
+        {% endif %}
 
-              {% if type == 'most-donations-by-grade' or type == 'all' %}
-              <h4 class="bold">Total Donations By Grade By Teacher:</h4>
-              <iframe src="/admin/reporting/most-donations-by-grade" height="600" width="900"></iframe>
-              {% endif %}
+        {% if type == 'most-donations-by-grade' or type == 'all' %}
+        <h4 class="bold">Total Donations By Grade By Teacher:</h4>
+        <iframe src="/admin/reporting/most-donations-by-grade" height="600" width="900"></iframe>
+        {% endif %}
 
-              {% if type == 'most-donations-by-grade-avg' or type == 'all' %}
-              <h4 class="bold">Total Donations By Grade By Teacher (Avg):</h4>
-              <iframe src="/admin/reporting/most-donations-by-grade-avg" height="600" width="900"></iframe>
-              {% endif %}
+        {% if type == 'most-donations-by-grade-avg' or type == 'all' %}
+        <h4 class="bold">Total Donations By Grade By Teacher (Avg):</h4>
+        <iframe src="/admin/reporting/most-donations-by-grade-avg" height="600" width="900"></iframe>
+        {% endif %}
 
-              {% if type == 'most-donations-by-child-by-grade' or type == 'all' %}
-              <h4 class="bold">Most Donations By Grade By Student (Top 20):</h4>
-              <iframe src="/admin/reporting/most-donations-by-child-by-grade" height="600" width="900"></iframe>
-              {% endif %}
+        {% if type == 'most-donations-by-child-by-grade' or type == 'all' %}
+        <h4 class="bold">Most Donations By Grade By Student (Top 20):</h4>
+        <iframe src="/admin/reporting/most-donations-by-child-by-grade" height="600" width="900"></iframe>
+        {% endif %}
 
-              {% if type == 'most-donations-by-child' or type == 'all' %}
-              <h4 class="bold">Most Donations Collected (Top 22):</h4>
-              <iframe src="/admin/reporting/most-donations-by-child" height="600" width="900"></iframe>
-              {% endif %}
-            </div><!--/col-->
-          </div><!--/row-->
-        </div><!--/span-->
-
-        {% include "include/thermometer.html" %}
-      </div><!--/row-offcanvas-->
-
-      <!-- Stay Connected -->
-      <div id="page-bottom">
-        {% include "include/page-bottom.html" %}
-      </div>
-
-      <!-- Site footer -->
-      <div class="footer">
-        {% include "include/page-footer.html" %}
-      </div>
-    </div><!--/.container-->
-    {% include "include/page-script.html" %}
-  </body>
-</html>
+        {% if type == 'most-donations-by-child' or type == 'all' %}
+        <h4 class="bold">Most Donations Collected (Top 22):</h4>
+        <iframe src="/admin/reporting/most-donations-by-child" height="600" width="900"></iframe>
+        {% endif %}
+      </div><!--/col-->
+    </div><!--/row-->
+  </div><!--/span-->
+{% endblock %}

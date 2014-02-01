@@ -6,6 +6,10 @@ var formID  = '';
 var tID     = '';
 
 $('.submit-form').bind('click', submitForm);
+$('.post-to-social').bind('click', postToSocial);
+$('.pre-set-amount').bind('change', setPreSetAmount);
+$('.to-principle').bind('change', setPreSetAmount);
+$('.to-teacher').bind('change', setPreSetAmount);
 $('#modal-box-donation').on('show.bs.modal', function(e){ makeDonation(e.relatedTarget) });
 
 /* Overlay Functions */
@@ -166,13 +170,13 @@ function submitForm(event) {
     var form = $('#'+ id[1] +'_form');
     var params = form.serialize();
     var action = form.attr('action');
-    if (id === 'email') {
+    if (id[1] === 'invite') {
         if (!$('#email_addresses').val()) {
             alert('You must provide email addresses');
             return false;
         }
     }
-    if (id === 'reminder' || id === 'thanks') {
+    if (id[1] === 'reminder' || id[1] === 'thanks') {
         $('.set-reminder').each(
             function () {
                 if ($(this).attr('checked') === 'checked') {
@@ -191,7 +195,6 @@ function submitForm(event) {
             complete: function(results){ button.button('reset'); updateStatus(results.responseJSON) }
         }
     );
-// 	showOverlayTop();
     return false;
 };
 
@@ -298,6 +301,9 @@ function updateStatus(data) {
     } else {
         status_msg.css('color','green');
     }
+    if (data.is_modal) {
+        $('#'+data.is_modal).modal('hide');
+    }
     status_msg.append('<li>'+data.message+'</li>');
     clearMessage();
 };
@@ -313,7 +319,7 @@ function setAllReminders(event) {
 
 function setPreSetAmount(event) {
     var value = $(this).val();
-    if (this.className === 'to-principle') {
+    if (this.className.match('to-principle')) {
         if (value) {
             $('#id_first_name').attr('value', value);
             $('#id_first_name').attr('readonly', true);
@@ -327,7 +333,7 @@ function setPreSetAmount(event) {
             $('#id_teacher').attr('disabled', false);
             $('#id_teacher').show();
         }
-    } else if (this.className === 'to-teacher') {
+    } else if (this.className.match('to-teacher')) {
             value = $('#id_teacher :selected').val();
             $('#to_principle_teacher').attr('checked', true);
             $('#id_first_name').attr('value', value);
@@ -340,25 +346,6 @@ function setPreSetAmount(event) {
             $('#id_donation').attr('readonly', false);
         }
     }
-};
-
-function sendEmail(event) {
-    var id = this.id.replace( 'email-', '' );
-    var msg = $('#message').text();
-    msg = msg.replace( /{donate_url}/g, $('#donate-'+id).text() );
-    msg = msg.replace( /{first_name}/g, $('#first_name-'+id).text() );
-    $('#child_first_name').val( $('#first_name-'+id).text() );
-    $('#custom_message').html( msg );
-    $('#email_form').show();
-    $('#overlay-box-email').dialog({
-        closeOnEscape: true,
-        minWidth: 790,
-        minHeight: 400,
-        modal: true,
-        dialogClass: 'tooltip',
-        resizable: false,
-        close: function(event, ui) { cancelForm(event, ui); }
-    });
 };
 
 function sendReminders(event) {
@@ -452,8 +439,9 @@ function makePayment(event) {
 };
 
 function makeDonation(object) {
-    $('#donation_form').attr('action', '/donation/' + object.id);
+    $('#donation_form').attr('action', object.getAttribute('action'));
     $('#donation_id').val(object.id);
+    $('#donation_title').text('Make a Payment to ' + $('#student-'+object.id).text());
 };
 
 function disconnectSocial(event) {
@@ -469,20 +457,18 @@ function runCalculations(event) {
 
 function postToSocial(event) {
     window.open($(this).attr('src'), '_social', 'height=200,width=550,resizable=yes,scrollbars=yes');
-//	$('#post-iframe').attr('src', $(this).attr('src'));
-//	doOverlayOpen('post');
 };
 
 (function() {
-	var ua = navigator.userAgent,
-		iStuff = ua.match(/iPhone/i) || ua.match(/iPad/i),
-		typeOfCanvas = typeof HTMLCanvasElement,
-		nativeCanvasSupport = (typeOfCanvas === 'object' || typeOfCanvas === 'function'),
-		textSupport = nativeCanvasSupport && (typeof document.createElement('canvas').getContext('2d').fillText === 'function');
-	labelType = (!nativeCanvasSupport || (textSupport && !iStuff))? 'Native' : 'HTML';
-	nativeTextSupport = labelType === 'Native';
-	useGradients = nativeCanvasSupport;
-	animate = !(iStuff || !nativeCanvasSupport);
+    var ua = navigator.userAgent,
+        iStuff = ua.match(/iPhone/i) || ua.match(/iPad/i),
+        typeOfCanvas = typeof HTMLCanvasElement,
+        nativeCanvasSupport = (typeOfCanvas === 'object' || typeOfCanvas === 'function'),
+        textSupport = nativeCanvasSupport && (typeof document.createElement('canvas').getContext('2d').fillText === 'function');
+    labelType = (!nativeCanvasSupport || (textSupport && !iStuff))? 'Native' : 'HTML';
+    nativeTextSupport = labelType === 'Native';
+    useGradients = nativeCanvasSupport;
+    animate = !(iStuff || !nativeCanvasSupport);
 })();
 
 function initBarChart(json) {
@@ -525,7 +511,7 @@ function initBarChart(json) {
                     window.parent.location = url;
                 } else if (window.location.href.match('donations-by-teacher\\?id=\\d+')) {
                     window.parent.location = '/admin/results/donations-by-teacher';
-//					window.parent.history.back();
+//                     window.parent.history.back();
                 }
             }
         }

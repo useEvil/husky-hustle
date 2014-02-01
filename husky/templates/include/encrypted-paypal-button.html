@@ -1,0 +1,13 @@
+<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="POST">
+  <p>
+    Please kindly submit your donation by using the button below.  You will be redirected to PayPal's 
+    secure website where you can safely submit your donation.  Your contribution will help the students 
+    of Hicks Canyon tremendously.
+  </p>
+  <p class="center">
+    <input type="hidden" name="cmd" value="_s-xclick" />
+    <input type="hidden" name="encrypted" value="{{ encrypted_block }}" />
+    <input type="submit" name="submit" style="width: 16em;" class="button pay control input" id="make_donation" value=" Make a Donation for ${{ amount }} " /><br /><br />
+    <input type="image" src="/static/images/credit-card-paypal.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+  </p>
+</form>

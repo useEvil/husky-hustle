@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    {% include "include/page-header.html" %}
+  </head>
+  <body>
+    {% include "include/menu.html" %}
+
+    <div class="container">
+      <div class="row row-offcanvas row-offcanvas-right">
+        {% block content %}
+        {{ content }}
+        {% endblock %}
+        {% include "include/thermometer.html" %}
+      </div><!--/row-offcanvas-->
+
+      <!-- Stay Connected -->
+      <div id="page-bottom">
+        {% include "include/page-bottom.html" %}
+      </div>
+
+      <!-- Site footer -->
+      <div class="footer">
+        {% include "include/page-footer.html" %}
+      </div>
+    </div><!--/.container-->
+  </body>
+  {% include "include/page-script.html" %}
+</html>

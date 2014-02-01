@@ -64,27 +64,6 @@ def nav(request, page='index', id=None):
             c['entries'] = Blog.objects.order_by('-date_added')[:15]
     return render_to_response('%s.html'%page, c, context_instance=RequestContext(request))
 
-def donation_sheet(request, identifier=None, final=None):
-    c = Context(dict(
-        page_title='Pledge Sheet',
-        final=final,
-    ))
-    if identifier and identifier == 'pdf':
-        response = HttpResponse(mimetype='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="donation-sheet.pdf"'
-        response.write(file("%s/docs/donation_sheet.pdf" % settings.MEDIA_ROOT).read())
-        return response
-    elif identifier and identifier == 'print':
-        c['page_title'] = 'Pledge Sheet'
-    elif identifier:
-        try:
-            c['student'] = Student.objects.get(identifier=identifier)
-            c['page_title'] = 'Pledge Sheet: %s' % (c['student'])
-        except:
-            messages.error(request, 'Could not find Student for identity: %s' % identifier)
-    c['messages'] = messages.get_messages(request)
-    return render_to_response('account/donation_sheet.html', c, context_instance=RequestContext(request))
-
 def student_donation(request, identifier=None):
     c = Context(dict(
         page_title='Donate',
@@ -108,7 +87,7 @@ def student_donation(request, identifier=None):
                 c['error'] = True
     elif identifier:
         try:
-            c['students'] = Student.objects.get(identifier=identifier)
+            c['student'] = Student.objects.get(identifier=identifier)
         except:
             messages.error(request, 'Could not find Student for identity: %s' % identifier)
             c['error'] = True
@@ -143,20 +122,21 @@ def payment(request, identifier=None, id=None):
         messages.error(request, 'Could not find Student for identity: %s' % identifier)
         c['error'] = True
     ids = id.split(',')
+    donation = Donation()
     if request.GET.get('amount'):
         if request.GET.get('id') and not id: id = request.GET.get('id')
-        c['encrypted_block'] = Donation().encrypted_block(Donation().button_data(request.GET.get('amount'), id))
-        c['total'] = request.GET.get('amount')
+        c['encrypted_block'] = donation.encrypted_block(donation.button_data(request.GET.get('amount'), id))
+        c['amount'] = request.GET.get('amount')
     elif len(ids) > 1:
-        total = Donation().get_total(ids)
-        c['encrypted_block'] = Donation().encrypted_block(Donation().button_data(total, id))
-        c['total'] = total
+        amount = donation.get_total(ids)
+        c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, id))
+        c['amount'] = amount
     else:
         try:
             donation = Donation.objects.get(id=id)
             c['donation'] = donation
             c['encrypted_block'] = donation.encrypted_block()
-            c['total'] = donation.total()
+            c['amount'] = donation.total()
         except:
             messages.error(request, 'Could not find Donation for ID: %s' % id)
             c['error'] = True
@@ -165,20 +145,15 @@ def payment(request, identifier=None, id=None):
 
 def donate(request, student_id=None):
     student = Student.objects.get(identifier=student_id)
-    from_account = None
     make_donation = None
     teacher_donation = None
     c = Context(dict(
         page_title='Donator',
-        path=request.path,
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
         teachers=Teacher().get_donate_list(),
         student=student,
         donate=True,
     ))
     if request.POST:
-        from_account = request.POST.get('from_account')
         make_donation = request.POST.get('make_donation')
         teacher_donation = request.POST.get('teacher_donation')
         form = DonationForm(request.POST)
@@ -189,13 +164,13 @@ def donate(request, student_id=None):
                     last_name=request.POST.get('last_name'),
                     email_address=request.POST.get('email_address'),
                     phone_number=request.POST.get('phone_number'),
-                    per_lap=request.POST.get('per_lap') or 0,
                     donation=request.POST.get('donation'),
                     date_added=date.datetime.now(pytz.utc),
+                    per_lap=request.POST.get('per_lap')) or 0,
                     student=student,
                 )
                 donation.save()
-                messages.success(request, from_account and 'Donation Added Successfully' or 'Thank you for making a Pledge')
+                messages.success(request, 'Thank you for making a Pledge')
                 c['success'] = True
                 c['donate_url'] = student.donate_url()
                 c['student_full_name'] = student.full_name()
@@ -205,25 +180,21 @@ def donate(request, student_id=None):
                 c['is_per_lap'] = donation.per_lap
                 c['payment_url'] = donation.payment_url()
                 c['email_address'] = donation.email_address
+                c['encrypted_block'] = donation.encrypted_block()
                 c['subject'] = 'Hicks Canyon Jog-A-Thon: Thank you for making a Pledge'
                 c['domain'] = Site.objects.get_current().domain
                 if not teacher_donation:
                     _send_email_teamplate('donate', c)
             except Exception, e:
                 c['make_donation'] = make_donation or False
-                if from_account: c['error'] = True
                 messages.error(request, str(e))
         else:
             c['make_donation'] = make_donation or False
-            if from_account: c['error'] = True
             messages.error(request, 'Failed to Add %s' % (teacher_donation and 'Donation' or 'Sponsor'))
         c['form'] = form
     c['messages'] = messages.get_messages(request)
     c['teacher_donation'] = teacher_donation or False
-    if from_account:
-        return HttpResponseRedirect('/account/%s' % student.identifier)
-    else:
-        return render_to_response('donate.html', c, context_instance=RequestContext(request))
+    return render_to_response('donate.html', c, context_instance=RequestContext(request))
 
 def donate_direct(request):
     make_donation = None
@@ -258,7 +229,7 @@ def donate_direct(request):
                     last_name=request.POST.get('last_name'),
                     email_address=request.POST.get('email_address'),
                     phone_number=request.POST.get('phone_number'),
-                    per_lap=request.POST.get('per_lap') or 0,
+                    per_lap=int(request.POST.get('per_lap')) or 0,
                     donation=request.POST.get('donation'),
                     date_added=date.datetime.now(pytz.utc),
                     student=student,
@@ -288,6 +259,27 @@ def donate_direct(request):
         c['teacher_donation'] = True
     return render_to_response('donate.html', c, context_instance=RequestContext(request))
 
+def donation_sheet(request, identifier=None, final=None):
+    c = Context(dict(
+        page_title='Pledge Sheet',
+        final=final,
+    ))
+    if identifier and identifier == 'pdf':
+        response = HttpResponse(mimetype='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="donation-sheet.pdf"'
+        response.write(file("%s/docs/donation_sheet.pdf" % settings.MEDIA_ROOT).read())
+        return response
+    elif identifier and identifier == 'print':
+        c['page_title'] = 'Pledge Sheet'
+    elif identifier:
+        try:
+            c['student'] = Student.objects.get(identifier=identifier)
+            c['page_title'] = 'Pledge Sheet: %s' % (c['student'])
+        except:
+            messages.error(request, 'Could not find Student for identity: %s' % identifier)
+    c['messages'] = messages.get_messages(request)
+    return render_to_response('account/donation_sheet.html', c, context_instance=RequestContext(request))
+
 def album(request, album_id=None):
     album = Album().get_album(album_id)
     c = Context(dict(
@@ -308,8 +300,6 @@ def photo(request, album_id=None, photo_id=None):
         prev=prevPhoto(album.entry, request.GET.get('index')),
         next=nextPhoto(album.entry, request.GET.get('index')),
         index=int(request.GET.get('index')),
-        bar_height=Donation().bar_height(),
-        arrow_height=Donation().arrow_height(),
     ))
     return render_to_response('photos.html', c, context_instance=RequestContext(request))
 
@@ -344,7 +334,7 @@ def results(request, type=None, grade=None):
         page_title='Results',
         path='/nav/results',
         type=type or 'all',
-        id=request.GET.get('id') or 0,
+        id=int(request.GET.get('id')) or 0,
     ))
     if 'admin' in request.path:
         if request.GET.get('id'):
@@ -365,7 +355,7 @@ def reporting(request, type=None):
     c = Context(dict(
         page_title='Reporting',
         type=type,
-        id=request.GET.get('id') or 0,
+        id=int(request.GET.get('id')) or 0,
     ))
     return render_to_response('admin/chart.html', c, context_instance=RequestContext(request))
 
@@ -375,10 +365,13 @@ def emails(request):
         body=request.POST.get('custom_message'),
         reply_to=settings.EMAIL_HOST_USER,
     ))
+    is_modal = request.POST.get('is_modal')
     addresses = request.POST.get('email_addresses')
     if not addresses:
-        messages.success(request, 'You must provide email addresses')
-        return HttpResponse(simplejson.dumps({'result': 'NOTOK', 'status': 400, 'message': 'You must provide email addresses.'}), mimetype='application/json')
+        if request.GET.get('format') == 'ajax':
+            return HttpResponse(simplejson.dumps({'result': 'NOTOK', 'status': 400, 'message': 'You must provide email addresses.', 'is_modal': is_modal}), mimetype='application/json')
+        else:
+            messages.success(request, 'You must provide email addresses')
     p = regexp.compile(r'\s*,\s*')
     addresses = filter(None, p.split(addresses))
     data = []
@@ -386,8 +379,10 @@ def emails(request):
         c['email_address'] = address
         data.append(_send_email_teamplate('emails', c, 1))
     _send_mass_mail(data)
-    messages.success(request, 'Successfully Sent Emails')
-    return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200}), mimetype='application/json')
+    # set message or return json message
+    if request.GET.get('format') != 'ajax':
+        messages.success(request, 'Successfully Sent Emails')
+    return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Sent', 'is_modal': is_modal}), mimetype='application/json')
 
 def reminders(request):
     c = Context(dict(
@@ -526,11 +521,11 @@ def reset_complete(request):
 
 @never_cache
 def json(request, student_id=None):
-    offset = request.GET.get('page') or 1
-    limit = request.GET.get('rp')  or 30
-    query = request.GET.get('query')  or None
-    field = request.GET.get('qtype')  or None
-    sortname = request.GET.get('sortname')  or 'id'
+    offset = int(request.GET.get('page')) or 1
+    limit = int(request.GET.get('rp')) or 30
+    query = request.GET.get('query') or None
+    field = request.GET.get('qtype') or None
+    sortname = request.GET.get('sortname') or 'id'
     sortorder = request.GET.get('sortorder') or 'asc'
     students = [student_id]
     offset = int(offset) - 1
@@ -569,7 +564,7 @@ def reports(request, type=None):
     elif type == 'most-donations-by-student-by-grade':
         json = Donation().reports_most_donations_by_student_by_grade()
     elif type == 'donations-by-teacher':
-        id = int(request.GET.get('id') or 0)
+        id = int(request.GET.get('id')) or 0
         json = Donation().reports_donations_by_teacher(id)
     elif type == 'download-raffle-tickets':
         winner = request.GET.get('winner') or None

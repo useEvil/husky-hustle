@@ -1,45 +1,22 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    {% include "include/page-header.html" %}
-  </head>
-  <body>
-    {% include "include/menu.html" %}
+{% extends "base.html" %}
 
-    <div class="container">
-      <div class="row row-offcanvas row-offcanvas-right">
-        <div class="col-xs-12 col-sm-9 col-lg-10">
-          <h2>Links</h2>
-          <div class="row box-shadow">
-            <div class="col-lg-6" id="links">
-              <h3>Tustin Unified</h3>
-              <ul>
-                {% for link in links %}
-                <li><a href="{{ link.shortened }}" target="_school">{{ link.title }}</a></li>
-                {% endfor %}
-              </ul>
-            </div>
-            <div class="col-lg-6">
-              <h3>Fundraising</h3>
-              <img class="image aligntop full" src="/static/images/welcome2.jpg" width="430" height="155" alt="" />
-              {{ content.content|safe }}
-            </div>
-          </div><!--/row-->
-        </div><!--/span-->
-
-        {% include "include/thermometer.html" %}
-      </div><!--/row-offcanvas-->
-
-      <!-- Stay Connected -->
-      <div id="page-bottom">
-        {% include "include/page-bottom.html" %}
+{% block content %}
+  <div class="col-xs-12 col-sm-9 col-lg-10">
+    <h2>Links</h2>
+    <div class="row box-shadow">
+      <div class="col-lg-6" id="links">
+        <h3>Tustin Unified</h3>
+        <ul>
+          {% for link in links %}
+          <li><a href="{{ link.shortened }}" target="_school">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
       </div>
-
-      <!-- Site footer -->
-      <div class="footer">
-        {% include "include/page-footer.html" %}
+      <div class="col-lg-6">
+        <h3>Fundraising</h3>
+        <img class="image aligntop full" src="/static/images/welcome2.jpg" width="430" height="155" alt="" />
+        {{ content.content|safe }}
       </div>
-    </div><!--/.container-->
-    {% include "include/page-script.html" %}
-  </body>
-</html>
+    </div><!--/row-->
+  </div><!--/span-->
+{% endblock %}

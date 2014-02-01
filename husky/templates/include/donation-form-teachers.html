@@ -1,57 +1,104 @@
-<form action="/donate{% if child %}/{{ child.identifier }}{% else %}-direct{% endif %}" method="post" id="add_teacher_form">
-	{% if make_donation %}<input type="hidden" name="make_donation" value="1" />{% endif %}
-	{% if from_account %}<input type="hidden" name="from_account" value="1" />{% endif %}
-	<input type="hidden" name="teacher_donation" value="1" />
-	<input type="hidden" name="last_name" value="teacher" />
-	<input type="hidden" name="phone_number" value="(000) 000-0000" />
-	<input type="hidden" name="email_address" value="_teacher_@huskyhustle.com" />
-	<input type="hidden" name="per_lap" value="" />
-	{% csrf_token %}
-	<ol>
-		{% if not child %}
-		<li>
-			<label for="id_for_student">For Student:</label>
-			<input type="text" name="student_first_name" size="25" value="" placeholder="First Name" />
-			<input type="text" name="student_last_name" size="25" value="" placeholder="Last Name" />
-			<select id="student_teacher_id" name="student_teacher_id">
-				<option value="">Select Teacher</option>
-				{% for teacher in teachers %}
-				<option value="{{ teacher.id }}">{{ teacher }}</option>
-				{% endfor %}
-			</select>
-		</li>
-		<li>&nbsp;</li>
-		{% endif %}
-		{% if not child.sponsored_principle %}
-		<li>
-			<label for="id_to_principle">Donate To:</label>
-			<input type="radio" class="to-principle" id="to_principle" name="to-principle" value="Mrs. Agopian" />&nbsp;Mrs. Agopian&nbsp;&nbsp;
-			<input type="radio" class="to-principle" id="to_principle_teacher" name="to-principle" value="" />&nbsp;A Teacher
-		</li>
-		{% endif %}
-		<li>
-			<label for="teacher">Teacher:</label>
-			<input id="id_first_name" type="text" name="first_name" value="{{ form.first_name.value }}" class="hidden" />
-			<select id="id_teacher" name="teacher" class="to-teacher">
-				<option value="">Select Teacher</option>
-				{% for teacher in teachers_donate %}
-				<option value="{{ teacher.full_name }}">{{ teacher }}</option>
-				{% endfor %}
-			</select>
-		</li>
-		<li>
-			<label for="id_set_amount"{% if form.donation.errors %} class="error"{% endif %}>Set Amount:</label>
-			<input type="radio" class="pre-set-amount" name="pre-set-amount" value="5.00" />&nbsp;$5&nbsp;&nbsp;
-			<input type="radio" class="pre-set-amount" name="pre-set-amount" value="10.00" />&nbsp;$10&nbsp;&nbsp;
-			<input type="radio" class="pre-set-amount" name="pre-set-amount" value="20.00" />&nbsp;$20&nbsp;&nbsp;
-			<input type="radio" class="pre-set-amount" name="pre-set-amount" value="" />&nbsp;Other&nbsp;&nbsp;
-		</li>
-		<li>
-			<label for="id_donation"{% if form.donation.errors %} class="error"{% endif %}>Donation:</label>
-			<input id="id_donation" type="text" name="donation" value="{{ form.donation.value }}" size="10" class="input-field required" placeholder="xxxx.xx" readonly="readonly" />
-			{% if form.donation.errors %}<span class="pad-left10 error">* required</span>{% endif %}
-		</li>
-		<li>&nbsp;</li>
-		<li><input type="button" style="width: 10em;" class="control input submit_form" id="submit_add_teacher" value=" Make Donation " /></li>
-	</ol>
-</form>
+<div class="panel panel-default">
+  <div class="panel-heading"><strong>Make a Pledge to: {{ student.full_name }}</strong></div>
+  <div class="panel-body">
+    <form action="/donate{% if student %}/{{ student.identifier }}{% else %}-direct{% endif %}" method="post" id="add_teacher_form" class="form-horizontal" role="form">
+      {% if make_donation %}<input type="hidden" name="make_donation" value="1" />{% endif %}
+      {% if from_account %}<input type="hidden" name="from_account" value="1" />{% endif %}
+      <input type="hidden" name="teacher_donation" value="1" />
+      <input type="hidden" name="last_name" value="teacher" />
+      <input type="hidden" name="phone_number" value="(000) 000-0000" />
+      <input type="hidden" name="email_address" value="_teacher_@huskyhustle.com" />
+      <input type="hidden" name="per_lap" value="0" />
+      {% csrf_token %}
+
+      {% if not student %}
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="id_for_student">For Student:</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" name="student_first_name" value="" placeholder="First Name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="id_for_student">&nbsp;</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" name="student_last_name" value="" placeholder="Last Name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="id_for_student">&nbsp;</label>
+        <div class="col-sm-4">
+          <select id="student_teacher_id" class="form-control" name="student_teacher_id">
+            <option value="">Select Student's Teacher</option>
+            {% for teacher in teachers %}
+            <option value="{{ teacher.id }}">{{ teacher }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="clearfix">&nbsp;</div>
+      {% endif %}
+
+      {% if not student.sponsored_principle %}
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="id_to_principle"{% if form.to_principle.errors %} class="error"{% endif %}>Donate To:</label>
+        <div class="col-sm-4">
+          <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-info">
+              <input type="radio" class="to-principle" id="to_principle" name="to-principle" value="Mrs. Agopian" /> Mrs. Agopian
+            </label>
+            <label class="btn btn-info">
+              <input type="radio" class="to-principle" id="to_principle_teacher" name="to-principle" value="" /> A Teacher
+            </label>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="teacher">Teacher:</label>
+        <div class="col-sm-4">
+          <input id="id_first_name" type="text" name="first_name" value="{{ form.first_name.value }}" style="display: none;" />
+          <select id="id_teacher" class="form-control to-teacher" name="teacher">
+            <option value="">Select Teacher</option>
+            {% for teacher in teachers_donate %}
+            <option value="{{ teacher.full_name }}">{{ teacher }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="id_set_amount"{% if form.donation.errors %} class="error"{% endif %}>Set Amount:</label>
+        <div class="col-sm-4">
+          <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-info">
+              <input type="radio" class="pre-set-amount" name="pre-set-amount" value="5.00" /> $5
+            </label>
+            <label class="btn btn-info">
+              <input type="radio" class="pre-set-amount" name="pre-set-amount" value="10.00" /> $10
+            </label>
+            <label class="btn btn-info">
+              <input type="radio" class="pre-set-amount" name="pre-set-amount" value="20.00" /> $20
+            </label>
+            <label class="btn btn-info">
+              <input type="radio" class="pre-set-amount" name="pre-set-amount" value="" /> Other
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="id_donation"{% if form.donation.errors %} class="error"{% endif %}>Donation:</label>
+        <div class="col-sm-2">
+          <input id="id_donation" type="text" name="donation" value="{{ form.donation.value }}" class="form-control required" placeholder="0.00" readonly="readonly" />{% if form.donation.errors %}<span class="pad-left10 error">* required</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-8">
+          <input type="submit" class="btn btn-primary submit_form pull-right" id="submit_add_teacher" value=" Submit Pledge " data-loading-text=" Submitting... " />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
