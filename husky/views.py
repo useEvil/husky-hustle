@@ -166,7 +166,7 @@ def donate(request, student_id=None):
                     phone_number=request.POST.get('phone_number'),
                     donation=request.POST.get('donation'),
                     date_added=date.datetime.now(pytz.utc),
-                    per_lap=request.POST.get('per_lap')) or 0,
+                    per_lap=request.POST.get('per_lap') or 0,
                     student=student,
                 )
                 donation.save()
