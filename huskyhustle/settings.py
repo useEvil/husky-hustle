@@ -120,6 +120,7 @@ TWITTER_AUTHORIZATION_URL = 'https://api.twitter.com/oauth/authorize'
 BITLY_LOGIN = ''
 BITLY_APIKEY = ''
 
+# PayPal BUTTON API CONSTANTS
 PAYPAL_PAYPAL_CERT = 'certs/paypal_cert.pem'
 PAYPAL_PRIVATE_KEY = 'certs/private_key.pem'
 PAYPAL_PUBLIC_KEY = 'certs/public_key.pem'
@@ -128,10 +129,42 @@ PAYPAL_CERT_ID = base64.b64decode('')
 PAYPAL_BUS_ID = base64.b64decode('')
 PAYPAL_CSV_REPORT = 'data/paypal-report.csv'
 
+# PayPal REST API CONSTANTS
+PAYPAL_REST_API_ACCOUNT = ''
+PAYPAL_REST_API_ENDPOINT = 'https://api.sandbox.paypal.com'
+PAYPAL_REST_API_CLIENT_ID = base64.b64decode('')
+PAYPAL_REST_API_SECTRET = base64.b64decode('')
+PAYPAL_REST_API_ACCESS_TOKEN = base64.b64decode('')
+PAYPAL_REST_API_APP_ID = base64.b64decode('')
+
 PICASA_STORAGE_OPTIONS = {
     'email': 'you@example.com',
     'source': 'example',
     'password': base64.b64decode(''),
     'userid': 'exampleid',
     'cache': True
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/husky-hustle-error.log',
+        },
+    },
+    'loggers': {
+        'husky.views': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'husky.models': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
 }
