@@ -141,7 +141,7 @@ def payment(request, identifier=None, id=None):
             messages.error(request, 'Could not find Donation for ID: %s' % id)
             c['error'] = True
     c['messages'] = messages.get_messages(request)
-    return render_to_response('donation.html', c, context_instance=RequestContext(request))
+    return render_to_response('payment.html', c, context_instance=RequestContext(request))
 
 def donate(request, student_id=None):
     student = Student.objects.get(identifier=student_id)

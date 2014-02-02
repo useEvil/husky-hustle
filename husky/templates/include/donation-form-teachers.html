@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-  <div class="panel-heading"><strong>Make a Pledge to: {{ student.full_name }}</strong></div>
+  <div class="panel-heading"><strong>Make a Donation to a Teacher{% if student %} for: {{ student }}{% else %}:{% endif %}</strong></div>
   <div class="panel-body">
     <form action="/donate{% if student %}/{{ student.identifier }}{% else %}-direct{% endif %}" method="post" id="add_teacher_form" class="form-horizontal" role="form">
       {% if make_donation %}<input type="hidden" name="make_donation" value="1" />{% endif %}
@@ -57,11 +57,11 @@
       <div class="form-group">
         <label class="col-sm-3 control-label" for="teacher">Teacher:</label>
         <div class="col-sm-4">
-          <input id="id_first_name" type="text" name="first_name" value="{{ form.first_name.value }}" style="display: none;" />
+          <input id="id_first_name" class="form-control" type="text" name="first_name" value="{{ form.first_name.value }}" style="display: none;" />
           <select id="id_teacher" class="form-control to-teacher" name="teacher">
             <option value="">Select Teacher</option>
             {% for teacher in teachers_donate %}
-            <option value="{{ teacher.full_name }}">{{ teacher }}</option>
+            <option value="{{ teacher.full_name }}" {% if teacher == student.teacher %}selected{% endif %}>{{ teacher }}</option>
             {% endfor %}
           </select>
         </div>
