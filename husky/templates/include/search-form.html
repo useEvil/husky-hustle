@@ -3,15 +3,24 @@
 <span>Your search for <strong>"{{ search|safe }}"</strong> found <strong>{{ students|length }}</strong> results:</span>
 <table class="table table-hover table-striped">
   <tr>
-    <th>Student</th><th>Grade</th><th>Teacher</th><th colspan="2">&nbsp;</th>
+    <th>Student</th><th>Teacher</th><th>&nbsp;</th>
   </tr>
   {% for student in students %}
   <tr>
-    <td><a href="{{ student.donate_url }}" id="student-{{ student.identifier }}">{{ student.full_name }}</a></td>
-    <td>{{ student.teacher.grade }}</td>
+    <td><a href="{{ student.donate_url }}" id="student-{{ student.identifier }}">{{ student.full_name }}</a> ({{ student.teacher.grade }})</td>
     <td>{{ student.teacher.full_name }} ({{ student.teacher.room_number }})</td>
-    <td><a href="{{ student.donate_url }}" class="make-donation" title="Use this option if you want to make a pledge to this student">Make a Pledge</a></td>
-    <td><a href="#" class="make-payment" id="{{ student.identifier }}" action="{{ student.payment_url }}" data-toggle="modal" data-target="#modal-box-donation" title="Use this option if you need to make a payment for pledge you've already made.">Make a Payment</a></td>
+    <td>
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          Selection <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="{{ student.donate_url }}" class="make-donation" title="Use this option if you want to make a pledge to this student">Make a Pledge</a></li>
+          <li><a href="#"><a href="#" class="make-payment" id="{{ student.identifier }}" action="{{ student.payment_url }}" data-toggle="modal" data-target="#modal-box-donation" title="Use this option if you need to make a payment for pledge you've already made.">Make a Payment</a></a></li>
+          <li><a href="/teacher-donation/{{ student.identifier }}">Donate to a Teacher</a></li>
+        </ul>
+      </div>
+    </td>
   </tr>
   {% endfor %}
 </table>

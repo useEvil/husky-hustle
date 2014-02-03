@@ -494,7 +494,7 @@ class Donation(models.Model):
            amount = self.donation * (self.student.laps or 0)
            return CurrencyField().to_python(amount)
         else:
-            return self.donation
+            return CurrencyField().to_python(self.donation)
 
     def bar_height(self):
         try:

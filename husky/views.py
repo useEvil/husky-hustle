@@ -164,9 +164,9 @@ def donate(request, student_id=None):
                     last_name=request.POST.get('last_name'),
                     email_address=request.POST.get('email_address'),
                     phone_number=request.POST.get('phone_number'),
-                    donation=request.POST.get('donation'),
+                    donation=float(request.POST.get('donation')),
+                    per_lap=int(request.POST.get('per_lap')) or 0,
                     date_added=date.datetime.now(pytz.utc),
-                    per_lap=request.POST.get('per_lap') or 0,
                     student=student,
                 )
                 donation.save()

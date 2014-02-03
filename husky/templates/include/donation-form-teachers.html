@@ -57,7 +57,7 @@
       <div class="form-group">
         <label class="col-sm-3 control-label" for="teacher">Teacher:</label>
         <div class="col-sm-4">
-          <input id="id_first_name" class="form-control" type="text" name="first_name" value="{{ form.first_name.value }}" style="display: none;" />
+          <input id="id_first_name" class="form-control" type="text" name="first_name" value="{% firstof form.first_name.value student.teacher.last_name %}" style="display: none;" />
           <select id="id_teacher" class="form-control to-teacher" name="teacher">
             <option value="">Select Teacher</option>
             {% for teacher in teachers_donate %}
