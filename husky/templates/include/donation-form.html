@@ -6,6 +6,33 @@
       {% if from_account %}<input type="hidden" name="from_account" value="1" />{% endif %}
       {% csrf_token %}
 
+      {% if not student %}
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="id_for_student">Student:</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" name="student_first_name" value="" placeholder="First Name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="id_for_student">&nbsp;</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" name="student_last_name" value="" placeholder="Last Name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="id_for_student">&nbsp;</label>
+        <div class="col-sm-4">
+          <select id="student_teacher_id" class="form-control" name="student_teacher_id">
+            <option value="">Select Student's Teacher</option>
+            {% for teacher in teachers %}
+            <option value="{{ teacher.id }}">{{ teacher }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="clearfix">&nbsp;</div>
+      {% endif %}
+
       <div class="form-group">
         <label class="col-sm-3 control-label" for="form_id_first_name"{% if form.first_name.errors %} class="error"{% endif %}>First Name:</label>
         <div class="col-sm-4">
@@ -46,10 +73,10 @@
         <div class="col-sm-4">
           <div class="btn-group" data-toggle="buttons">
             <label class="btn btn-info">
-              <input type="radio" name="per_lap" id="per_lap_1" value="1"> Per Lap
+              <input type="radio" name="per_lap" id="per_lap_1" value="1" /> Per Lap
             </label>
-            <label class="btn btn-info">
-              <input type="radio" name="per_lap" id="per_lap_2" value="0"> Flat
+            <label class="btn btn-info active">
+              <input type="radio" name="per_lap" id="per_lap_2" value="0" checked="checked" /> Flat
             </label>
           </div>
         </div>
