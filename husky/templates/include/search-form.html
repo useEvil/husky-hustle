@@ -1,6 +1,8 @@
 {% load custom_filters %}
 {% if students %}
-<span>Your search for <strong>"{{ search|safe }}"</strong> found <strong>{{ students|length }}</strong> results:</span>
+<div class="alert alert-success">
+  Your search for <strong>"{{ search|safe }}"</strong> found <strong>{{ students|length }}</strong> results.
+</div>
 <table class="table table-hover table-striped">
   <tr>
     <th>Student</th><th class="visible-md">Teacher</th><th>&nbsp;</th>
@@ -59,7 +61,7 @@
 {% endif %}
 <div class="clearfix">&nbsp;</div>
 {% if form.non_field_errors %}
-<div class="alert alert-warning">{{ form.non_field_errors }}</dib>
+<div class="alert alert-danger">{{ form.non_field_errors }}</dib>
 {% endif %}
 
 <div class="panel panel-default">
