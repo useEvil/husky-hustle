@@ -334,7 +334,7 @@ def results(request, type=None, grade=None):
         page_title='Results',
         path='/nav/results',
         type=type or 'all',
-        id=int(request.GET.get('id')) or 0,
+        id=request.GET.get('id') and int(request.GET.get('id')) or 0,
     ))
     if 'admin' in request.path:
         if request.GET.get('id'):
@@ -355,7 +355,7 @@ def reporting(request, type=None):
     c = Context(dict(
         page_title='Reporting',
         type=type,
-        id=int(request.GET.get('id')) or 0,
+        id=request.GET.get('id') and int(request.GET.get('id')) or 0,
     ))
     return render_to_response('admin/chart.html', c, context_instance=RequestContext(request))
 
@@ -521,8 +521,8 @@ def reset_complete(request):
 
 @never_cache
 def json(request, student_id=None):
-    offset = int(request.GET.get('page')) or 1
-    limit = int(request.GET.get('rp')) or 30
+    offset = request.GET.get('page') and int(request.GET.get('page')) or 1
+    limit = request.GET.get('rp') and int(request.GET.get('rp')) or 30
     query = request.GET.get('query') or None
     field = request.GET.get('qtype') or None
     sortname = request.GET.get('sortname') or 'id'
@@ -564,7 +564,7 @@ def reports(request, type=None):
     elif type == 'most-donations-by-student-by-grade':
         json = Donation().reports_most_donations_by_student_by_grade()
     elif type == 'donations-by-teacher':
-        id = int(request.GET.get('id')) or 0
+        id = request.GET.get('id') and int(request.GET.get('id')) or 0
         json = Donation().reports_donations_by_teacher(id)
     elif type == 'download-raffle-tickets':
         winner = request.GET.get('winner') or None

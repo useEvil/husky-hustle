@@ -3,12 +3,12 @@
 <span>Your search for <strong>"{{ search|safe }}"</strong> found <strong>{{ students|length }}</strong> results:</span>
 <table class="table table-hover table-striped">
   <tr>
-    <th>Student</th><th class="visible-md">Teacher</th><th>&nbsp;</th>
+    <th>Student</th><th class="hidden-xs">Teacher</th><th>&nbsp;</th>
   </tr>
   {% for student in students %}
   <tr>
     <td><a href="{{ student.donate_url }}" id="student-{{ student.identifier }}">{{ student.full_name }}</a> ({{ student.teacher.grade }})</td>
-    <td class="visible-md">{{ student.teacher.full_name }} ({{ student.teacher.room_number }})</td>
+    <td class="hidden-xs">{{ student.teacher.full_name }} ({{ student.teacher.room_number }})</td>
     <td>
       <div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
