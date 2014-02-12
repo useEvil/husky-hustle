@@ -72,24 +72,25 @@ def student_donation(request, identifier=None):
     ))
     if identifier == 'search':
         c['search'] = True
-        first_name = request.GET.get('student_first_name') or None
-        last_name = request.GET.get('student_last_name') or None
-        teacher_name = request.GET.get('teacher_last_name') or None
-        if first_name or last_name or teacher_name:
-            if first_name and last_name:
-                c['search'] = '%s %s' % (first_name, last_name)
-            else:
-                c['search'] = first_name or last_name or teacher_name
+        if request.GET:
+            first_name = request.GET.get('student_first_name') or None
+            last_name = request.GET.get('student_last_name') or None
+            teacher_name = request.GET.get('teacher_last_name') or None
+            if first_name or last_name or teacher_name:
+                if first_name and last_name:
+                    c['search'] = '%s %s' % (first_name, last_name)
+                else:
+                    c['search'] = first_name or last_name or teacher_name
 
-            students = Student().find(first_name, last_name, teacher_name)
-            if students.count():
-                c['students'] = students
+                students = Student().find(first_name, last_name, teacher_name)
+                if students.count():
+                    c['students'] = students
+                else:
+                    messages.error(request, 'Could not find Records matching: %s' % (c['search']))
+                    c['error'] = True
             else:
-                messages.error(request, 'Could not find Records matching: %s' % (c['search']))
+                messages.error(request, 'You must provide a first or last name')
                 c['error'] = True
-        else:
-            messages.error(request, 'You must provide a first or last name')
-            c['error'] = True
     elif identifier:
         try:
             c['student'] = Student.objects.get(identifier=identifier)
