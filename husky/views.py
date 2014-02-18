@@ -445,7 +445,7 @@ def paid(request, donation_id=None):
         try:
             result = getHttpRequest(settings.PAYPAL_IPN_URL, 'cmd=_notify-validate&%s' % query)
         except Exception, e:
-            printLog('Failed IPN handshake')
+            logger.debug('Failed IPN handshake')
     if result == 'VERIFIED':
         data = []
         for id in donation_id.split(','):
@@ -454,14 +454,14 @@ def paid(request, donation_id=None):
                 object.paid = True
                 object.donated = object.total()
                 object.save()
-                messages.success(request, 'Successfully set Sponsor to Paid')
+                logger.debug('Successfully set Sponsor to Paid')
                 c['code'] = result
                 c['query'] = query
                 c['name'] = object.full_name()
                 c['amount'] = object.donated
                 data.append(_send_email_teamplate('paid', c, 1))
             except Exception, e:
-                messages.error(request, 'Failed to set Sponsor to Paid: %s' % str(e))
+                logger.debug('Failed to set Sponsor to Paid: %s' % str(e))
         _send_mass_mail(data)
     elif result:
         c['code'] = result
@@ -471,7 +471,7 @@ def paid(request, donation_id=None):
         c['subject'] = 'Hicks Canyon Jog-A-Thon: Payment Failed'
         _send_email_teamplate('paid', c)
     elif regexp.match('[^\d,]+', donation_id):
-        messages.success(request, 'Successfully Received Payment')
+        logger.debug('Successfully Received Payment')
     else:
         for id in donation_id.split(','):
             try:
@@ -479,9 +479,9 @@ def paid(request, donation_id=None):
                 object.paid = True
                 object.donated = object.total()
                 object.save()
-                messages.success(request, 'Successfully set Sponsor to Paid')
+                logger.debug('Successfully set Sponsor to Paid')
             except Exception, e:
-                messages.error(request, 'Failed to set Sponsor to Paid: %s' % str(e))
+                logger.debug('Failed to set Sponsor to Paid: %s' % str(e))
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'code': result}), mimetype='application/json')
 
 @csrf_exempt
