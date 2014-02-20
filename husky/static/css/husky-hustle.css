@@ -65,6 +65,10 @@ ul {
     top: 0;
     width: 50%; /* 6 columns */
   }
+
+  .social-icon {
+    width: 48px;
+  }
 }
 
 /* ---------- Hoverbox styles start here ----------------------- */
@@ -343,7 +347,7 @@ ul {
   border-top-color: #ffffff;
   border-bottom-color: #ffffff;
 }
-@media (max-width: 767) {
+@media (max-width: 767px) {
   .navbar-custom .navbar-nav .open .dropdown-menu > li > a {
     color: #ffffff;
   }
