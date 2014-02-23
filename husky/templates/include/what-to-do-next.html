@@ -3,12 +3,12 @@
 {% endif %}
 <h4>Spread the word and invite your family and friends to sponsor your student.</h4>
 <ul id="next-to-do">
-  <li><span src="{{ student.facebook_share_url }}" class="post-to-social post">Share with your Family/Friends on Facebook<span></li>
-  <li><span src="{{ student.twitter_share_url }}" class="post-to-social post">Share with your Family/Friends on Twitter</span></li>
-  <li><span src="{{ student.google_share_url }}" class="post-to-social post">Share with your Family/Friends on Google+</span></li>
-  <li><span class="show-invite post" data-toggle="modal" data-target="#modal-box-invite">Share with your Family/Friends via Email</span></li>
-  <li><a href="{{ student.donation_sheet_url }}" title="Print Form" target="_print">Print {{ student.first_name }}'s Donation sheet</a></li>
-  <li><a href="/teacher-donation/{{ student.identifier }}">Make a Donation to a Teacher</a></li>
+  <li><span src="{{ student.facebook_share_url }}" class="post-to-social post">Share with your family/friends on Facebook<span></li>
+  <li><span src="{{ student.twitter_share_url }}" class="post-to-social post">Share with your family/friends on Twitter</span></li>
+  <li><span src="{{ student.google_share_url }}" class="post-to-social post">Share with your family/friends on Google+</span></li>
+  <li><span class="show-invite post" data-toggle="modal" data-target="#modal-box-invite">Share with your family/friends via Email</span></li>
+  <li><a href="{{ student.donation_sheet_url }}" title="Print Form" target="_print">Print {{ student.first_name }}'s donation sheet</a></li>
+  <li><a href="/teacher-donation/{{ student.identifier }}">Make a donation to a teacher</a></li>
   <li id="next-to-do-social">
     <span src="{{ student.facebook_share_url }}" class="post-to-social post"><img src="/static/images/facebook-share-button.png" width="60" /></span>
     <span><a href="{{ student.twitter_share_url }}" class="twitter-hashtag-button" data-related="HuskyHustle" data-url="{{ student.donate_url }}">Post to Twitter #HuskyHustle</a></span>

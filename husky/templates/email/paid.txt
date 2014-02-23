@@ -1,5 +1,6 @@
 {% autoescape off %}
-{{ name }}, has {% if amount %}successfully{% else %}unsuccessfully{% endif %} made a payment of {{ amount }}.
+{% load humanize %}
+{{ name }}, has {% if amount %}successfully{% else %}unsuccessfully{% endif %} made a payment of {{ amount|floatformat:2|intcomma }}.
 
 {{ code }}
 {{ query }}
