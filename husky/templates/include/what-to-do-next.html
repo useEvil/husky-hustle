@@ -1,4 +1,7 @@
+{% if not next %}
 <h4>What to do Next:</h4>
+{% endif %}
+<h4>Spread the word and invite your family and friends to sponsor your student.</h4>
 <ul id="next-to-do">
   <li><span src="{{ student.facebook_share_url }}" class="post-to-social post">Share with your Family/Friends on Facebook<span></li>
   <li><span src="{{ student.twitter_share_url }}" class="post-to-social post">Share with your Family/Friends on Twitter</span></li>
