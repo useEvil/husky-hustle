@@ -38,17 +38,16 @@
             {% include "include/donation-form-teachers.html" %}
             {% else %}
             {% include "include/donation-form.html" %}
-            {% include "include/search-form.html" %}
-            <h3><a href="/teacher-donation/{{ student.identifier }}">Make a Donation to the Student's Teacher</a></h3>
+            <h3 class="alert alert-info"><a href="/teacher-donation/{{ student.identifier }}">Make a donation to the student's teacher</a></h3>
             {% endif %}
           {% else %}
             {% include "include/search-form.html" %}
             <br class="clearfix" />
             <div class="panel panel-default">
-              <div class="panel-heading"><strong>Make a Donation Directly</strong></div>
+              <div class="panel-heading"><strong>Make a donation directly</strong></div>
               <div class="panel-body">
-                <a href="/student-donation/">Make a Donation to a Student</a><br />
-                <a href="/teacher-donation/">Make a Donation to a Teacher</a>
+                <a href="/student-donation/">Make a donation to a student</a><br />
+                <a href="/teacher-donation/">Make a donation to a teacher</a>
               </div>
             </div>
           {% endif %}
