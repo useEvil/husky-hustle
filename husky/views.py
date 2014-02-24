@@ -481,7 +481,7 @@ def paid(request, donation_id=None):
         try:
             result = getHttpRequest(settings.PAYPAL_IPN_URL, 'cmd=_notify-validate&%s' % query)
         except Exception, e:
-            logger.debug('Failed IPN handshake')
+            logger.debug('Failed IPN handshake: %s' % str(e))
     if result == 'VERIFIED':
         data = []
         for id in donation_id.split(','):
