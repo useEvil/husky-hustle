@@ -298,6 +298,7 @@ def donate_direct(request):
 def donation_sheet(request, identifier=None, final=None):
     c = Context(dict(
         page_title='Pledge Sheet',
+        user=request.user,
         final=final,
     ))
     if identifier and identifier == 'pdf':

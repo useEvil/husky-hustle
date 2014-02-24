@@ -332,6 +332,10 @@ class Student(models.Model):
         site = Site.objects.get_current()
         return 'http://%s/donation-sheet/%s' % (site.domain, self.identifier)
 
+    def invitation_url(self):
+        site = Site.objects.get_current()
+        return 'http://%s/invite/%s' % (site.domain, self.identifier)
+
     def payment_url(self):
         site = Site.objects.get_current()
         return 'http://%s/make-payment/%s' % (site.domain, self.identifier)
@@ -339,6 +343,10 @@ class Student(models.Model):
     def donate_url(self):
         site = Site.objects.get_current()
         return 'http://%s/student-donation/%s' % (site.domain, self.identifier)
+
+    def donate_teacher_url(self):
+        site = Site.objects.get_current()
+        return 'http://%s/teacher-donation/%s' % (site.domain, self.identifier)
 
     def manage_url(self):
         site = Site.objects.get_current()
@@ -833,9 +841,7 @@ class Donation(models.Model):
         return data
 
     def encrypted_block(self, data=None):
-        logger.debug('==== data1 [%s]'%(data))
         if not data: data = self.button_data()
-        logger.debug('==== data2 [%s]'%(data))
         paypal = PayPal()
         return paypal.encrypt(data)
 

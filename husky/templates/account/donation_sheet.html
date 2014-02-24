@@ -20,8 +20,8 @@
       .bold {font-weight: bold;}
       .underline {text-decoration: underline;}
       .center {text-align: center;}
-      .name {width: 30%;}
-      .phone {width: 20%;}
+      .name {width: 20%;}
+      .phone {width: 30%;}
       .office {width: 15%;}
       #wrapper {margin: 20px;width: 1180px;position: relative;}
       #content {color: #3D3D3D;padding: 5px 15px 15px 15px;width: 1110px;}
@@ -92,7 +92,7 @@
                 {% for sponsor in student.sponsors_flat %}
                 <tr>
                   <td class="bold">{{ sponsor.full_name }}</td>
-                  <td>{{ sponsor.phone_number }}</td>
+                  <td>{% if user.is_superuser %}{{ sponsor.phone_number }} - {{ sponsor.email_address }}{% else %}&nbsp;{% endif %}</td>
                   <td class="amount">${{ sponsor.donation|floatformat:2|intcomma }}</td>
                   <td>&nbsp;</td>
                   <td>{% if sponsor.paid %}Yes{% else %}No{% endif %}</td>
@@ -158,7 +158,7 @@
                 {% for sponsor in student.sponsors_perlap %}
                 <tr>
                   <td class="bold">{{ sponsor.full_name }}</td>
-                  <td>{{ sponsor.phone_number }}</td>
+                  <td>{% if user.is_superuser %}{{ sponsor.phone_number }} - {{ sponsor.email_address }}{% else %}&nbsp;{% endif %}</td>
                   <td class="amount">${{ sponsor.donation|floatformat:2|intcomma }}{% if sponsor.laps %}*{{ sponsor.laps }}{% else %} <span class="foot-note">per lap</span>{% endif %}</td>
                   <td>&nbsp;</td>
                   <td class="center">{% if sponsor.paid %}Yes{% else %}No{% endif %}</td>

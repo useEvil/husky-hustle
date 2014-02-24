@@ -19,8 +19,9 @@
         <ul class="dropdown-menu" role="menu">
           <li><a href="{{ student.donate_url }}" class="make-donation" title="Use this option if you want to make a pledge to this student">Make a Pledge</a></li>
           <li><a href="#"><a href="#" class="make-payment" id="{{ student.identifier }}" action="{{ student.payment_url }}" data-toggle="modal" data-target="#modal-box-donation" title="Use this option if you need to make a payment for pledge you've already made.">Make a Payment</a></a></li>
-          <li><a href="/teacher-donation/{{ student.identifier }}">Donate to a Teacher</a></li>
-          <li><a href="/invite/{{ student.identifier }}">Send Invitations</a></li>
+          <li><a href="{{ student.donate_teacher_url }}">Donate to a Teacher</a></li>
+          <li><a href="{{ student.invitation_url }}">Send Invitations</a></li>
+          <li><a href="{{ student.donation_sheet_url }}" target="_print">Donation Sheet</a></li>
         </ul>
       </div>
     </td>

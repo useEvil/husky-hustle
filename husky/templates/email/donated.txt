@@ -10,6 +10,10 @@ They chose to donate ${{ amount|floatformat:2|intcomma }} for each lap.
 They chose to donate a flat amount of ${{ amount|floatformat:2|intcomma }}.
 {% endif %}
 
+You can view your student's pledges by using this link:
+
+{{ donation_sheet_url }}
+
 Regards,
 
 The Husky Hustle Team
