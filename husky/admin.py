@@ -137,8 +137,13 @@ class LinkAdmin(admin.ModelAdmin):
     list_editable = ['status']
 
 class PledgeAdmin(admin.ModelAdmin):
+    def student(obj):
+        return obj.donation.student
+    student.allow_tags = True
+    student.short_description = "Student"
+
     fields = ['email_address', 'donation']
-    list_display = ['email_address', 'donation']
+    list_display = ['email_address', 'donation', student]
     search_fields = ['email_address']
 
 admin.site.unregister(User)

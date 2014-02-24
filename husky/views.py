@@ -271,6 +271,11 @@ def donate_direct(request):
                     student=student,
                 )
                 donation.save()
+                pledge = Pledge(
+                    email_address=request.POST.get('email_address'),
+                    donation=donation,
+                )
+                pledge.save()
                 messages.success(request, 'Thank you for making a Pledge')
                 c['success'] = True
                 c['donate_url'] = student.donate_url()

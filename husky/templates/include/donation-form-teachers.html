@@ -7,7 +7,6 @@
       <input type="hidden" name="teacher_donation" value="1" />
       <input type="hidden" name="last_name" value="teacher" />
       <input type="hidden" name="phone_number" value="(000) 000-0000" />
-      <input type="hidden" name="email_address" value="_teacher_@huskyhustle.com" />
       <input type="hidden" name="per_lap" value="0" />
       {% csrf_token %}
 
@@ -91,6 +90,13 @@
         <label class="col-sm-3 control-label" for="id_donation"{% if form.donation.errors %} class="error"{% endif %}>Donation:</label>
         <div class="col-sm-2">
           <input id="id_donation" type="text" name="donation" value="{{ form.donation.value }}" class="form-control required" placeholder="0.00" readonly="readonly" />{% if form.donation.errors %}<span class="pad-left10 error">* required</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="form_id_email_address"{% if form.email_address.errors %} class="error"{% endif %}>Your Email Address:</label>
+        <div class="col-sm-4">
+          <input id="form_id_email_address" type="text" name="email_address" value="{{ form.email_address.value }}" class="form-control required" placeholder="email@examples.com" />{% if form.email_address.errors %}<span class="pad-left10 error">* required</span>{% endif %}
         </div>
       </div>
 
