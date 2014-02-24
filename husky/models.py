@@ -466,7 +466,7 @@ class Donation(models.Model):
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    email_address = models.CharField(max_length=100, default='_student_@huskyhustle.com')
+    email_address = models.CharField(max_length=100, default='_sponsor_@huskyhustle.com')
     phone_number = models.CharField(max_length=25, blank=True, null=True)
     student = models.ForeignKey(Student, related_name='sponsors')
     donation = CurrencyField(blank=True, null=True)
@@ -558,7 +558,7 @@ class Donation(models.Model):
     def get_total(self, ids=None):
         try:
             donation = Donation.objects.filter(id__in=ids).aggregate(total=Sum('donated'))
-            return donation['total']
+            return CurrencyField().to_python(donation['total'])
         except Exception, e:
             return 0
 
@@ -833,9 +833,21 @@ class Donation(models.Model):
         return data
 
     def encrypted_block(self, data=None):
+        logger.debug('==== data1 [%s]'%(data))
         if not data: data = self.button_data()
+        logger.debug('==== data2 [%s]'%(data))
         paypal = PayPal()
         return paypal.encrypt(data)
+
+
+class Pledge(models.Model):
+
+    email_address = models.CharField(max_length=100, blank=False, null=False, default='_sponsor_@huskyhustle.com')
+    donation = models.ForeignKey(Donation, related_name='pledges')
+
+    def get_donations(self, email_address=None):
+        if not email_address: return
+        return Pledge.objects.filter(email_address=email_address)
 
 
 class DonationForm(forms.Form):

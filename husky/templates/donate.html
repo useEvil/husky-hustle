@@ -17,6 +17,12 @@
             <li>You will be notified via email at a later date on how to make your payment.</li>
             {% else %}
             <li>
+              <p>
+                If you would like to make another donation and make one final payment.  You can use the link below when you are ready:
+                <h4 class="text-center"><a href="/make-payment/{{ student.identifier }}?sponsor={{ email_address }}">Make Final Payment</a></h4>
+              </p>
+            </li>
+            <li>
               {% include "include/encrypted-paypal-button.html" %}
             </li>
             {% endif %}

@@ -6,6 +6,9 @@ from M2Crypto import BIO, SMIME, X509
 
 from django.conf import settings
 
+import logging
+logger = logging.getLogger(__name__)
+
 cwd = os.path.dirname(os.path.realpath(__file__))
 PAYPAL_PAYPAL_CERT = os.path.join(cwd, settings.PAYPAL_PAYPAL_CERT)
 PAYPAL_PRIVATE_KEY = os.path.join(cwd, settings.PAYPAL_PRIVATE_KEY)

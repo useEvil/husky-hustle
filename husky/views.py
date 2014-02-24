@@ -28,7 +28,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.conf import settings
 
-from husky.models import Student, Donation, Teacher, Grade, Album, Photo, Content, Blog, Message, Link, Calendar, ContactForm, DonationForm
+from husky.models import Student, Pledge, Donation, Teacher, Grade, Album, Photo, Content, Blog, Message, Link, Calendar, ContactForm, DonationForm, CurrencyField
 from husky.helpers import *
 
 logger = logging.getLogger(__name__)
@@ -120,7 +120,7 @@ def teacher_donation(request, identifier=None):
 
 def payment(request, identifier=None, id=None):
     c = Context(dict(
-        page_title='Make a Donation',
+        page_title='Make a Payment',
     ))
     try:
         c['student'] = Student.objects.get(identifier=identifier)
@@ -131,8 +131,23 @@ def payment(request, identifier=None, id=None):
     donation = Donation()
     if request.GET.get('amount'):
         if request.GET.get('id') and not id: id = request.GET.get('id')
-        c['encrypted_block'] = donation.encrypted_block(donation.button_data(request.GET.get('amount'), id))
-        c['amount'] = request.GET.get('amount')
+        amount = CurrencyField().to_python(request.GET.get('amount'))
+        c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, id))
+        c['amount'] = amount
+    elif request.GET.get('sponsor'):
+        sponsors = Pledge.objects.filter(email_address=request.GET.get('sponsor')).all()
+        total_due = 0
+        ids = []
+        for sponsor in sponsors:
+            if sponsor.donation.paid: continue
+            if sponsor.donation.per_lap:
+                total_due += sponsor.donation.donation * (sponsor.donation.student.laps or 0)
+            else:
+                total_due += sponsor.donation.donation
+            ids.append(str(sponsor.donation.id))
+        amount = CurrencyField().to_python(total_due)
+        c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, ",".join(ids)))
+        c['amount'] = amount
     elif len(ids) > 1:
         amount = donation.get_total(ids)
         c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, id))
@@ -143,7 +158,8 @@ def payment(request, identifier=None, id=None):
             c['donation'] = donation
             c['encrypted_block'] = donation.encrypted_block()
             c['amount'] = donation.total()
-        except:
+        except Exception, e:
+            logger.debug('==== c [%s]'%(e))
             messages.error(request, 'Could not find Donation for ID: %s' % id)
             c['error'] = True
     c['messages'] = messages.get_messages(request)
@@ -185,6 +201,11 @@ def donate(request, student_id=None):
                     student=student,
                 )
                 donation.save()
+                pledge = Pledge(
+                    email_address=request.POST.get('email_address'),
+                    donation=donation,
+                )
+                pledge.save()
                 messages.success(request, 'Thank you for making a Pledge')
                 c['success'] = True
                 c['donate_url'] = student.donate_url()
