@@ -1,6 +1,6 @@
 {% load humanize %}
 <style>
-	.search-results, .child-list {
+	.search-results, .student-list {
 		border-collapse: collapse;
 		text-align: left;
 	}
@@ -20,7 +20,7 @@
 				<th width="350" nowrap="nowrap">Date</th>
 				<th width="350" align="left" nowrap="nowrap">Name</th>
 				<th width="350" align="left" nowrap="nowrap">Parent</th>
-				<th width="350" align="left" nowrap="nowrap">Child</th>
+				<th width="350" align="left" nowrap="nowrap">Student</th>
 				<th width="350" align="left" nowrap="nowrap">Teacher</th>
 				<th width="350" align="right">Donation</th>
 				<th width="350" align="center">Type</th>
@@ -33,7 +33,7 @@
 				<td>{{ result.date|safe }}</td>
 				<td>{{ result.name|safe }}</td>
 				<td>{{ result.parent|safe }}</td>
-				<td>{{ result.child|safe }}</td>
+				<td>{{ result.student|safe }}</td>
 				<td>{{ result.teacher|safe }}</td>
 				<td align="right">{% if result.donation %}${{ result.donation|floatformat:2|intcomma }}{% endif %}</td>
 				<td>{{ result.type|safe }}</td>

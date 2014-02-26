@@ -22,8 +22,8 @@
 					{% endif %}
 					<div class="box">
 						<h3><a href="/accounts/profile/">Profile</a> &gt; Donation List</h3>
-						{% if child %}
-						<span>{{ child }}:  In room {{ child.teacher.room_number }} with {{ child.teacher.full_name }}{% if child.laps %} ran {{ child.laps }} laps.{% endif %}</span>
+						{% if student %}
+						<span>{{ student }}:  In room {{ student.teacher.room_number }} with {{ student.teacher.full_name }}{% if student.laps %} ran {{ student.laps }} laps.{% endif %}</span>
 						{% endif %}
 					</div>
 				</div>
@@ -50,7 +50,7 @@
 							<li>
 								Sample:
 								<pre style="font-size: 0.8em;line-height: 1.2em;">
-									{% include "email/reminder.txt" with name='"Donor Name"' child_name='"Student Name"' payment_url='"http://payment_url/"' custom_message='"Your Custom Message"' %}
+									{% include "email/reminder.txt" with name='"Donor Name"' student_name='"Student Name"' payment_url='"http://payment_url/"' custom_message='"Your Custom Message"' %}
 								</pre>
 							</li>
 							<li>
@@ -85,7 +85,7 @@
 				</form>
 			</div>
 		</div>
-	{% if child %}
+	{% if student %}
 		<div id="overlay-box-edit" class="overlay-box" title="Edit Sponsor" style="z-index: 1010;">
 			<div class="overlay-content">
 				{% include "include/donation-form.html" with edit=1 %}
@@ -144,7 +144,7 @@
 					buttons: [
 						{name: 'Reload', bclass: 'reset', onpress: reloadPage},
 						{separator: true},
-						{% if child %}
+						{% if student %}
 						{name: 'Add Sponsor', bclass: 'add', onpress: showFormDonate},
 						{separator: true},
 						{name: 'Teacher Donation', bclass: 'add', onpress: showFormTeacher},
@@ -152,8 +152,8 @@
 						{% endif %}
 						{name: 'Delete', bclass: 'delete', onpress: deleteSponsors},
 						{separator: true},
-						{% if child %}
-						{name: 'Print', bclass: 'print', onpress: function() { window.open('/donation_sheet/{{ child.identifier }}', '_print') }},
+						{% if student %}
+						{name: 'Print', bclass: 'print', onpress: function() { window.open('/donation_sheet/{{ student.identifier }}', '_print') }},
 						{separator: true},
 						{% endif %}
 						{name: 'Send Thank You', bclass: 'reminder', onpress: sendThanks},

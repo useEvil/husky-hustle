@@ -1,7 +1,7 @@
 {% autoescape off %}{% if is_parent %}
 Dear {{ parent_name }},
 
-You are getting this email because you have sponsors for {{ child_name }} that have yet to make 
+You are getting this email because you have sponsors for {{ student_name }} that have yet to make 
 a payment for their pledge.  If you can, please forward the message below to your sponsor.  If 
 you have already contacted the sponsor and they have submitted their payment or will not be making 
 a payment, please respond to let us know and we will reconcile with our records.
@@ -19,8 +19,8 @@ husky@huskyhustle.com
 Dear {{ name }},
 {% if custom_message %}{{ custom_message }}
 {% endif %}
-You are getting this email because you have sponsored {{ child_name }} for the Hicks Canyon 
-Husky Hustle.  {% if child_laps %}{{ child_name }} ran an amazing {{ child_laps }} laps.{% endif %}
+You are getting this email because you have sponsored {{ student_name }} for the Hicks Canyon 
+Husky Hustle.  {% if student_laps %}{{ student_name }} ran an amazing {{ student_laps }} laps.{% endif %}
 
 Our records indicate that your pledge has not been funded.  Please refer to the link below to 
 make your payment.  Your contribution ensures that the students at Hicks Canyon will continue 

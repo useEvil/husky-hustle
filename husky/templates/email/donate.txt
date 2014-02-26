@@ -2,7 +2,7 @@
 {% load humanize %}
 Dear {{ full_name }},
 
-Thank you for sponsoring {{ child_full_name }} and Hicks Canyon.
+Thank you for sponsoring {{ student_full_name }} and Hicks Canyon.
 {% if is_per_lap %}
 You chose to donate ${{ amount|floatformat:2|intcomma }} for each lap.
 {% else %}
@@ -14,7 +14,7 @@ We will periodically send updates to your email address at: {{ email_address }}.
 {% if is_per_lap %}
 Upon the conclusion of the Jog-A-Thon we will email you instructions on how to make your payment.
 {% endif %}
-If you would like to invite family and friends to sponsor {{ child_full_name }}, you can forward the link below:
+If you would like to invite family and friends to sponsor {{ student_full_name }}, you can forward the link below:
 
 {{ donate_url }}
 

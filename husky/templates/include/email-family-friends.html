@@ -11,9 +11,9 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="email_addresses" id="email_addresses_label">Email Addresses</label><br />
+            <label for="email_addresses" id="email_addresses_label">Email Addresses (comma separated)</label><br />
             <div class="col-medium-12">
-              <input type="text" class="form-control" id="email_addresses" name="email_addresses" value="" placeholder="email@example.com, email@example.com" />
+              <textarea class="form-control" id="email_addresses" name="email_addresses" rows="2" placeholder="email@example.com, email@example.com"></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -37,7 +37,7 @@ You can use the following url to donate directly to {{ student.first_name }}:
         <div class="clearfix">&nbsp;</div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel_invite">Close</button>
-          <button type="submit" class="btn btn-primary submit-form" id="submit_invite" data-loading-text=" Searching... ">Send Invite</button>
+          <button type="submit" class="btn btn-primary submit-form" id="submit_invite" data-loading-text=" Sending... ">Send Invite</button>
         </div>
       </form>
     </div><!-- /.modal-content -->
