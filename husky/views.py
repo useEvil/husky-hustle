@@ -188,8 +188,6 @@ def donate(request, student_id=None):
         make_donation = request.POST.get('make_donation')
         teacher_donation = request.POST.get('teacher_donation')
         per_lap = request.POST.get('per_lap')
-        logger.debug('==== get(per_lap) [%s]'%(request.POST.get('per_lap')))
-        logger.debug('==== per_lap [%s]'%(per_lap))
         form = DonationForm(request.POST)
         if form.is_valid():
             try:
