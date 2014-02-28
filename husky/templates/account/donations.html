@@ -23,7 +23,7 @@
 					<div class="box">
 						<h3><a href="/accounts/profile/">Profile</a> &gt; Donation List</h3>
 						{% if student %}
-						<span>{{ student }}:  In room {{ student.teacher.room_number }} with {{ student.teacher.full_name }}{% if student.laps %} ran {{ student.laps }} laps.{% endif %}</span>
+						<span>{{ student.list_name }}:  In room {{ student.teacher.room_number }} with {{ student.teacher.full_name }}{% if student.laps %} ran {{ student.laps }} laps.{% endif %}</span>
 						{% endif %}
 					</div>
 				</div>

@@ -790,7 +790,8 @@ def _send_email_teamplate(template, data, mass=None):
     if mass:
         return mail.EmailMessage(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']], headers={'Reply-To': data['reply_to']})
     else:
-        mail.send_mail(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']])
+        if not regexp.match('^(_teacher_|sponsor_)', data['email_address']):
+            mail.send_mail(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']])
 
 def _send_mass_mail(messages):
     connection = mail.get_connection()

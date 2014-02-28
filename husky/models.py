@@ -254,7 +254,7 @@ class Teacher(models.Model):
         students = Student.objects.filter(teacher=self).all()
         for student in students:
             donation = student.total_sum()
-            donators.append({'name': student.list_name(), 'total': float(donation['total_sum'] or 0)})
+            donators.append({'name': student.full_name(), 'total': float(donation['total_sum'] or 0)})
         donations = Donation.objects.filter(first_name__contains=self.last_name)
         totals = { }
         for index, donation in enumerate(donations):
@@ -300,10 +300,13 @@ class Student(models.Model):
     pledged = CurrencyField(blank=True, null=True)
     teacher = models.ForeignKey(Teacher, related_name='students')
     class Meta:
-        ordering = ['last_name', 'first_name']
+        ordering = ['last_name', 'first_name', 'teacher']
 
     def __unicode__(self):
-        return self.list_name()
+        return self.form_list_name()
+
+    def form_list_name(self):
+        return '%s, %s; %s' % (self.last_name, self.first_name, self.teacher)
 
     def list_name(self):
         return '%s, %s' % (self.last_name, self.first_name)

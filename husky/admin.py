@@ -75,10 +75,17 @@ class StudentAdmin(admin.ModelAdmin):
     save_on_top = True
     list_per_page = 40
 
-class ContentModelForm( forms.ModelForm ):
-    content = forms.CharField( widget=forms.Textarea(attrs={'cols': 125, 'rows': 50}) )
+class ContentModelForm(forms.ModelForm):
+    content = forms.CharField(widget=forms.Textarea(attrs={'cols': 125, 'rows': 50}))
     class Meta:
         model = Content
+
+class DonationModelForm(forms.ModelForm):
+    student = forms.IntegerField(widget=forms.Select(
+        choices=[(s.id, s.form_list_name) for s in Student.objects.all()]
+    ), label='Student')
+    class Meta:
+        model = Student
 
 class ContentAdmin(admin.ModelAdmin):
     fields = ['page', 'content', 'date_added']
@@ -94,6 +101,11 @@ class MessageAdmin(admin.ModelAdmin):
     list_display = ['title', 'content', 'date_added']
 
 class DonationAdmin(admin.ModelAdmin):
+    def list_name(obj):
+        return '<a href="/admin/husky/donation/%d/" class="nowrap">%s</a>' % (obj.student.id, obj.student.list_name())
+    list_name.allow_tags = True
+    list_name.short_description = "Student"
+
     def total_link(obj):
         if regexp.match('^(_teacher_)', obj.email_address):
             return obj.total()
@@ -103,12 +115,13 @@ class DonationAdmin(admin.ModelAdmin):
     total_link.short_description = "Total"
 
     fields = ['student', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'date_added']
-    list_display = ['student', 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'date_added', 'paid', 'paid_by']
+    list_display = ['id', list_name, 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'date_added', 'paid', 'paid_by']
     search_fields = ['email_address', 'first_name', 'last_name', 'student__first_name', 'student__last_name', 'student__teacher__last_name', 'paid_by']
     list_editable = ['per_lap', 'donation', 'paid', 'paid_by']
     list_filter = [MostDonationsListFilter]
     save_on_top = True
     list_per_page = 50
+#     form = DonationModelForm
 
 
 class UserAdmin(UserAdmin):
