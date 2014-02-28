@@ -187,6 +187,9 @@ def donate(request, student_id=None):
     if request.POST:
         make_donation = request.POST.get('make_donation')
         teacher_donation = request.POST.get('teacher_donation')
+        per_lap = request.POST.get('per_lap')
+        logger.debug('==== get(per_lap) [%s]'%(request.POST.get('per_lap')))
+        logger.debug('==== per_lap [%s]'%(per_lap))
         form = DonationForm(request.POST)
         if form.is_valid():
             try:
@@ -196,7 +199,7 @@ def donate(request, student_id=None):
                     email_address=request.POST.get('email_address'),
                     phone_number=request.POST.get('phone_number'),
                     donation=float(request.POST.get('donation')),
-                    per_lap=int(request.POST.get('per_lap')) or 0,
+                    per_lap=per_lap and int(per_lap) or 0,
                     date_added=date.datetime.now(pytz.utc),
                     student=student,
                 )
@@ -246,7 +249,8 @@ def donate_direct(request):
         if form.is_valid():
             teacher = Teacher.objects.get(pk=request.POST.get('student_teacher_id'))
             first_name = request.POST.get('student_first_name').strip()
-            last_name  = request.POST.get('student_last_name').strip()
+            last_name = request.POST.get('student_last_name').strip()
+            per_lap = request.POST.get('per_lap')
             identifier = '%s-%s-%s'%(_replace_space(first_name), _replace_space(last_name), teacher.room_number)
             try:
                 student = Student.objects.get(identifier=identifier)
@@ -265,7 +269,7 @@ def donate_direct(request):
                     last_name=request.POST.get('last_name'),
                     email_address=request.POST.get('email_address'),
                     phone_number=request.POST.get('phone_number'),
-                    per_lap=int(request.POST.get('per_lap')) or 0,
+                    per_lap=per_lap and int(per_lap) or 0,
                     donation=request.POST.get('donation'),
                     date_added=date.datetime.now(pytz.utc),
                     student=student,
