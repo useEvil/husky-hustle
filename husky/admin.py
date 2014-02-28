@@ -114,6 +114,7 @@ class DonationAdmin(admin.ModelAdmin):
     total_link.allow_tags = True
     total_link.short_description = "Total"
 
+    ordering = ('-date_added',)
     fields = ['student', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'date_added']
     list_display = ['id', list_name, 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'date_added', 'paid', 'paid_by']
     search_fields = ['email_address', 'first_name', 'last_name', 'student__first_name', 'student__last_name', 'student__teacher__last_name', 'paid_by']
