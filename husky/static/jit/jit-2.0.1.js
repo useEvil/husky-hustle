@@ -11327,6 +11327,7 @@ $jit.BarChart = new Class({
     for(var i=0, values=json.values, l=values.length; i<l; i++) {
       var val = values[i]
       var valArray = $.splat(values[i].values);
+      var nameArray = $.splat(values[i].labels);
       var acum = 0;
       ch.push({
         'id': prefix + val.label,
@@ -11335,7 +11336,7 @@ $jit.BarChart = new Class({
           'value': valArray,
           '$valueArray': valArray,
           '$colorArray': color,
-          '$stringArray': name,
+          '$stringArray': nameArray,
           '$gradient': gradient,
           '$config': config
         },
