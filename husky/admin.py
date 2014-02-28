@@ -102,7 +102,7 @@ class MessageAdmin(admin.ModelAdmin):
 
 class DonationAdmin(admin.ModelAdmin):
     def list_name(obj):
-        return '<a href="/admin/husky/donation/%d/" class="nowrap">%s</a>' % (obj.student.id, obj.student.list_name())
+        return '<a href="/admin/husky/student/%d/" class="nowrap">%s</a>' % (obj.student.id, obj.student.list_name())
     list_name.allow_tags = True
     list_name.short_description = "Student"
 
