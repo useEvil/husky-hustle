@@ -1,1 +1,1 @@
-jit-2.0.1.js
+jit-2.0.1.min.js
