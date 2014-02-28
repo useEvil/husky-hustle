@@ -102,10 +102,10 @@ class DonationAdmin(admin.ModelAdmin):
     total_link.allow_tags = True
     total_link.short_description = "Total"
 
-    fields = ['student', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'date_added', 'paid']
-    list_display = ['student', 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'date_added', 'paid']
-    search_fields = ['email_address', 'first_name', 'last_name', 'student__first_name', 'student__last_name', 'student__teacher__last_name']
-    list_editable = ['per_lap', 'donation', 'paid']
+    fields = ['student', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'date_added']
+    list_display = ['student', 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'date_added', 'paid', 'paid_by']
+    search_fields = ['email_address', 'first_name', 'last_name', 'student__first_name', 'student__last_name', 'student__teacher__last_name', 'paid_by']
+    list_editable = ['per_lap', 'donation', 'paid', 'paid_by']
     list_filter = [MostDonationsListFilter]
     save_on_top = True
     list_per_page = 50

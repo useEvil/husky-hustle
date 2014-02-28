@@ -481,6 +481,7 @@ class Donation(models.Model):
     donated = CurrencyField(blank=True, null=True)
     per_lap = models.BooleanField(null=False, default=0)
     paid = models.BooleanField(null=False, default=0)
+    paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=(('cash','cash'), ('check','check'), ('online','online')))
     date_added = models.DateTimeField(default=date.datetime.now())
     class Meta:
         ordering = ['last_name', 'first_name']
