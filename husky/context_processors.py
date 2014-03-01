@@ -11,4 +11,5 @@ def page_content(request):
         'arrow_height': donate.arrow_height(),
         'path': request.path,
         'user': request.user,
+        'return_url': request.get_full_path(),
     }

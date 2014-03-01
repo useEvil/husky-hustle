@@ -355,6 +355,10 @@ class Student(models.Model):
         site = Site.objects.get_current()
         return 'http://%s/account/%s' % (site.domain, self.identifier)
 
+    def reminder_url(self):
+        site = Site.objects.get_current()
+        return 'http://%s/reminders/%s' % (site.domain, self.identifier)
+
     def facebook_share_url(self):
         site = Site.objects.get_current()
         params = 'app_id=' + settings.FACEBOOK_APP_ID + '&link=' + self.donate_url() + '&picture=' + ('http://%s/static/images/hickslogo-1.jpg' % site.domain) + '&name=' + urllib.quote('Husky Hustle') + '&caption=' + urllib.quote('Donate to %s' % self.full_name()) + '&description=' + urllib.quote("Donate and help further our student's education.") + '&redirect_uri=' + 'http://%s/' % site.domain

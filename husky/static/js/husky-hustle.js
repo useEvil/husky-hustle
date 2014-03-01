@@ -11,6 +11,7 @@ $('.pre-set-amount').bind('change', setPreSetAmount);
 $('.to-principle').bind('change', setPreSetAmount);
 $('.to-teacher').bind('change', setPreSetAmount);
 $('#modal-box-donation').on('show.bs.modal', function(e){ makeDonation(e.relatedTarget) });
+$('#modal-box-reminder').on('show.bs.modal', function(e){ sendReminder(e.relatedTarget) });
 
 /* Overlay Functions */
 function clearMessage(out) {
@@ -348,100 +349,17 @@ function setPreSetAmount(event) {
     }
 };
 
-function sendReminders(event) {
-    var senders = false;
-    $('.set-reminder').each(
-        function () {
-            if ($(this).attr('checked') === 'checked') {
-                var id = this.id.replace( 'reminder-', '' );
-                var text = $('#row'+id+' td[abbr="last_name"]').text();
-                if (text === 'teacher') {
-                    $(this).attr('checked', false);
-                } else {
-                    senders = true;
-                }
-            }
-        }
-    );
-    if (senders) {
-        $('#reminder_form').show();
-        $('#overlay-box-reminder').dialog({
-            closeOnEscape: true,
-            minWidth: 790,
-            minHeight: 400,
-            modal: true,
-            dialogClass: 'tooltip',
-            resizable: false,
-            close: function(event, ui) { cancelForm(event, ui); }
-        });
-    } else {
-        alert('You must select sponsors to email.  You cannot send Reminders to Teachers.');
-    }
-};
-
-function sendThanks(event) {
-    var senders = false;
-    $('.set-reminder').each(
-        function () {
-            if ($(this).attr('checked') === 'checked') {
-                var id = this.id.replace( 'reminder-', '' );
-                var text = $('#row'+id+' td[abbr="last_name"]').text();
-                if (text === 'teacher') {
-                    $(this).attr('checked', false);
-                } else {
-                    senders = true;
-                }
-            }
-        }
-    );
-    if (senders) {
-        $('#thanks_form').show();
-        $('#overlay-box-thanks').dialog({
-            closeOnEscape: true,
-            minWidth: 790,
-            minHeight: 400,
-            modal: true,
-            dialogClass: 'tooltip',
-            resizable: false,
-            close: function(event, ui) { cancelForm(event, ui); }
-        });
-    } else {
-        alert('You must select sponsors to email.  You cannot send a Thank You to Teachers.');
-    }
-};
-
-function makePayment(event) {
-    var payments = 0, paid = 0, ids = [], id, text;
-    $('.set-reminder').each(
-        function () {
-            if ($(this).attr('checked') === 'checked') {
-                id   = this.id.replace( 'reminder-', '' );
-                text = $('#row'+id+' span[abbr="total"]').text();
-                if ( $('#row'+id+' .success').text() ==='Paid' ) {
-                    $(this).attr('checked', false);
-                    paid += 1;
-                }
-                payments += parseFloat(text);
-                ids.push(id);
-            }
-        }
-    );
-    if (paid) {
-        alert('You have selected one or more donations that have already been Paid.');
-    } else if (payments) {
-        if (confirm('You are about to make a payment for: $' + payments) === true) {
-            var url = window.location.href.replace( 'account', 'payment' );
-            window.location.href = url + '/' + ids.join(',') + '?amount=' + payments;
-        }
-    } else {
-        alert('You must select sponsors to make payments for.');
-    }
-};
-
 function makeDonation(object) {
+    var id = object.id.match('payment-([\\w-]+)')[1];
     $('#donation_form').attr('action', object.getAttribute('action'));
-    $('#donation_id').val(object.id);
+    $('#donation_id').val(id);
     $('#donation_title').text('Make a Payment to ' + $('#student-'+object.id).text());
+};
+
+function sendReminder(object) {
+    var id = object.id.match('reminder-([\\w-]+)')[1];
+    $('#reminder_form').attr('action', object.getAttribute('action'));
+    $('#reminder_title').text("Send a Reminder to " + $('#student-'+id).text() + "'s Sponsors ");
 };
 
 function disconnectSocial(event) {

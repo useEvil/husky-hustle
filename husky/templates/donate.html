@@ -8,7 +8,7 @@
         <ul class="messages"></ul>
         {% if messages %}
         <div class="alert alert-{% if error %}danger{% else %}success{% endif %}">
-          <ul>
+          <ul style="padding-left: 0;">
           {% for message in messages %}
           <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><strong>{{ message }}</strong></li>
           {% endfor %}

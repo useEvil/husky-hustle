@@ -19,7 +19,7 @@ husky@huskyhustle.com
 Dear {{ name }},
 {% if custom_message %}{{ custom_message }}
 {% endif %}
-You are getting this email because you have sponsored {{ student_name }} for the Hicks Canyon 
+You are receiving this email because you sponsored {{ student_name }} for the Hicks Canyon 
 Husky Hustle.  {% if student_laps %}{{ student_name }} ran an amazing {{ student_laps }} laps.{% endif %}
 
 Our records indicate that your pledge has not been funded.  Please refer to the link below to 

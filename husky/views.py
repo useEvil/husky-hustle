@@ -173,8 +173,8 @@ def payment(request, identifier=None, id=None):
     c['messages'] = messages.get_messages(request)
     return render_to_response('payment.html', c, context_instance=RequestContext(request))
 
-def invite(request, student_id=None):
-    student = Student.objects.get(identifier=student_id)
+def invite(request, identifier=None):
+    student = Student.objects.get(identifier=identifier)
     c = Context(dict(
         page_title='Invite',
         student=student,
@@ -182,8 +182,8 @@ def invite(request, student_id=None):
     c['messages'] = messages.get_messages(request)
     return render_to_response('invite.html', c, context_instance=RequestContext(request))
 
-def donate(request, student_id=None):
-    student = Student.objects.get(identifier=student_id)
+def donate(request, identifier=None):
+    student = Student.objects.get(identifier=identifier)
     make_donation = None
     teacher_donation = None
     c = Context(dict(
@@ -435,18 +435,17 @@ def emails(request):
         messages.success(request, 'Successfully Sent Emails')
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Sent', 'is_modal': is_modal}), mimetype='application/json')
 
-def reminders(request):
+def reminders(request, identifier=None):
     c = Context(dict(
         subject='Hicks Canyon Jog-A-Thon: Payment Reminder',
         domain=Site.objects.get_current().domain,
         reply_to=settings.EMAIL_HOST_USER,
     ))
-    donators = request.POST.getlist('donators')
+    student = Student.objects.get(identifier=identifier)
     if request.POST.get('custom_message'):
         c['custom_message'] = request.POST.get('custom_message')
     data = []
-    for donator in donators:
-        donation = Donation.objects.get(pk=donator)
+    for donation in student.sponsors.exclude(paid=True).all():
         c['name'] = donation.full_name()
         c['email_address'] = donation.email_address
         c['student_name'] = donation.student.full_name()
@@ -457,6 +456,8 @@ def reminders(request):
         data.append(_send_email_teamplate('reminder', c, 1))
     _send_mass_mail(data)
     messages.success(request, 'Successfully Sent Reminders')
+    if request.POST.get('return_url'):
+        return HttpResponseRedirect(request.POST.get('return_url'))
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200}), mimetype='application/json')
 
 def thanks(request):
@@ -499,14 +500,14 @@ def paid(request, donation_id=None):
                 object.paid = True
                 object.donated = object.total()
                 object.save()
-                logger.debug('Successfully set Sponsor to Paid')
+                logger.debug('Successfully set Donation to Paid for ID: %s' % id)
                 c['code'] = result
                 c['query'] = query
                 c['name'] = object.full_name()
                 c['amount'] = object.donated
                 data.append(_send_email_teamplate('paid', c, 1))
             except Exception, e:
-                logger.debug('Failed to set Sponsor to Paid: %s' % str(e))
+                logger.debug('Failed to set Donation to Paid: %s' % str(e))
         _send_mass_mail(data)
     elif result:
         c['code'] = result
@@ -516,7 +517,7 @@ def paid(request, donation_id=None):
         c['subject'] = 'Hicks Canyon Jog-A-Thon: Payment Failed'
         _send_email_teamplate('paid', c)
     elif regexp.match('[^\d,]+', donation_id):
-        logger.debug('Successfully Received Payment')
+        logger.debug('Successfully Received Payment For: %s' % donation_id)
     else:
         for id in donation_id.split(','):
             try:
@@ -524,9 +525,9 @@ def paid(request, donation_id=None):
                 object.paid = True
                 object.donated = object.total()
                 object.save()
-                logger.debug('Successfully set Sponsor to Paid')
+                logger.debug('Successfully set Donation to Paid for ID: %s' % id)
             except Exception, e:
-                logger.debug('Failed to set Sponsor to Paid: %s' % str(e))
+                logger.debug('Failed to set Donation to Paid: %s' % str(e))
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'code': result}), mimetype='application/json')
 
 @csrf_exempt
