@@ -10,4 +10,5 @@ def page_content(request):
         'bar_height': donate.bar_height(),
         'arrow_height': donate.arrow_height(),
         'path': request.path,
+        'user': request.user,
     }

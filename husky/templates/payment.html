@@ -1,11 +1,32 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block content %}
   <div class="col-xs-12 col-sm-9 col-lg-10">
     <h2>Make a Donation</h2>
-    <div class="row box-shadow" style="height: 340px;">
+    <div class="row box-shadow">
       <div class="col-lg-12">
         <h3>Thank You for becoming a sponsor for {{ student.full_name }}!</h3>
+        {% if donations %}
+        <div class="col-lg-6 table-responsive">
+          <table class="table table-hover table-striped table-condensed">
+            <tr>
+              <th>Pledged To</th>
+              <th>Amount</th>
+            </tr>
+            {% for donation in donations %}
+            <tr>
+              <td>{% if donation.last_name == 'teacher' %}{{ donation.first_name }} for {% endif %}{{ donation.student.full_name }}</td>
+              <td class="amount">${{ donation.donation|floatformat:2|intcomma }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+              <td>&nbsp;</td>
+              <td class="amount">${{ amount }}</td>
+            </tr>
+          </table>
+        </div>
+        {% endif %}
         {% include "include/encrypted-paypal-button.html" %}
       </div>
     </div><!--/row-->

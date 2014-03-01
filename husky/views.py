@@ -129,39 +129,47 @@ def payment(request, identifier=None, id=None):
         c['error'] = True
     ids = id.split(',')
     donation = Donation()
-    if request.GET.get('amount'):
-        if request.GET.get('id') and not id: id = request.GET.get('id')
-        amount = CurrencyField().to_python(request.GET.get('amount'))
-        c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, id))
-        c['amount'] = amount
-    elif request.GET.get('sponsor'):
+    amount = 0
+    if request.GET.get('sponsor'):
         sponsors = Pledge.objects.filter(email_address=request.GET.get('sponsor')).all()
         total_due = 0
         ids = []
+        donations = []
         for sponsor in sponsors:
             if sponsor.donation.paid: continue
             if sponsor.donation.per_lap:
                 total_due += sponsor.donation.donation * (sponsor.donation.student.laps or 0)
             else:
                 total_due += sponsor.donation.donation
-            ids.append(str(sponsor.donation.id))
+            ids.append(str(sponsor.donation_id))
+            donations.append(sponsor.donation)
         amount = CurrencyField().to_python(total_due)
-        c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, ",".join(ids)))
-        c['amount'] = amount
+        ids = ",".join(ids)
+        c['donations'] = donations
+    elif request.GET.get('amount'):
+        if request.GET.get('id') and not id: id = request.GET.get('id')
+        amount = CurrencyField().to_python(request.GET.get('amount'))
+        ids = id
     elif len(ids) > 1:
         amount = donation.get_total(ids)
-        c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, id))
-        c['amount'] = amount
+        ids = id
     else:
         try:
             donation = Donation.objects.get(id=id)
             c['donation'] = donation
-            c['encrypted_block'] = donation.encrypted_block()
-            c['amount'] = donation.total()
+            amount = donation.total()
+            ids = donation.id
         except Exception, e:
             logger.debug('==== c [%s]'%(e))
             messages.error(request, 'Could not find Donation for ID: %s' % id)
             c['error'] = True
+    try:
+        c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, ids))
+    except Exception, e:
+        logger.debug('==== c [%s]'%(e))
+        messages.error(request, 'Could not encrypt button for ID: %s' % id)
+        c['error'] = True
+    c['amount'] = amount
     c['messages'] = messages.get_messages(request)
     return render_to_response('payment.html', c, context_instance=RequestContext(request))
 
@@ -305,7 +313,6 @@ def donate_direct(request):
 def donation_sheet(request, identifier=None, final=None):
     c = Context(dict(
         page_title='Pledge Sheet',
-        user=request.user,
         final=final,
     ))
     if identifier and identifier == 'pdf':

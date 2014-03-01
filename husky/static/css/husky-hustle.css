@@ -510,6 +510,13 @@ div.box-shadow {
     float: right;
 }
 
+.amount {
+    font-weight: bold;
+    text-align: right;
+    width: 100px;
+}
+
+
 /* background and overlay styles */
 .background-cover {
     background: #000;
