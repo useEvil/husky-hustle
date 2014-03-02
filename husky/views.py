@@ -458,7 +458,10 @@ def reminders(request, identifier=None):
     messages.success(request, 'Successfully Sent Reminders')
     if request.POST.get('return_url'):
         return HttpResponseRedirect(request.POST.get('return_url'))
-    return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200}), mimetype='application/json')
+    elif request.POST.get('ajax'):
+        return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200}), mimetype='application/json')
+    else:
+        return HttpResponseRedirect(request.path))
 
 def thanks(request):
     c = Context(dict(
