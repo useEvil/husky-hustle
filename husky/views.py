@@ -131,7 +131,14 @@ def payment(request, identifier=None, id=None):
     donation = Donation()
     amount = 0
     if request.GET.get('sponsor'):
-        sponsors = Pledge.objects.filter(email_address=request.GET.get('sponsor')).all()
+        try:
+            sponsors = Pledge.objects.filter(email_address=request.GET.get('sponsor')).all()
+        except Exception, e:
+            logger.debug('==== c [%s]'%(e))
+            messages.error(request, 'Could not find Donation for ID: %s' % id)
+            c['error'] = True
+            c['messages'] = messages.get_messages(request)
+            return render_to_response('/student-donation/%s' % identifier, c, context_instance=RequestContext(request))
         total_due = 0
         ids = []
         donations = []
@@ -461,7 +468,7 @@ def reminders(request, identifier=None):
     elif request.POST.get('ajax'):
         return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200}), mimetype='application/json')
     else:
-        return HttpResponseRedirect(request.path))
+        return HttpResponseRedirect('/student-donation/search')
 
 def thanks(request):
     c = Context(dict(
