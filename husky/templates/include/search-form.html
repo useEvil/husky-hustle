@@ -21,7 +21,7 @@
           <li><a href="#" class="make-payment" id="payment-{{ student.identifier }}" action="{{ student.payment_url }}" data-toggle="modal" data-target="#modal-box-donation" title="Use this option if you need to make a payment for pledge you've already made.">Make a Payment</a></li>
           <li><a href="{{ student.donate_teacher_url }}">Donate to a Teacher</a></li>
           <li><a href="{{ student.invitation_url }}">Send Invitations</a></li>
-          <li><a href="#" class="send-reminder" id="reminder-{{ student.identifier }}" action="{{ student.reminder_url }}" data-toggle="modal" data-target="#modal-box-reminder" title="Use this option if you need to send payment reminders.">Send Reminders</a></li>
+          <li><a href="#" class="send-reminder" id="reminder-{{ student.identifier }}" action="/reminders/{{ student.identifier }}" data-toggle="modal" data-target="#modal-box-reminder" title="Use this option if you need to send payment reminders.">Send Reminders</a></li>
           <li><a href="{{ student.donation_sheet_url }}" target="_print">Donation Sheet</a></li>
         </ul>
       </div>
