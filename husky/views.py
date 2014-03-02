@@ -761,7 +761,6 @@ def calculate_totals(request, type=None, id=None):
         Student().calculate_totals()
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200}), mimetype='application/json')
 
-
 def _formatData(data, total):
     if not data and not total: return
     result = { }
