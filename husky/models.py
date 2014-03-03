@@ -27,6 +27,7 @@ from picasa import  PicasaField, PicasaStorage
 from decimal import Decimal
 
 from husky.helpers import *
+# from husky.signals import *
 
 logger = logging.getLogger(__name__)
 
@@ -898,3 +899,8 @@ class ContactForm(forms.Form):
     message = forms.CharField()
     sender = forms.EmailField()
     cc_myself = forms.BooleanField(required=False)
+
+
+# post save signals
+# post_save.connect(calculate_totals_callback, sender=Student, dispatch_uid="calculate_student_totals_callback")
+# post_save.connect(calculate_totals_callback, sender=Donation, dispatch_uid="calculate_donation_totals_callback")

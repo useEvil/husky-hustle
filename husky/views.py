@@ -26,10 +26,13 @@ from django.contrib.syndication.views import Feed
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.core.signals import request_finished
+from django.dispatch import receiver
 from django.conf import settings
 
 from husky.models import Student, Pledge, Donation, Teacher, Grade, Album, Photo, Content, Blog, Message, Link, Calendar, ContactForm, DonationForm, CurrencyField
 from husky.helpers import *
+from husky.signals import *
 
 logger = logging.getLogger(__name__)
 
@@ -223,6 +226,7 @@ def donate(request, identifier=None):
                 )
                 pledge.save()
                 messages.success(request, 'Thank you for making a Pledge')
+                calculate_totals_signal.send(sender=None, donation=donation)
                 c['success'] = True
                 c['donate_url'] = student.donate_url()
                 c['student_full_name'] = student.full_name()
@@ -511,6 +515,7 @@ def paid(request, donation_id=None):
                 object.donated = object.total()
                 object.save()
                 logger.debug('Successfully set Donation to Paid for ID: %s' % id)
+                calculate_totals_signal.send(sender=None, donation=object)
                 c['code'] = result
                 c['query'] = query
                 c['name'] = object.full_name()
@@ -844,3 +849,4 @@ class BlogFeed(Feed):
         domain = Site.objects.get_current().domain
         return 'http://%s/nav/blog/%d' % (domain, item.id)
 
+request_finished.connect(calculate_totals_callback, dispatch_uid="calculate_totals_callback")
