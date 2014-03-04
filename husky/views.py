@@ -303,7 +303,12 @@ def donate_direct(request):
                     donation=donation,
                 )
                 pledge.save()
-                messages.success(request, 'Thank you for making a Pledge')
+                messages.success(request, 'Thank you for making a pledge to %s' % (teacher_donation and donation.first_name or student.full_name()))
+                # add to cart
+                add_to_cart(request, 'donation', donation.id, 1)
+                # update totals
+                donation.calculate_totals(donation.id)
+#                 calculate_totals_signal.send(sender=None, donation=donation)
                 c['success'] = True
                 c['donate_url'] = student.donate_url()
                 c['student_full_name'] = student.full_name()
