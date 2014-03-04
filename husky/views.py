@@ -831,11 +831,14 @@ def get_cart(request):
         page_title='Cart',
     ))
     amount = request.cart.cart.total_price()
-    cart_id = request.cart.cart.id
+    ids = []
+    for item in request.cart.cart.item_set.all():
+        if item.product.__class__ == Donation:
+            ids.append(str(item.id))
     try:
         c['amount'] = amount
         c['paypal_ipn_url'] = settings.PAYPAL_IPN_URL
-        c['encrypted_block'] = Donation().encrypted_block(Donation().button_data(amount, 'cart-%s'%cart_id))
+        c['encrypted_block'] = Donation().encrypted_block(Donation().button_data(amount, ",".join(ids)))
     except Exception, e:
         logger.debug('==== c [%s]'%(e))
 #         messages.error(request, 'Could not encrypt button for ID: %s' % id)

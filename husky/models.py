@@ -901,6 +901,19 @@ class Shirt(models.Model):
             return d[self.size]
 
 
+class ShirtOrder(models.Model):
+
+    email_address = models.CharField(max_length=100, default='_sponsor_@huskyhustle.com')
+    phone_number = models.CharField(max_length=25, blank=True, null=True)
+    student = models.ForeignKey(Student, related_name='sponsors')
+    shirt = models.ForeignKey(Shirt, related_name='shirts')
+    quantity = models.IntegerField(blank=True, null=True)
+    price = CurrencyField(blank=True, null=True)
+    paid = models.BooleanField(null=False, default=0)
+    paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=(('cash','cash'), ('check','check'), ('online','online')))
+    date_added = models.DateTimeField(default=date.datetime.now())
+
+
 class DonationForm(forms.Form):
 
     first_name = forms.CharField(max_length=50)
