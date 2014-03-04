@@ -7,6 +7,9 @@ from datetime import datetime
 
 from husky.helpers import *
 
+import logging
+logger = logging.getLogger(__name__)
+
 register = template.Library()
 
 @register.filter(name='date_format')
@@ -70,3 +73,14 @@ def fix_err_msg(text=None):
     text = text.replace('username', 'email address')
 #    texts = re.findall('<[^>]+>(.+)</[^>]+>', text)
     return text
+
+@register.filter(name='object_name')
+def object_name(object):
+    logger.debug('==== object.__class__.__name__ [%s]'%(object.__class__.__name__))
+    if object.__class__.__name__ == 'Shirt':
+        return '%s %s' % (object.type_display(), object.size_display())
+    else:
+        if object.last_name == 'teacher':
+            return '%s for %s' % (object.first_name, object.student.full_name())
+        else:
+            return object.student.full_name()

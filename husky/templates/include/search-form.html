@@ -1,106 +1,10 @@
 {% load custom_filters %}
 {% if students %}
-<div class="alert alert-success">
-  Your search for <strong>"{{ search|safe }}"</strong> found <strong>{{ students|length }}</strong> results.
-</div>
-<table class="table table-hover table-striped">
-  <tr>
-    <th>Student</th><th class="hidden-xs">Teacher</th><th>&nbsp;</th>
-  </tr>
-  {% for student in students %}
-  <tr>
-    <td><a href="{{ student.donate_url }}" id="student-{{ student.identifier }}">{{ student.full_name }}</a> ({{ student.teacher.grade }})</td>
-    <td class="hidden-xs">{{ student.teacher.full_name }} ({{ student.teacher.room_number }})</td>
-    <td>
-      <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-          Select <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li><a href="{{ student.donate_url }}" class="make-donation" title="Use this option if you want to make a pledge to this student">Make a Pledge</a></li>
-          <li><a href="#" class="make-payment" id="payment-{{ student.identifier }}" action="{{ student.payment_url }}" data-toggle="modal" data-target="#modal-box-donation" title="Use this option if you need to make a payment for pledge you've already made.">Make a Payment</a></li>
-          <li><a href="{{ student.donate_teacher_url }}">Donate to a Teacher</a></li>
-          <li><a href="{{ student.invitation_url }}">Send Invitations</a></li>
-          <li><a href="#" class="send-reminder" id="reminder-{{ student.identifier }}" action="/reminders/{{ student.identifier }}" data-toggle="modal" data-target="#modal-box-reminder" title="Use this option if you need to send payment reminders.">Send Reminders</a></li>
-          <li><a href="{{ student.donation_sheet_url }}" target="_print">Donation Sheet</a></li>
-        </ul>
-      </div>
-    </td>
-  </tr>
-  {% endfor %}
-</table>
-<div class="modal fade" id="modal-box-donation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form id="donation_form" action="/make-payment" method="GET" class="form-horizontal" role="form">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="donation_title">Make a Payment to {student_name}</h4>
-        </div>
-        <div class="modal-body">
-          <p>Enter a specific amount you would like to donate.  Or if you've previously made a pledge and are making the payment now, use the email address you entered when you made your pledge.</p>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" for="donation_amount"{% if form.donation_amount.errors %} class="error"{% endif %}>Payment Amount:</label>
-            <div class="col-sm-6">
-              <input type="hidden" id="donation_id" name="id" value="">
-              <input type="text" class="form-control" id="donation_amount" name="amount" value="" placeholder="0.00" />
-            </div>
-          </div>
-          <p class="center">- OR -</p>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" for="donation_sponsor"{% if form.donation_sponsor.errors %} class="error"{% endif %}>Email Address:</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" id="donation_sponsor" name="sponsor" value="" placeholder="example@email.com" />
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary make-donation" id="submit_donation">Make Payment</button>
-        </div>
-      </form>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<div class="modal fade" id="modal-box-reminder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form id="reminder_form" action="/reminders" method="POST" class="form-horizontal" role="form">
-        <input type="hidden" id="return_url" name="return_url" value="{{ return_url }}">
-        {% csrf_token %}
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="reminder_title">Send a Reminder to {student_name}'s Sponsors</h4>
-        </div>
-        <div class="modal-body">
-          <p><strong>Custom Message:</strong></p>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <textarea class="form-control" id="custom_message" name="custom_message" value="" rows="10"></textarea>
-            </div>
-          </div>
-          <p>
-            <strong>Sample:</strong>
-            <pre style="font-size: 0.8em;line-height: 1.2em;overflow-x: auto;word-wrap: normal;white-space: pre;">
-              {% include "email/reminder.txt" with name='"Donor Name"' student_name='"Student Name"' payment_url="" custom_message='"Your Custom Message"' %}
-            </pre>
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary make-reminder" id="submit_reminder" data-loading-text=" Sending Reminder... ">Send Reminder</button>
-        </div>
-      </form>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+{% include "include/search-form-results.html" %}
 {% endif %}
-<div class="clearfix">&nbsp;</div>
 {% if form.non_field_errors %}
 <div class="alert alert-danger">{{ form.non_field_errors }}</dib>
 {% endif %}
-
 <div class="panel panel-default">
   <div class="panel-heading"><strong>Search for a Student</strong></div>
   <div class="panel-body">

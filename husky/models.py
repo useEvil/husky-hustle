@@ -454,9 +454,9 @@ class Student(models.Model):
 
     def calculate_totals(self, id=None):
         if id:
+            student = (self.id == id) and self or Student.objects.get(pk=id)
             total_collected = 0
             total_pledged = 0
-            student = Student.objects.get(pk=id)
             for sponsor in student.sponsors.all():
                 total_pledged += sponsor.total() or 0
                 if sponsor.paid:
@@ -810,14 +810,14 @@ class Donation(models.Model):
 
     def calculate_totals(self, id=None):
         if id:
-            result = Donation.objects.get(pk=id)
-            result.donated = result.total()
-            result.save()
+            donation = (self.id == id) and self or Donation.objects.get(pk=id)
+            donation.donated = donation.total()
+            donation.save()
         else:
-            results = Donation.objects.all()
-            for result in results:
-                result.donated = result.total()
-                result.save()
+            donations = Donation.objects.all()
+            for donations in donations:
+                donation.donated = donation.total()
+                donation.save()
 
     def thank_you_url(self):
         site = Site.objects.get_current()
@@ -863,6 +863,42 @@ class Pledge(models.Model):
     def get_donations(self, email_address=None):
         if not email_address: return
         return Pledge.objects.filter(email_address=email_address)
+
+
+class Shirt(models.Model):
+
+    TYPES = (
+        (1, 'Child'),
+        (2, 'Adult'),
+    )
+    SIZES = (
+        (1, 'XS (2-4)'),
+        (2, 'S (6-8)'),
+        (3, 'M (10-12)'),
+        (4, 'L (14-16)'),
+        (5, 'XL (Adult Small)'),
+        (6, 'S'),
+        (7, 'M'),
+        (8, 'L'),
+        (9, 'XL'),
+        (10, 'XXL'),
+    )
+    type = models.IntegerField(blank=True, null=True, choices=TYPES)
+    size = models.IntegerField(blank=True, null=True, choices=SIZES)
+    price = CurrencyField(blank=True, null=True, default=10.00)
+
+    def __unicode__(self):
+        return '%s %s' % (self.type, self.size)
+
+    def type_display(self):
+        d = dict(self.TYPES)
+        if self.type in d:
+            return d[self.type]
+
+    def size_display(self):
+        d = dict(self.SIZES)
+        if self.size in d:
+            return d[self.size]
 
 
 class DonationForm(forms.Form):

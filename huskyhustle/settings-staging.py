@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
 #     'djangorestframework',
 #     'django_mobile',
+    'changuito',
     'picasa',
     'husky',
 )
@@ -56,6 +57,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'changuito.middleware.CartMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -175,6 +177,21 @@ LOGGING = {
             'propagate': True,
         },
         'husky.models': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'husky.paypal': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'husky.helpers': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'husky.signals': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,

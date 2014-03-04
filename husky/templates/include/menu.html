@@ -18,6 +18,7 @@
         <li{% if 'blog' in path %} class="active"{% endif %}><a href="/nav/blog">Blog</a></li>
         <li{% if 'links' in path %} class="active"{% endif %}><a href="/nav/links">Links</a></li>
         <li{% if 'contact' in path %} class="active"{% endif %}><a href="/nav/contact">Contact</a></li>
+        <li{% if 'cart' in path %} class="active"{% endif %}><a href="/cart" class="glyphicon glyphicon-shopping-cart" style="height: 50px;top: 0;">{% if cart %}<span class="badge">{{ cart.cart.total_quantity }}</span>{% endif %}</a></li>
         <!--li{% if 'profile' in path %} class="active"{% endif %}><a href="/account/profile">Profile</a></li-->
       </ul>
     </div><!-- /.nav-collapse -->

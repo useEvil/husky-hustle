@@ -7,7 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from husky.models import Student, Pledge, Content, Blog, Message, Link, Donation, Grade, Teacher
+from husky.models import Student, Pledge, Content, Blog, Message, Link, Donation, Grade, Teacher, Shirt
 
 
 class MostLapsListFilter(SimpleListFilter):
@@ -124,7 +124,6 @@ class DonationAdmin(admin.ModelAdmin):
     list_per_page = 50
 #     form = DonationModelForm
 
-
 class UserAdmin(UserAdmin):
     list_display = ['username', 'email', 'is_active']
 
@@ -160,6 +159,11 @@ class PledgeAdmin(admin.ModelAdmin):
     list_display = ['email_address', 'donation', student]
     search_fields = ['email_address']
 
+class ShirtAdmin(admin.ModelAdmin):
+    fields = ['type', 'size', 'price']
+    list_display = ['id', 'type', 'size', 'price']
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Student, StudentAdmin)
@@ -171,3 +175,4 @@ admin.site.register(Pledge, PledgeAdmin)
 admin.site.register(Link, LinkAdmin)
 admin.site.register(Grade, GradeAdmin)
 admin.site.register(Teacher, TeacherAdmin)
+admin.site.register(Shirt, ShirtAdmin)

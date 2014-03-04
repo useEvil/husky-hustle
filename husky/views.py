@@ -30,7 +30,7 @@ from django.core.signals import request_finished
 from django.dispatch import receiver
 from django.conf import settings
 
-from husky.models import Student, Pledge, Donation, Teacher, Grade, Album, Photo, Content, Blog, Message, Link, Calendar, ContactForm, DonationForm, CurrencyField
+from husky.models import Student, Pledge, Donation, Teacher, Grade, Album, Photo, Content, Blog, Message, Link, Calendar, ContactForm, DonationForm, CurrencyField, Shirt
 from husky.helpers import *
 from husky.signals import *
 
@@ -174,10 +174,11 @@ def payment(request, identifier=None, id=None):
             messages.error(request, 'Could not find Donation for ID: %s' % id)
             c['error'] = True
     try:
+        c['paypal_ipn_url'] = settings.PAYPAL_IPN_URL
         c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, ids))
     except Exception, e:
         logger.debug('==== c [%s]'%(e))
-        messages.error(request, 'Could not encrypt button for ID: %s' % id)
+#         messages.error(request, 'Could not encrypt button for ID: %s' % id)
         c['error'] = True
     c['amount'] = amount
     c['messages'] = messages.get_messages(request)
@@ -198,7 +199,7 @@ def donate(request, identifier=None):
     teacher_donation = None
     c = Context(dict(
         page_title='Donate',
-        teachers=Teacher().get_donate_list(),
+        teachers_donate=Teacher().get_donate_list(),
         student=student,
         donate=True,
     ))
@@ -225,8 +226,12 @@ def donate(request, identifier=None):
                     donation=donation,
                 )
                 pledge.save()
-                messages.success(request, 'Thank you for making a Pledge')
-                calculate_totals_signal.send(sender=None, donation=donation)
+                messages.success(request, 'Thank you for making a pledge to %s' % (teacher_donation and donation.first_name or student.full_name()))
+                # add to cart
+                add_to_cart(request, 'donation', donation.id, 1)
+                # update totals
+                donation.calculate_totals(donation.id)
+#                 calculate_totals_signal.send(sender=None, donation=donation)
                 c['success'] = True
                 c['donate_url'] = student.donate_url()
                 c['student_full_name'] = student.full_name()
@@ -236,7 +241,8 @@ def donate(request, identifier=None):
                 c['is_per_lap'] = donation.per_lap
                 c['payment_url'] = donation.payment_url()
                 c['email_address'] = donation.email_address
-                c['encrypted_block'] = donation.encrypted_block()
+                c['paypal_ipn_url'] = settings.PAYPAL_IPN_URL
+#                 c['encrypted_block'] = donation.encrypted_block()
                 c['subject'] = 'Hicks Canyon Jog-A-Thon: Thank you for making a Pledge'
                 c['domain'] = Site.objects.get_current().domain
                 if not teacher_donation:
@@ -391,6 +397,32 @@ def contact(request):
     c['messages'] = messages.get_messages(request)
     return render_to_response('contact.html', c, context_instance=RequestContext(request))
 
+def order_form(request):
+    c = Context(dict(
+        page_title='T-Shirt Order Form',
+    ))
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            sender  = form.cleaned_data['sender']
+            cc_myself  = form.cleaned_data['cc_myself']
+            recipients = [settings.EMAIL_HOST_USER]
+            if cc_myself:
+                recipients.append(sender)
+            mail.send_mail(subject, "%s\n\nSender: %s" % (message, sender), sender, recipients)
+            # set message or return json message
+            if request.GET.get('format') == 'ajax':
+                return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Sent'}), mimetype='application/json')
+            else:
+                messages.success(request, 'Successfully Sent')
+    else:
+        form = ContactForm()
+    c['form'] = form
+    c['messages'] = messages.get_messages(request)
+    return render_to_response('order.html', c, context_instance=RequestContext(request))
+
 def results(request, type=None, grade=None):
     c = Context(dict(
         page_title='Results',
@@ -510,16 +542,19 @@ def paid(request, donation_id=None):
         data = []
         for id in donation_id.split(','):
             try:
-                object = Donation.objects.get(pk=id)
-                object.paid = True
-                object.donated = object.total()
-                object.save()
+                donation = Donation.objects.get(pk=id)
+                donation.paid = True
+                donation.donated = donation.total()
+                donation.save()
                 logger.debug('Successfully set Donation to Paid for ID: %s' % id)
-                calculate_totals_signal.send(sender=None, donation=object)
+                # update totals
+                donation.calculate_totals(donation.id)
+#                 calculate_totals_signal.send(sender=None, donation=donation)
+                calculate_totals_signal.send(sender=None, donation=donation)
                 c['code'] = result
                 c['query'] = query
-                c['name'] = object.full_name()
-                c['amount'] = object.donated
+                c['name'] = donation.full_name()
+                c['amount'] = donation.donated
                 data.append(_send_email_teamplate('paid', c, 1))
             except Exception, e:
                 logger.debug('Failed to set Donation to Paid: %s' % str(e))
@@ -536,11 +571,14 @@ def paid(request, donation_id=None):
     else:
         for id in donation_id.split(','):
             try:
-                object = Donation.objects.get(pk=id)
-                object.paid = True
-                object.donated = object.total()
-                object.save()
+                donation = Donation.objects.get(pk=id)
+                donation.paid = True
+                donation.donated = donation.total()
+                donation.save()
                 logger.debug('Successfully set Donation to Paid for ID: %s' % id)
+                # update totals
+                donation.calculate_totals(donation.id)
+#                 calculate_totals_signal.send(sender=None, donation=donation)
             except Exception, e:
                 logger.debug('Failed to set Donation to Paid: %s' % str(e))
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'code': result}), mimetype='application/json')
@@ -550,24 +588,21 @@ def thank_you(request, donation_id=None):
     c = Context(dict(
         page_title='Thank You',
     ))
+    donation_id = donation_id or request.GET.get('custom') or request.POST.get('custom') or None
     if donation_id:
         try:
-            object = Donation.objects.get(pk=donation_id)
-            object.paid = True
-            object.save()
+            donation = Donation.objects.get(pk=donation_id)
+            donation.paid = True
+            donation.save()
             messages.success(request, 'Successfully set Sponsor to Paid')
-        except Exception, e:
-            messages.error(request, 'Failed to set Sponsor to Paid: %s' % str(e))
-    elif request.GET.get('custom') or request.POST.get('custom'):
-        donation_id = request.GET.get('custom')
-        try:
-            object = Donation.objects.get(pk=donation_id)
-            object.paid = True
-            object.save()
-            messages.success(request, 'Successfully set Sponsor to Paid')
+            # update totals
+            donation.calculate_totals(donation.id)
+#             calculate_totals_signal.send(sender=None, donation=donation)
         except Exception, e:
             messages.error(request, 'Failed to set Sponsor to Paid: %s' % str(e))
     else:
+        request.cart.checkout()
+        request.cart.clear()
         return render_to_response('thank_you.html', c, context_instance=RequestContext(request))
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200}), mimetype='application/json')
 
@@ -766,6 +801,49 @@ def calculate_totals(request, type=None, id=None):
         Student().calculate_totals()
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200}), mimetype='application/json')
 
+
+## Cart endpoints
+def add_to_cart(request, model, product_id, quantity=1):
+    cart = request.cart 
+    if model == 'shirt':
+        product = Shirt.objects.get(pk=product_id)
+        cart.add(product, product.price, int(quantity))
+    else:
+        donation = Donation.objects.get(pk=product_id)
+        if not donation.per_lap:
+            cart.add(donation, donation.donation, quantity)
+#     messages.success(request, 'Successfully Added')
+    return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Added', 'product_id': product_id}), mimetype='application/json')
+
+def remove_from_cart(request, product_id):
+    cart = request.cart 
+    cart.remove(product_id)
+#     messages.success(request, 'Successfully Removed')
+    return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Removed', 'product_id': product_id}), mimetype='application/json')
+
+def get_cart(request):
+    c = Context(dict(
+        page_title='Cart',
+    ))
+    amount = request.cart.cart.total_price()
+    cart_id = request.cart.cart.id
+    try:
+        c['amount'] = amount
+        c['paypal_ipn_url'] = settings.PAYPAL_IPN_URL
+        c['encrypted_block'] = Donation().encrypted_block(Donation().button_data(amount, 'cart-%s'%cart_id))
+    except Exception, e:
+        logger.debug('==== c [%s]'%(e))
+#         messages.error(request, 'Could not encrypt button for ID: %s' % id)
+        c['error'] = True
+    return render_to_response('cart.html', c, context_instance=RequestContext(request))
+
+def checkout_cart(request):
+    request.cart.checkout()
+    request.cart.clear()
+    return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Checked Out'}), mimetype='application/json')
+
+
+## Internal functions
 def _formatData(data, total):
     if not data and not total: return
     result = { }

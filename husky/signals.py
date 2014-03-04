@@ -16,12 +16,9 @@ logger = logging.getLogger(__name__)
 # @receiver(request_finished)
 def calculate_totals_callback(sender, **kwargs):
     donation = kwargs.has_key('donation') and kwargs['donation'] or None
-    logger.debug('==== sender [%s]'%(sender))
-    logger.debug('==== donation [%s]'%(donation))
-    logger.debug('==== student [%s]'%(donation.student))
     if donation:
         donation.calculate_totals(donation.id)
         donation.student.calculate_totals(donation.student.id)
 
-calculate_totals_signal = Signal(providing_args=["sender", "donation"])
-calculate_totals_signal.connect(calculate_totals_callback, dispatch_uid='calculate_totals')
+# calculate_totals_signal = Signal(providing_args=["sender", "donation"])
+# calculate_totals_signal.connect(calculate_totals_callback, dispatch_uid='calculate_totals')

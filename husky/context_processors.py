@@ -5,11 +5,12 @@ from husky.helpers import *
 
 
 def page_content(request):
-    donate=Donation()
+    donation=Donation()
     return {
-        'bar_height': donate.bar_height(),
-        'arrow_height': donate.arrow_height(),
+        'bar_height': donation.bar_height(),
+        'arrow_height': donation.arrow_height(),
         'path': request.path,
         'user': request.user,
         'return_url': request.get_full_path(),
+        'cart': request.cart,
     }

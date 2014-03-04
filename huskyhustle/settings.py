@@ -24,15 +24,15 @@ SECRET_KEY = 'jillw=2=j97x^+ja$^h-(8v*k4nxpl@09&cv1i7*6r$04ze&2i'
 DEBUG = True
 
 TEMPLATE_DEBUG = True
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'husky/templates'))
+
+MEDIA_ROOT = 'husky/static'
+MEDIA_URL = '/media/'
+ADMIN_MEDIA_PREFIX = '/media/'
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'husky.context_processors.page_content',
-)
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
 #     'djangorestframework',
 #     'django_mobile',
+    'changuito',
     'picasa',
     'husky',
 )
@@ -56,7 +57,20 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'changuito.middleware.CartMiddleware',
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
+    # 'django_mobile.context_processors.flavour',
+
+    # Application context processors
+    'husky.context_processors.page_content',
+)
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 ROOT_URLCONF = 'huskyhustle.urls'
 
@@ -86,7 +100,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-SITE_ID = 3
+SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
@@ -162,6 +176,21 @@ LOGGING = {
             'propagate': True,
         },
         'husky.models': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'husky.paypal': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'husky.helpers': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'husky.signals': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,

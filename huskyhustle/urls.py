@@ -28,6 +28,12 @@ urlpatterns = patterns('',
     url(r'^contact/*$', 'husky.views.contact', name='contact'),
     url(r'^results/*(?P<type>[\w-]*)$', 'husky.views.results', name='results'),
 
+    # Cart
+    url(r'^add[-_]to[-_]cart/(?P<model>[\w]+)*/(?P<product_id>[\d]+)/(?P<quantity>[\d]+)*$', 'husky.views.add_to_cart', name='add_to_cart'),
+    url(r'^remove[-_]from[-_]cart/(?P<product_id>[\d]+)*$', 'husky.views.remove_from_cart', name='remove_from_cart'),
+    url(r'^cart/*$', 'husky.views.get_cart', name='get_cart'),
+    url(r'^checkout/*$', 'husky.views.checkout_cart', name='checkout_cart'),
+
     # rss feed
     url(r'^blog/feed$', BlogFeed()),
 

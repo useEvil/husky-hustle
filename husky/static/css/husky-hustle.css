@@ -516,6 +516,19 @@ div.box-shadow {
     width: 100px;
 }
 
+.total {
+    border-top: solid 2px black;
+    background-color: #fff;
+}
+
+.total td {
+    background-color: #fff;
+}
+
+.badge {
+    margin-left: 4px;
+    padding: 3px 7px 6px;
+}
 
 /* background and overlay styles */
 .background-cover {
