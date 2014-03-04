@@ -64,7 +64,7 @@ class MostDonationsListFilter(SimpleListFilter):
         elif self.value() == 'flat':
             return queryset.filter(paid=True, per_lap=False).all()
         elif self.value() == 'brooke_bree':
-            return queryset.filter(student__in=[125,126]).order_by('student__last_name').all()
+            return queryset.filter(student__in=[125,126]).order_by('student__last_name', 'student__first_name').all()
         else:
             return queryset.all()
 
