@@ -52,6 +52,7 @@ class MostDonationsListFilter(SimpleListFilter):
             ('perlap', _('Paid Per Lap')),
             ('flat', _('Paid Flat')),
             ('direct', _('Direct')),
+            ('brooke_bree', _('Brooke+Bree')),
         )
     def queryset(self, request, queryset):
         if self.value() == 'unpaid_lap':
@@ -62,6 +63,8 @@ class MostDonationsListFilter(SimpleListFilter):
             return queryset.filter(paid=True, per_lap=True).all()
         elif self.value() == 'flat':
             return queryset.filter(paid=True, per_lap=False).all()
+        elif self.value() == 'brooke_bree':
+            return queryset.filter(student__in=[125,126]).order_by('student__last_name').all()
         else:
             return queryset.all()
 

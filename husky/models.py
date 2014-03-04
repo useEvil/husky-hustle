@@ -300,6 +300,7 @@ class Student(models.Model):
     disqualify = models.IntegerField(default=0, choices=((0, 'No'), (1, 'Yes')))
     pledged = CurrencyField(blank=True, null=True)
     teacher = models.ForeignKey(Teacher, related_name='students')
+
     class Meta:
         ordering = ['last_name', 'first_name', 'teacher']
 
