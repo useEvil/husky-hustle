@@ -7,7 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from husky.models import Student, Pledge, Content, Blog, Message, Link, Donation, Grade, Teacher, Shirt
+from husky.models import Student, Pledge, Content, Blog, Message, Link, Donation, Grade, Teacher, Shirt, ShirtOrder
 
 
 class MostLapsListFilter(SimpleListFilter):
@@ -51,7 +51,9 @@ class MostDonationsListFilter(SimpleListFilter):
             ('unpaid_flat', _('Unpaid Flat')),
             ('perlap', _('Paid Per Lap')),
             ('flat', _('Paid Flat')),
-            ('direct', _('Direct')),
+#             ('direct', _('Direct')),
+            ('online', _('Via Online')),
+            ('check_cash', _('Via Cash/Check')),
             ('brooke_bree', _('Brooke+Bree')),
         )
     def queryset(self, request, queryset):
@@ -63,6 +65,10 @@ class MostDonationsListFilter(SimpleListFilter):
             return queryset.filter(paid=True, per_lap=True).all()
         elif self.value() == 'flat':
             return queryset.filter(paid=True, per_lap=False).all()
+        elif self.value() == 'online':
+            return queryset.filter(paid_by='online').all()
+        elif self.value() == 'check_cash':
+            return queryset.filter(paid_by__in=['check', 'cash']).all()
         elif self.value() == 'brooke_bree':
             return queryset.filter(student__in=[125,126]).order_by('student__last_name', 'student__first_name').all()
         else:
@@ -110,7 +116,7 @@ class DonationAdmin(admin.ModelAdmin):
     list_name.short_description = "Student"
 
     def total_link(obj):
-        if regexp.match('^(_teacher_)', obj.email_address):
+        if obj.last_name == 'teacher':
             return obj.total()
         else:
             return '<a href="%s" target="_payment_url">%s</a>' % (obj.payment_url(), obj.total())
@@ -118,10 +124,10 @@ class DonationAdmin(admin.ModelAdmin):
     total_link.short_description = "Total"
 
     ordering = ('-date_added',)
-    fields = ['student', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'date_added']
-    list_display = ['id', list_name, 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'date_added', 'paid', 'paid_by']
+    fields = ['student', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'type', 'date_added']
+    list_display = ['id', list_name, 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'date_added', 'paid', 'paid_by', 'type']
     search_fields = ['email_address', 'first_name', 'last_name', 'student__first_name', 'student__last_name', 'student__teacher__last_name', 'paid_by']
-    list_editable = ['per_lap', 'donation', 'paid', 'paid_by']
+    list_editable = ['per_lap', 'donation', 'paid', 'paid_by', 'type']
     list_filter = [MostDonationsListFilter]
     save_on_top = True
     list_per_page = 50
@@ -166,6 +172,10 @@ class ShirtAdmin(admin.ModelAdmin):
     fields = ['type', 'size', 'price']
     list_display = ['id', 'type', 'size', 'price']
 
+class ShirtOrderAdmin(admin.ModelAdmin):
+    fields = ['student', 'shirt', 'email_address', 'quantity', 'price', 'paid', 'paid_by', 'date_added']
+    list_display = ['student', 'shirt', 'email_address', 'quantity', 'price', 'paid', 'paid_by', 'date_added']
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
@@ -179,3 +189,4 @@ admin.site.register(Link, LinkAdmin)
 admin.site.register(Grade, GradeAdmin)
 admin.site.register(Teacher, TeacherAdmin)
 admin.site.register(Shirt, ShirtAdmin)
+admin.site.register(ShirtOrder, ShirtOrderAdmin)

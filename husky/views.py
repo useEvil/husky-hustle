@@ -30,7 +30,8 @@ from django.core.signals import request_finished
 from django.dispatch import receiver
 from django.conf import settings
 
-from husky.models import Student, Pledge, Donation, Teacher, Grade, Album, Photo, Content, Blog, Message, Link, Calendar, ContactForm, DonationForm, CurrencyField, Shirt
+from husky.models import Student, Pledge, Donation, Teacher, Grade, Album, Photo, Content, Blog, Message, Link, Calendar, Shirt, ShirtOrder
+from husky.models import ContactForm, DonationForm, ShirtOrderForm, CurrencyField
 from husky.helpers import *
 from husky.signals import *
 
@@ -218,8 +219,11 @@ def donate(request, identifier=None):
                     donation=float(request.POST.get('donation')),
                     per_lap=per_lap and int(per_lap) or 0,
                     date_added=date.datetime.now(pytz.utc),
+                    type=0,
                     student=student,
                 )
+                if teacher_donation:
+                    donation.type = donation.first_name == 'Mrs. Agopian' and 2 or 1
                 donation.save()
                 pledge = Pledge(
                     email_address=request.POST.get('email_address'),
@@ -401,32 +405,6 @@ def contact(request):
     c['form'] = form
     c['messages'] = messages.get_messages(request)
     return render_to_response('contact.html', c, context_instance=RequestContext(request))
-
-def order_form(request):
-    c = Context(dict(
-        page_title='T-Shirt Order Form',
-    ))
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
-            sender  = form.cleaned_data['sender']
-            cc_myself  = form.cleaned_data['cc_myself']
-            recipients = [settings.EMAIL_HOST_USER]
-            if cc_myself:
-                recipients.append(sender)
-            mail.send_mail(subject, "%s\n\nSender: %s" % (message, sender), sender, recipients)
-            # set message or return json message
-            if request.GET.get('format') == 'ajax':
-                return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Sent'}), mimetype='application/json')
-            else:
-                messages.success(request, 'Successfully Sent')
-    else:
-        form = ContactForm()
-    c['form'] = form
-    c['messages'] = messages.get_messages(request)
-    return render_to_response('order.html', c, context_instance=RequestContext(request))
 
 def results(request, type=None, grade=None):
     c = Context(dict(
@@ -776,7 +754,7 @@ def send_unpaid_reminders(request, type=None, donation_id=None):
     sponsors = {}
     for donation in donations:
         email_address = donation.email_address
-        if regexp.match('^(_teacher_)', email_address): continue
+        if donation.last_name == 'teacher': continue
         if not sponsors.has_key(email_address):
             sponsors[email_address] = []
         sponsors[email_address].append(donation)
@@ -809,7 +787,7 @@ def calculate_totals(request, type=None, id=None):
 
 ## Cart endpoints
 def add_to_cart(request, model, product_id, quantity=1):
-    cart = request.cart 
+    cart = request.cart
     if model == 'shirt':
         product = Shirt.objects.get(pk=product_id)
         cart.add(product, product.price, int(quantity))
@@ -834,7 +812,7 @@ def get_cart(request):
     ids = []
     for item in request.cart.cart.item_set.all():
         if item.product.__class__ == Donation:
-            ids.append(str(item.id))
+            ids.append(str(item.product.id))
     try:
         c['amount'] = amount
         c['paypal_ipn_url'] = settings.PAYPAL_IPN_URL
@@ -849,6 +827,65 @@ def checkout_cart(request):
     request.cart.checkout()
     request.cart.clear()
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Checked Out'}), mimetype='application/json')
+
+def order_form(request, identifier=None):
+    c = Context(dict(
+        page_title='T-Shirt Order Form',
+        shirts=Shirt.objects.all(),
+    ))
+    try:
+        c['student'] = Student.objects.get(identifier=identifier)
+    except Exception, e:
+        logger.debug('==== c [%s]'%(e))
+        messages.error(request, 'Could not find Student for identity: %s' % identifier)
+        c['error'] = True
+    if request.method == 'POST':
+        form = ShirtOrderForm(request.POST)
+        if form.is_valid():
+            cart = request.cart
+            for key in request.POST.iterkeys():
+                match = regexp.match('quantity-(?P<product_id>\d+)', key)
+                if match:
+                    quantity = int(request.POST.get(key))
+                    if quantity:
+                        product_id = int(match.group('product_id'))
+                        for shirt in c['shirts']:
+                            if shirt.id == product_id:
+                                cart.add(shirt, shirt.price, quantity)
+            # add cart item to shirt order table
+#             for item in cart.cart.item_set.all():
+#                 if item.product.__class__ == ShirtOrder:
+#                     try:
+#                         order = ShirtOrder(
+#                             email_address=request.POST.get('email_address'),
+#                             quantity=item.quantity,
+#                             price=item.total_price(),
+#                             student=student,
+#                             shirt=shirt,
+#                             paid_by='online',
+#                         )
+#                         order.save()
+#                     except Exception, e:
+#                         logger.debug('==== order error [%s]'%(str(e)))
+#                         messages.error(request, str(e))
+            # this should happen at order paid, have to figure out how to do that
+            c['subject'] = 'T-Shirt Order Form'
+            c['email_address'] = request.POST.get('email_address')
+            c['student_teacher'] = c['student'].form_list_name()
+            c['products'] = cart
+            recipients = [settings.EMAIL_HOST_USER]
+            _send_email_teamplate('order', c)
+            # set message or return json message
+            if request.GET.get('format') == 'ajax':
+                messages.success(request, 'Order Successfully Sent')
+                return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Sent'}), mimetype='application/json')
+            else:
+                return HttpResponseRedirect('/cart')
+    else:
+        form = ShirtOrderForm()
+    c['form'] = form
+    c['messages'] = messages.get_messages(request)
+    return render_to_response('order.html', c, context_instance=RequestContext(request))
 
 
 ## Internal functions
@@ -898,7 +935,8 @@ def _send_email_teamplate(template, data, mass=None):
     if mass:
         return mail.EmailMessage(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']], headers={'Reply-To': data['reply_to']})
     else:
-        if not regexp.match('^(_teacher_|sponsor_)', data['email_address']):
+        ## need to send and replace first and last name with sponsor's
+        if not regexp.match('^(_sponsor_)', data['email_address']) or data['last_name'] != 'teacher':
             mail.send_mail(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']])
 
 def _send_mass_mail(messages):

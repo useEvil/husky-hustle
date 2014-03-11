@@ -171,6 +171,8 @@ function submitForm(event) {
     var form = $('#'+ id[1] +'_form');
     var params = form.serialize();
     var action = form.attr('action');
+console.log( '####-params: ',params );
+console.log( '####-action: ',action );
     if (id[1] === 'invite') {
         if (!$('#email_addresses').val()) {
             alert('You must provide email addresses');
@@ -322,6 +324,7 @@ function setPreSetAmount(event) {
     var value = $(this).val();
     if (this.className.match('to-principle')) {
         if (value) {
+            $('#id_last_name').attr('value', 'principal');
             $('#id_first_name').attr('value', value);
             $('#id_first_name').attr('readonly', true);
             $('#id_first_name').show();
@@ -338,6 +341,7 @@ function setPreSetAmount(event) {
             value = $('#id_teacher :selected').val();
             $('#to_principle_teacher').attr('checked', true);
             $('#id_first_name').attr('value', value);
+            $('#id_last_name').attr('value', 'teacher');
     } else {
         if (value) {
             $('#id_donation').attr('value', value);

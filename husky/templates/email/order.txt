@@ -1,0 +1,17 @@
+{% autoescape off %}
+{% load custom_filters %}
+{{ student.full_name }}'s parent has placed an order for Jog-a-thon T-Shirts.
+
+{{ student_teacher }}
+
+Here is the list of the order:
+
+{% for item in products %}{{ item.product|object_name }} x {{ item.quantity }}
+{% endfor %}
+
+----------------------------
+The Husky Hustle Team
+
+http://www.huskyhustle.com
+husky@huskyhustle.com
+{% endautoescape %}

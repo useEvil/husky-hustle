@@ -22,6 +22,7 @@
           <li><a href="{{ student.invitation_url }}">Send Invitations</a></li>
           <li><a href="#" class="send-reminder" id="reminder-{{ student.identifier }}" action="/reminders/{{ student.identifier }}" data-toggle="modal" data-target="#modal-box-reminder" title="Use this option if you need to send payment reminders.">Send Reminders</a></li>
           <li><a href="{{ student.donation_sheet_url }}" target="_print">Donation Sheet</a></li>
+          <li><a href="{{ student.order_form_url }}" target="_print">Order T-Shirt</a></li>
         </ul>
       </div>
     </td>

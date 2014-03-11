@@ -361,6 +361,10 @@ class Student(models.Model):
         site = Site.objects.get_current()
         return 'http://%s/reminders/%s' % (site.domain, self.identifier)
 
+    def order_form_url(self):
+        site = Site.objects.get_current()
+        return 'http://%s/order/%s' % (site.domain, self.identifier)
+
     def facebook_share_url(self):
         site = Site.objects.get_current()
         params = 'app_id=' + settings.FACEBOOK_APP_ID + '&link=' + self.donate_url() + '&picture=' + ('http://%s/static/images/hickslogo-1.jpg' % site.domain) + '&name=' + urllib.quote('Husky Hustle') + '&caption=' + urllib.quote('Donate to %s' % self.full_name()) + '&description=' + urllib.quote("Donate and help further our student's education.") + '&redirect_uri=' + 'http://%s/' % site.domain
@@ -481,6 +485,12 @@ class Student(models.Model):
 
 class Donation(models.Model):
 
+    TYPES = (
+        (0, 'student'),
+        (1, 'teacher'),
+        (2, 'principal'),
+    )
+
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email_address = models.CharField(max_length=100, default='_sponsor_@huskyhustle.com')
@@ -491,6 +501,7 @@ class Donation(models.Model):
     per_lap = models.BooleanField(null=False, default=0)
     paid = models.BooleanField(null=False, default=0)
     paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=(('cash','cash'), ('check','check'), ('online','online')))
+    type = models.IntegerField(null=False, default=0, choices=TYPES)
     date_added = models.DateTimeField(default=date.datetime.now())
     class Meta:
         ordering = ['last_name', 'first_name']
@@ -506,6 +517,11 @@ class Donation(models.Model):
 
     def teacher(self):
         return self.student.teacher or ''
+
+    def type_display(self):
+        d = dict(self.TYPES)
+        if self.type in d:
+            return d[self.type]
 
     def total(self):
         if self.per_lap:
@@ -816,7 +832,7 @@ class Donation(models.Model):
             donation.save()
         else:
             donations = Donation.objects.all()
-            for donations in donations:
+            for donation in donations:
                 donation.donated = donation.total()
                 donation.save()
 
@@ -889,7 +905,10 @@ class Shirt(models.Model):
     price = CurrencyField(blank=True, null=True, default=10.00)
 
     def __unicode__(self):
-        return '%s %s' % (self.type, self.size)
+        return self.full_name()
+
+    def full_name(self):
+        return '%s %s' % (self.type_display(), self.size_display())
 
     def type_display(self):
         d = dict(self.TYPES)
@@ -905,15 +924,18 @@ class Shirt(models.Model):
 class ShirtOrder(models.Model):
 
     email_address = models.CharField(max_length=100, default='_sponsor_@huskyhustle.com')
-    phone_number = models.CharField(max_length=25, blank=True, null=True)
-    student = models.ForeignKey(Student, related_name='sponsors')
-    shirt = models.ForeignKey(Shirt, related_name='shirts')
+    student = models.ForeignKey(Student, related_name='orders')
+    shirt = models.ForeignKey(Shirt, related_name='shirtorders')
     quantity = models.IntegerField(blank=True, null=True)
     price = CurrencyField(blank=True, null=True)
     paid = models.BooleanField(null=False, default=0)
     paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=(('cash','cash'), ('check','check'), ('online','online')))
     date_added = models.DateTimeField(default=date.datetime.now())
 
+
+class ShirtOrderForm(forms.Form):
+
+    email_address = models.CharField(max_length=100)
 
 class DonationForm(forms.Form):
 

@@ -5,7 +5,7 @@
       {% if make_donation %}<input type="hidden" name="make_donation" value="1" />{% endif %}
       {% if from_account %}<input type="hidden" name="from_account" value="1" />{% endif %}
       <input type="hidden" name="teacher_donation" value="1" />
-      <input type="hidden" name="last_name" value="teacher" />
+      <input type="hidden" name="last_name" value="teacher" id="id_last_name" />
       <input type="hidden" name="phone_number" value="(000) 000-0000" />
       <input type="hidden" name="per_lap" value="0" />
       {% csrf_token %}

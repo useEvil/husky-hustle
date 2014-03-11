@@ -33,6 +33,7 @@ urlpatterns = patterns('',
     url(r'^remove[-_]from[-_]cart/(?P<product_id>[\d]+)*$', 'husky.views.remove_from_cart', name='remove_from_cart'),
     url(r'^cart/*$', 'husky.views.get_cart', name='get_cart'),
     url(r'^checkout/*$', 'husky.views.checkout_cart', name='checkout_cart'),
+    url(r'^order/(?P<identifier>[\w-]*)$', 'husky.views.order_form', name='teacher-donation'),
 
     # rss feed
     url(r'^blog/feed$', BlogFeed()),

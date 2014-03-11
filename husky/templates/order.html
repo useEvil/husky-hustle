@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="col-xs-12 col-sm-9 col-lg-10">
+    <h2>T-Shirt Order Form</h2>
+    <div class="row box-shadow">
+      <div class="col-lg-12">
+
+        <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><strong>{{ message }}</strong></li>
+          {% endfor %}
+        </ul>
+        <div class="form" style="min-height: 280px;">
+          {% if form.non_field_errors %}
+          <span class="error">{{ form.non_field_errors }}</span>
+          {% endif %}
+          <form action="/order/{{ student.identifier }}" method="post" id="order_form" class="form-horizontal" role="form">
+            {% csrf_token %}
+
+            <div class="row">
+              <div class="col-md-2">
+                <img src="/static/images/t-shirt-icon-hh.png" width="150%" sytle="float: left" />
+              </div>
+
+              <div class="col-md-6">
+                  {% for shirt in shirts %}
+                    {% if shirt.type == 1 %}
+                  <div class="form-group">
+                    <label class="col-sm-8 control-label" for="id_size">{{ shirt.type_display }} {{ shirt.size_display }}:</label>
+                    <select name="quantity-{{ shirt.id }}" style="margin-top: 8px;">
+                      {% for row in '0123456789' %}
+                      <option value="{{ row }}">{{ row }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                    {% endif %}
+                  {% endfor %}
+              </div>
+
+              <div class="col-md-4">
+                  {% for shirt in shirts %}
+                    {% if shirt.type == 2 %}
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="id_size">{{ shirt.type_display }} {{ shirt.size_display }}:</label>
+                    <select name="quantity-{{ shirt.id }}" style="margin-top: 8px;">
+                      {% for row in '0123456789' %}
+                      <option value="{{ row }}">{{ row }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                    {% endif %}
+                  {% endfor %}
+              </div><!--/col-md-4-->
+            </div><!--/row-->
+
+            <div class="row">
+              <div class="col-lg-10">
+                <div class="form-group">
+                  <label class="col-sm-8 control-label" for="form_id_email_address"{% if form.email_address.errors %} class="error"{% endif %}>Your Email Address:</label>
+                  <div class="col-sm-4">
+                    <input id="form_id_email_address" type="text" name="email_address" value="{{ form.email_address.value }}" class="form-control required" placeholder="email@examples.com" />{% if form.email_address.errors %}<span class="pad-left10 error">* required</span>{% endif %}
+                  </div>
+                </div>
+              </div><!--/col-lg-10-->
+            </div><!--/row-->
+
+            <div class="row">
+              <div class="col-lg-10">
+                <input type="submit" class="btn btn-primary pull-right" id="submit_order" value=" Order " data-loading-text=" Ordering... " />
+              </div>
+            </div><!--/row-->
+
+          </form>
+        </div><!--/form-->
+      </div><!--/col-lg-12-->
+    </div><!--/row-->
+  </div><!--/span-->
+{% endblock %}
