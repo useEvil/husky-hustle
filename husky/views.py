@@ -800,7 +800,7 @@ def add_to_cart(request, model, product_id, quantity=1):
 
 def remove_from_cart(request, product_id):
     cart = request.cart 
-    cart.remove(product_id)
+    cart.remove_item(product_id)
 #     messages.success(request, 'Successfully Removed')
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Removed', 'product_id': product_id}), mimetype='application/json')
 

@@ -172,8 +172,8 @@ function submitForm(event) {
     var form = $('#'+ id[1] +'_form');
     var params = form.serialize();
     var action = form.attr('action');
-console.log( '####-params: ',params );
-console.log( '####-action: ',action );
+// console.log( '####-params: ',params );
+// console.log( '####-action: ',action );
     if (id[1] === 'invite') {
         if (!$('#email_addresses').val()) {
             alert('You must provide email addresses');
@@ -312,6 +312,11 @@ function updateStatus(data) {
     clearMessage();
 };
 
+function updateReload(data) {
+    updateStatus(data);
+    setTimeout(function(){ top.location.href = path; }, 1200);
+};
+
 function setAllReminders(event) {
     var checked = $(this).attr('checked');
     $('.set-reminder').each(
@@ -376,13 +381,27 @@ function selectAllItems(event) {
 
 function removeCartItems(event) {
     var action = $('#cart_form').attr('action');
-    $('.remove-item').each(
-        function () {
-            if (this.checked) {
-                $.getJSON(action + this.id, updateStatus);
+    var makeRequest = function (id) {
+        var dfd = $.Deferred();
+        $.ajax(
+            {
+                url: action + id,
+                type: 'get',
+                dataType: 'json',
+                timeout: 3000,
+                complete: function(){ dfd.resolve(); },
+                error: function(){ makeRequest(id); }
             }
+        );
+        return dfd.promise();
+    };
+    var def = [];
+    $('.remove-item').each(function() {
+        if (this.checked) {
+            def.push(makeRequest(this.id));
         }
-    );
+    });
+    $.when.apply($, def).done(reloadPage);
 };
 
 (function() {
