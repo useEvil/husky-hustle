@@ -799,8 +799,10 @@ def add_to_cart(request, model, product_id, quantity=1):
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Added', 'product_id': product_id}), mimetype='application/json')
 
 def remove_from_cart(request, product_id):
-    cart = request.cart 
+    cart = request.cart
+    item = cart.get_item(product_id).get_product()
     cart.remove_item(product_id)
+    item.delete()
 #     messages.success(request, 'Successfully Removed')
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Removed', 'product_id': product_id}), mimetype='application/json')
 
