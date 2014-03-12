@@ -795,16 +795,17 @@ def add_to_cart(request, model, product_id, quantity=1):
         donation = Donation.objects.get(pk=product_id)
         if not donation.per_lap:
             cart.add(donation, donation.donation, quantity)
-#     messages.success(request, 'Successfully Added')
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Added', 'product_id': product_id}), mimetype='application/json')
 
 def remove_from_cart(request, product_id):
-    cart = request.cart
-    item = cart.get_item(product_id).get_product()
-    cart.remove_item(product_id)
-    item.delete()
-#     messages.success(request, 'Successfully Removed')
-    return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Removed', 'product_id': product_id}), mimetype='application/json')
+    if product_id:
+        cart = request.cart
+        item = cart.get_item(product_id).get_product()
+        cart.remove_item(product_id)
+        item.delete()
+        return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Removed', 'product_id': product_id}), mimetype='application/json')
+    else:
+        return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 400, 'message': 'No Product ID given'}), mimetype='application/json')
 
 def get_cart(request):
     c = Context(dict(

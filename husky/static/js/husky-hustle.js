@@ -402,6 +402,7 @@ function removeCartItems(event) {
         }
     });
     $.when.apply($, def).done(reloadPage);
+    return false;
 };
 
 (function() {

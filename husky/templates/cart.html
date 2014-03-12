@@ -10,7 +10,8 @@
         {% if cart.cart.total_quantity %}
         <h3>Thank you for ordering!</h3>
         <div class="col-lg-6 table-responsive">
-          <form action="/remove-from-cart/" method="post" id="cart_form" />
+          <form action="/remove-from-cart/" method="post" id="cart_form" role="form" />
+            {% csrf_token %}
             <table class="table table-hover table-striped table-condensed">
               <tr>
                 <th>Description</th>
@@ -19,7 +20,7 @@
                 <th class="center">
                   <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-info select-all-label">
-                      <input type="checkbox" class="select-all-items" name="select-all-items" value=" All " />All
+                      <input type="checkbox" class="select-all-items" name="select-all-items" value="All" />All
                     </label>
                   </div>
                 </th>
@@ -36,7 +37,11 @@
                 <td class="amount">Total:</td>
                 <td class="center">{{ cart.cart.total_quantity }}</td>
                 <td class="amount">${{ cart.cart.total_price|floatformat:2|intcomma }}</td>
-                <td class="center"><input type="button" class="btn btn-primary remove-items" name="delete"  value=" Delete " /></td>
+                <td class="center">
+                  <div class="form-group">
+                    <input type="submit" class="btn btn-primary remove-items" id="delete" name="delete"  value=" Delete " data-loading-text=" Deleting... " />
+                  </div>
+                </td>
               </tr>
             </table>
           </form>
