@@ -37,30 +37,14 @@
       <div class="clearfix">&nbsp;</div>
       {% endif %}
 
-      {% if not student.sponsored_principle %}
       <div class="form-group">
-        <label class="col-sm-3 control-label" for="id_to_principle"{% if form.to_principle.errors %} class="error"{% endif %}>Donate To:</label>
+        <label class="col-sm-3 control-label" for="teacher">Teacher/Principal:</label>
         <div class="col-sm-4">
-          <div class="btn-group" data-toggle="buttons">
-            <label class="btn btn-info">
-              <input type="radio" class="to-principle" id="to_principle" name="to-principle" value="Mrs. Agopian" /> Mrs. Agopian
-            </label>
-            <label class="btn btn-info">
-              <input type="radio" class="to-principle" id="to_principle_teacher" name="to-principle" value="" /> A Teacher
-            </label>
-          </div>
-        </div>
-      </div>
-      {% endif %}
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label" for="teacher">Teacher:</label>
-        <div class="col-sm-4">
-          <input id="id_first_name" class="form-control" type="text" name="first_name" value="{% firstof form.first_name.value student.teacher.last_name %}" style="display: none;" />
+          <input id="id_first_name" class="form-control" type="text" name="first_name" value="{% firstof form.first_name.value student.teacher.title_name %}" style="display: none;" />
           <select id="id_teacher" class="form-control to-teacher" name="teacher">
-            <option value="">Select Teacher</option>
+            <option value="">Select Teacher or Principal</option>
             {% for teacher in teachers_donate %}
-            <option value="{{ teacher.full_name }}" {% if teacher == student.teacher %}selected{% endif %}>{{ teacher }}</option>
+            <option value="{{ teacher.title_name }}" {% if teacher == student.teacher %}selected{% endif %}>{{ teacher }}</option>
             {% endfor %}
           </select>
         </div>

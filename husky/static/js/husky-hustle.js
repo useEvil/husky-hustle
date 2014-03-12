@@ -8,8 +8,9 @@ var tID     = '';
 $('.submit-form').bind('click', submitForm);
 $('.post-to-social').bind('click', postToSocial);
 $('.pre-set-amount').bind('change', setPreSetAmount);
-$('.to-principle').bind('change', setPreSetAmount);
 $('.to-teacher').bind('change', setPreSetAmount);
+$('.remove-items').bind('click', removeCartItems);
+$('.select-all-items').bind('change', selectAllItems);
 $('#modal-box-donation').on('show.bs.modal', function(e){ makeDonation(e.relatedTarget) });
 $('#modal-box-reminder').on('show.bs.modal', function(e){ sendReminder(e.relatedTarget) });
 
@@ -322,26 +323,9 @@ function setAllReminders(event) {
 
 function setPreSetAmount(event) {
     var value = $(this).val();
-    if (this.className.match('to-principle')) {
-        if (value) {
-            $('#id_last_name').attr('value', 'principal');
-            $('#id_first_name').attr('value', value);
-            $('#id_first_name').attr('readonly', true);
-            $('#id_first_name').show();
-            $('#id_teacher').attr('disabled', true);
-            $('#id_teacher').hide();
-        } else {
+    if (this.className.match('to-teacher')) {
             value = $('#id_teacher :selected').val();
             $('#id_first_name').attr('value', value);
-            $('#id_first_name').hide();
-            $('#id_teacher').attr('disabled', false);
-            $('#id_teacher').show();
-        }
-    } else if (this.className.match('to-teacher')) {
-            value = $('#id_teacher :selected').val();
-            $('#to_principle_teacher').attr('checked', true);
-            $('#id_first_name').attr('value', value);
-            $('#id_last_name').attr('value', 'teacher');
     } else {
         if (value) {
             $('#id_donation').attr('value', value);
@@ -379,6 +363,26 @@ function runCalculations(event) {
 
 function postToSocial(event) {
     window.open($(this).attr('src'), '_social', 'height=200,width=550,resizable=yes,scrollbars=yes');
+};
+
+function selectAllItems(event) {
+    var checked = $('.select-all-label').hasClass('active');
+    $('.remove-item').each(
+        function () {
+            this.checked = checked ? false : true;
+        }
+    );
+};
+
+function removeCartItems(event) {
+    var action = $('#cart_form').attr('action');
+    $('.remove-item').each(
+        function () {
+            if (this.checked) {
+                $.getJSON(action + this.id, updateStatus);
+            }
+        }
+    );
 };
 
 (function() {

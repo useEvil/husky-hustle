@@ -219,6 +219,9 @@ class Teacher(models.Model):
     def full_name(self):
         return '%s %s %s' % (self.title, self.first_name, self.last_name)
 
+    def title_name(self):
+        return '%s %s' % (self.title, self.last_name)
+
     def find(self, last_name=None):
         try:
             return Teacher.objects.filter(last_name__icontains=last_name).all()
