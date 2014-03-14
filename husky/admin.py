@@ -115,9 +115,11 @@ class DonationList(ChangeList):
 
     def get_results(self, *args, **kwargs):
         super(DonationList, self).get_results(*args, **kwargs)
-        self.total_sum = 0
+        self.total_pledged = 0
+        self.total_donated = 0
         for donation in self.result_list:
-            self.total_sum += donation.total()
+            self.total_pledged += donation.total()
+            if donation.paid: self.total_donated += donation.donated
 
 class DonationAdmin(admin.ModelAdmin):
 
@@ -134,7 +136,7 @@ class DonationAdmin(admin.ModelAdmin):
         else:
             return '<a href="%s" target="_payment_url">%s</a>' % (obj.payment_url(), obj.total())
     total_link.allow_tags = True
-    total_link.short_description = "Total"
+    total_link.short_description = "Pledged"
 
     # override the tempalte to show results
     def get_changelist(self, request):
@@ -143,7 +145,7 @@ class DonationAdmin(admin.ModelAdmin):
 
     ordering = ('-date_added',)
     fields = ['student', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'type', 'date_added']
-    list_display = ['id', list_name, 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'date_added', 'paid', 'paid_by', 'type']
+    list_display = ['id', list_name, 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'donated', 'date_added', 'paid', 'paid_by', 'type']
     search_fields = ['email_address', 'first_name', 'last_name', 'student__first_name', 'student__last_name', 'student__teacher__last_name', 'paid_by']
     list_editable = ['per_lap', 'donation', 'paid', 'paid_by', 'type']
     list_filter = [MostDonationsListFilter]
