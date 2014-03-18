@@ -57,6 +57,8 @@ class MostDonationsListFilter(SimpleListFilter):
             ('online', _('Via Online')),
             ('check_cash', _('Via Cash/Check')),
             ('brooke_bree', _('Brooke+Bree')),
+            ('to_teachers', _('To Teachers')),
+            ('to_principal', _('To Principal')),
         )
     def queryset(self, request, queryset):
         if self.value() == 'unpaid_lap':
@@ -73,6 +75,10 @@ class MostDonationsListFilter(SimpleListFilter):
             return queryset.filter(paid_by__in=['check', 'cash']).all()
         elif self.value() == 'brooke_bree':
             return queryset.filter(student__in=[125,126]).order_by('student__last_name', 'student__first_name').all()
+        elif self.value() == 'to_teachers':
+            return queryset.filter(type=1).all()
+        elif self.value() == 'to_principal':
+            return queryset.filter(type=2).all()
         else:
             return queryset.all()
 
