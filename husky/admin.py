@@ -3,9 +3,11 @@ import re as regexp
 from django import forms
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
+from django.contrib.admin.views.main import ChangeList
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Count, Sum, Avg, Max
 
 from husky.models import Student, Pledge, Content, Blog, Message, Link, Donation, Grade, Teacher, Shirt, ShirtOrder
 
@@ -115,23 +117,41 @@ class MessageAdmin(admin.ModelAdmin):
     fields = ['title', 'content', 'author', 'date_added']
     list_display = ['title', 'content', 'date_added']
 
+class DonationList(ChangeList):
+
+    def get_results(self, *args, **kwargs):
+        super(DonationList, self).get_results(*args, **kwargs)
+        self.total_pledged = 0
+        self.total_donated = 0
+        for donation in self.result_list:
+            self.total_pledged += donation.total()
+            if donation.paid: self.total_donated += donation.donated or 0
+
 class DonationAdmin(admin.ModelAdmin):
+
+    # create a link for the student name
     def list_name(obj):
         return '<a href="/admin/husky/student/%d/" class="nowrap">%s</a>' % (obj.student.id, obj.student.list_name())
     list_name.allow_tags = True
     list_name.short_description = "Student"
 
+    # create a payment link for the total amount
     def total_link(obj):
         if obj.last_name == 'teacher':
             return obj.total()
         else:
             return '<a href="%s" target="_payment_url">%s</a>' % (obj.payment_url(), obj.total())
     total_link.allow_tags = True
-    total_link.short_description = "Total"
+    total_link.short_description = "Pledged"
+
+    # override the tempalte to show results
+    def get_changelist(self, request):
+        return DonationList
+    change_list_template = 'admin/husky/donation/change_list.html'
 
     ordering = ('-date_added',)
     fields = ['student', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'type', 'date_added']
-    list_display = ['id', list_name, 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'date_added', 'paid', 'paid_by', 'type']
+    list_display = ['id', list_name, 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'donated', 'date_added', 'paid', 'paid_by', 'type']
     search_fields = ['email_address', 'first_name', 'last_name', 'student__first_name', 'student__last_name', 'student__teacher__last_name', 'paid_by']
     list_editable = ['per_lap', 'donation', 'paid', 'paid_by', 'type']
     list_filter = [MostDonationsListFilter]
