@@ -160,7 +160,34 @@ def payment(request, identifier=None, id=None):
     elif request.GET.get('amount'):
         if request.GET.get('id') and not id: id = request.GET.get('id')
         amount = CurrencyField().to_python(request.GET.get('amount'))
-        ids = id
+        student = Student.objects.get(identifier=id)
+        try:
+            donation = Donation(
+                first_name='Direct',
+                last_name='Payment',
+                email_address='_sponsor_@huskyhustle.com',
+                phone_number='(000) 000-0000',
+                per_lap=0,
+                donation=amount,
+                date_added=date.datetime.now(pytz.utc),
+                student=student,
+            )
+            donation.save()
+            pledge = Pledge(
+                email_address='_sponsor_@huskyhustle.com',
+                donation=donation,
+            )
+            pledge.save()
+            messages.success(request, 'Thank you for making a pledge to %s' % (teacher_donation and donation.first_name or student.full_name()))
+            # add to cart
+            add_to_cart(request, 'donation', donation.id, 1)
+            # update totals
+            donation.calculate_totals(donation.id)
+            ids = donation.id
+        except Exception, e:
+            logger.debug('==== c [%s]'%(e))
+            messages.error(request, 'Could not create donation for Student ID: %s' % ids)
+            c['error'] = True
     elif len(ids) > 1:
         amount = donation.get_total(ids)
         ids = id
@@ -704,7 +731,7 @@ def send_teacher_reports(request, id=None):
             c['sponsors'] = sponsors
             data.append(_send_email_teamplate('reports-teacher', c, 1))
     ## check donations for Mrs. Agopian ##
-    donations = Donation.objects.filter(first_name__contains='Agopian').order_by('student__last_name', 'student__first_name')
+    donations = Donation.objects.filter(type=2).order_by('student__last_name', 'student__first_name')
     sponsors = []
     for donation in donations:
         full_name = donation.student.full_name()
