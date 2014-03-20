@@ -747,7 +747,7 @@ class Donation(models.Model):
     def reports_donations_by_teacher(self, id=0):
         json = {'label': [], 'values': []}
         if id == 0:
-            donation = Donation.objects.filter(first_name__contains='Agopian').aggregate(donated=Sum('donated'))
+            donation = Donation.objects.filter(type=2).aggregate(donated=Sum('donated'))
             if donation:
                 json['values'].append({'label': 0, 'values': [float(donation['donated'] or 0)], 'labels': ['Mrs. Agopian']})
             teachers = Teacher.objects.exclude(list_type=3).all()
