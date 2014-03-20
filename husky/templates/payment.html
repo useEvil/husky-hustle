@@ -11,12 +11,16 @@
         <div class="col-lg-6 table-responsive">
           <table class="table table-hover table-striped table-condensed">
             <tr>
-              <th>Pledged To</th>
+              <th>Pledged</th>
               <th class="amount">Amount</th>
             </tr>
             {% for donation in donations %}
             <tr>
-              <td>{% if donation.last_name == 'teacher' %}{{ donation.first_name }} for {% endif %}{{ donation.student.full_name }}</td>
+              {% if donation.last_name == 'teacher' %}
+              <td>{{ donation.student.full_name }} for <strong>{{ donation.first_name }}</strong></td>
+              {% else %}
+              <td>{{ donation.full_name }} for {{ donation.student.full_name }}</td>
+              {% endif %}
               <td class="amount">${{ donation.donation|floatformat:2|intcomma }}</td>
             </tr>
             {% endfor %}
