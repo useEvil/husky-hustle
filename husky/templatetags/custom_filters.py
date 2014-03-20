@@ -76,7 +76,6 @@ def fix_err_msg(text=None):
 
 @register.filter(name='object_name')
 def object_name(object):
-    logger.debug('==== object.__class__.__name__ [%s]'%(object.__class__.__name__))
     if object.__class__.__name__ == 'Shirt':
         return '%s %s' % (object.type_display(), object.size_display())
     else:

@@ -64,7 +64,7 @@
   <div class="background-cover-top"></div>
   <div class="module">
     <table summary="Graph Results.">
-    <caption><a href="/admin/results/" class="section">Results</a></caption>
+    <caption><a href="/admin/results/" class="section">Graph Results</a></caption>
       <tr>
         <th scope="row"><a href="/admin/results/totals-by-grade">Totals By Grade</a></th>
         <td>&nbsp;</td>
@@ -169,6 +169,21 @@
         <th scope="row"><a href="#" action="/admin/send_teacher_reports" name="run_teacher_report_emails" class="run-calculations">Run Teacher Report Emails</a></th>
         <td><img id="run_teacher_report_emails_loader" class="hidden loading" src="/static/images/loading.gif" /></td>
         <td><a href="#" action="/admin/send_teacher_reports" name="run_teacher_report_emails" class="run-calculations calculator">Run</a></td>
+      </tr>
+    </table>
+  </div>
+  <div class="module">
+    <table summary="Donation Results.">
+    <caption>Donation Results</caption>
+      <tr>
+        <th scope="row" style="font-weight: bold;text-align: left;">Grand Total Pledged</th>
+        <td>&nbsp;</td>
+        <td style="font-weight: bold;text-align: right;">${{ grand_pledged }}</td>
+      </tr>
+      <tr>
+        <th scope="row" style="font-weight: bold;text-align: left;">Grand Total Collected</th>
+        <td>&nbsp;</td>
+        <td style="font-weight: bold;text-align: right;">${{ grand_donated }}</td>
       </tr>
     </table>
   </div>

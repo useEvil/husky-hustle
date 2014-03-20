@@ -57,7 +57,6 @@ class Intuit(object):
         params['Amount'] = amount
         url = INTUIT_BASE_URL + INTUIT_BASE_INIT_PATH
         code, content = self._makeRequest(url, params)
-#        print '==== content [%s]'%(content)
         try: ticket = findall("Ticket=(.+)\n", content)[0]
         except IndexError: print 'Ticket Not Found'; sys.exit()
         try: op_id = findall("OpId=(.+)\n", content)[0]
@@ -71,7 +70,6 @@ class Intuit(object):
         params['OpId'] = op_id
         url = INTUIT_BASE_URL + INTUIT_BASE_PAYPAGE_PATH
         code, content = self._makeRequest(url, params)
-        print '==== content [%s]'%(content)
         try: ticket = findall("Ticket=(.+)\n", content)[0]
         except IndexError: print 'Ticket Not Found'; sys.exit()
         try: op_id = findall("OpId=(.+)\n", content)[0]

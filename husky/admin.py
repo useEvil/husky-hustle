@@ -206,7 +206,6 @@ class ShirtOrderAdmin(admin.ModelAdmin):
     fields = ['student', 'shirt', 'email_address', 'quantity', 'price', 'paid', 'paid_by', 'date_added']
     list_display = ['student', 'shirt', 'email_address', 'quantity', 'price', 'paid', 'paid_by', 'date_added']
 
-
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Student, StudentAdmin)
