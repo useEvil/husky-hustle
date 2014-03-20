@@ -30,7 +30,9 @@ MEDIA_ROOT = 'husky/static'
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/media/'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'huskyhustle.com'
+]
 
 # Application definition
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
 #     'djangorestframework',
 #     'django_mobile',
+#    'pipeline',
     'changuito',
     'picasa',
     'husky',
@@ -106,6 +109,28 @@ SITE_ID = 2
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Static CSS and JS file compression
+PIPELINE = True
+PIPELINE_STORAGE = 'pipeline.storage.PipelineFinderStorage'
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+PIPELINE_CSS = {
+    'huskyhustle': {
+        'source_filenames': (
+            'css/husky-hustle.css',
+        ),
+        'output_filename': 'css/husky-hustle.min.css',
+    },
+}
+
+PIPELINE_JS = {
+    'huskyhustle': {
+        'source_filenames': (
+            'js/husky-hustle.js',
+        ),
+        'output_filename': 'js/husky-hustle.min.js',
+    }
+}
 
 # Application Constants
 DONATION_GOAL     = 50000
@@ -192,6 +217,11 @@ LOGGING = {
             'propagate': True,
         },
         'husky.signals': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'husky.admin': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
