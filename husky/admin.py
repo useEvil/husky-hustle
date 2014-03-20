@@ -121,6 +121,10 @@ class DonationList(ChangeList):
 
     def get_results(self, *args, **kwargs):
         super(DonationList, self).get_results(*args, **kwargs)
+        results1 = Donation.objects.filter(per_lap=False).aggregate(donated=Sum('donated'))
+        results2 = Donation.objects.filter(paid=True).aggregate(donated=Sum('donated'))
+        self.grand_pledged = results1['donated'] or 0
+        self.grand_donated = results2['donated'] or 0
         self.total_pledged = 0
         self.total_donated = 0
         for donation in self.result_list:
