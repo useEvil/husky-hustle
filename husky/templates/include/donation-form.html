@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-  <div class="panel-heading"><strong>Make a Pledge to: {{ student.full_name }}</strong></div>
+  <div class="panel-heading"><strong>Make a pledge to: {{ student.full_name }}</strong></div>
   <div class="panel-body">
     <form action="/donate{% if student %}/{{ student.identifier }}{% else %}-direct{% endif %}" method="post" id="student_search_form" class="form-horizontal" role="form">
       {% if make_donation %}<input type="hidden" name="make_donation" value="1" />{% endif %}

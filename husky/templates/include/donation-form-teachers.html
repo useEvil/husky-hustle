@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-  <div class="panel-heading"><strong>Make a Donation to a Teacher{% if student %} for: {{ student.full_name }}{% else %}:{% endif %}</strong></div>
+  <div class="panel-heading"><strong>Make a donation to a teacher{% if student %} for: {{ student.full_name }}{% else %}:{% endif %}</strong></div>
   <div class="panel-body">
     <form action="/donate{% if student %}/{{ student.identifier }}{% else %}-direct{% endif %}" method="post" id="add_teacher_form" class="form-horizontal" role="form">
       {% if make_donation %}<input type="hidden" name="make_donation" value="1" />{% endif %}

@@ -336,37 +336,36 @@ class Student(models.Model):
     def get_collected_list(self):
         return Student.objects.filter(collected__gt=0).order_by('-collected').all()
 
+    def student_url(self):
+        return self.set_url('student')
+
     def donation_sheet_url(self):
-        site = Site.objects.get_current()
-        return 'http://%s/donation-sheet/%s' % (site.domain, self.identifier)
+        return self.set_url('donation-sheet')
 
     def invitation_url(self):
-        site = Site.objects.get_current()
-        return 'http://%s/invite/%s' % (site.domain, self.identifier)
+        return self.set_url('invite')
 
     def payment_url(self):
-        site = Site.objects.get_current()
-        return 'http://%s/make-payment/%s' % (site.domain, self.identifier)
+        return self.set_url('make-payment')
 
     def donate_url(self):
-        site = Site.objects.get_current()
-        return 'http://%s/student-donation/%s' % (site.domain, self.identifier)
+        return self.set_url('student-donation')
 
     def donate_teacher_url(self):
-        site = Site.objects.get_current()
-        return 'http://%s/teacher-donation/%s' % (site.domain, self.identifier)
+        return self.set_url('teacher-donation')
 
     def manage_url(self):
-        site = Site.objects.get_current()
-        return 'http://%s/account/%s' % (site.domain, self.identifier)
+        return self.set_url('account')
 
     def reminder_url(self):
-        site = Site.objects.get_current()
-        return 'http://%s/reminders/%s' % (site.domain, self.identifier)
+        return self.set_url('reminders')
 
     def order_form_url(self):
+        return self.set_url('order')
+
+    def set_url(self, page=None):
         site = Site.objects.get_current()
-        return 'http://%s/order/%s' % (site.domain, self.identifier)
+        return 'http://%s/%s/%s' % (site.domain, page, self.identifier)
 
     def facebook_share_url(self):
         site = Site.objects.get_current()

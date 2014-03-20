@@ -68,6 +68,15 @@ def nav(request, page='index', id=None):
             c['entries'] = Blog.objects.order_by('-date_added')[:15]
     return render_to_response('%s.html'%page, c, context_instance=RequestContext(request))
 
+def student(request, identifier=None):
+    c = Context(dict(
+        page_title='Donate',
+        teachers_donate=Teacher().get_donate_list(),
+        student=Student.objects.get(identifier=identifier),
+        make_donation=True,
+    ))
+    return render_to_response('student.html', c, context_instance=RequestContext(request))
+
 def student_donation(request, identifier=None):
     c = Context(dict(
         page_title='Donate',
@@ -287,7 +296,7 @@ def donate(request, identifier=None):
         c['form'] = form
     c['messages'] = messages.get_messages(request)
     c['teacher_donation'] = teacher_donation or False
-    return render_to_response('donate.html', c, context_instance=RequestContext(request))
+    return HttpResponseRedirect('/cart')
 
 def donate_direct(request):
     make_donation = None
@@ -361,7 +370,7 @@ def donate_direct(request):
     c['messages'] = messages.get_messages(request)
     if make_donation and teacher_donation:
         c['teacher_donation'] = True
-    return render_to_response('donate.html', c, context_instance=RequestContext(request))
+    return HttpResponseRedirect('/cart')
 
 def donation_sheet(request, identifier=None, final=None):
     c = Context(dict(

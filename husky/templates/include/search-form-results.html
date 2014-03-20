@@ -8,7 +8,7 @@
   </tr>
   {% for student in students %}
   <tr>
-    <td><a href="{{ student.donate_url }}" id="student-{{ student.identifier }}">{{ student.full_name }}</a> ({{ student.teacher.grade }})</td>
+    <td><a href="{{ student.student_url }}" id="student-{{ student.identifier }}">{{ student.full_name }}</a> ({{ student.teacher.grade }})</td>
     <td class="hidden-xs">{{ student.teacher.full_name }} ({{ student.teacher.room_number }})</td>
     <td>
       <div class="btn-group">
