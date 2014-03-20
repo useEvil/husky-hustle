@@ -75,6 +75,15 @@ def student(request, identifier=None):
         student=Student.objects.get(identifier=identifier),
         make_donation=True,
     ))
+
+    amount = request.cart.cart.total_price()
+    ids = []
+    for item in request.cart.cart.item_set.all():
+        if item.product.__class__ == Donation:
+            ids.append(str(item.product.id))
+    c['amount'] = amount
+    c['paypal_ipn_url'] = settings.PAYPAL_IPN_URL
+    c['encrypted_block'] = Donation().encrypted_block(Donation().button_data(amount, ",".join(ids)))
     return render_to_response('student.html', c, context_instance=RequestContext(request))
 
 def student_donation(request, identifier=None):
