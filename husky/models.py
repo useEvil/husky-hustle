@@ -492,6 +492,11 @@ class Donation(models.Model):
         (1, 'teacher'),
         (2, 'principal'),
     )
+    PAID_BY = (
+        ('cash','cash'),
+        ('check','check'),
+        ('online','online'),
+    )
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -502,7 +507,7 @@ class Donation(models.Model):
     donated = CurrencyField(blank=True, null=True)
     per_lap = models.BooleanField(null=False, default=0)
     paid = models.BooleanField(null=False, default=0)
-    paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=(('cash','cash'), ('check','check'), ('online','online')))
+    paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=PAID_BY)
     type = models.IntegerField(null=False, default=0, choices=TYPES)
     date_added = models.DateTimeField(default=date.datetime.now())
     class Meta:

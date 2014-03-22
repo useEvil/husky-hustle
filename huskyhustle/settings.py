@@ -195,32 +195,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'husky.views': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'husky.models': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'husky.paypal': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'husky.helpers': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'husky.signals': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'husky.admin': {
+        'husky': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,

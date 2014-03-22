@@ -18,10 +18,10 @@ def page_content(request):
         'arrow_height': 0,
     }
     if 'admin' in request.path:
-        results1 = Donation.objects.filter(per_lap=False).aggregate(donated=Sum('donated'))
-        results2 = Donation.objects.filter(paid=True).aggregate(donated=Sum('donated'))
-        context['grand_pledged'] = results1['donated'] or 0
-        context['grand_donated'] = results2['donated'] or 0
+        context['grand_pledged'] = Donation.objects.filter(per_lap=False).aggregate(donated=Sum('donated')) or 0
+        context['grand_donated'] = Donation.objects.filter(paid=True).aggregate(donated=Sum('donated')) or 0
+        context['online_collected'] = Donation.objects.filter(paid=True, paid_by='online').aggregate(donated=Sum('donated')) or 0
+        context['monies_collected'] = Donation.objects.filter(paid=True).exclude(paid_by='online').aggregate(donated=Sum('donated')) or 0
     else:
         donation=Donation()
         context['bar_height'] = donation.bar_height()
