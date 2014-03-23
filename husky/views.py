@@ -44,6 +44,7 @@ def index(request):
         motd=Message.objects.latest('date_added'),
         content=Content.objects.filter(page='index').get(),
         jumbotron=Content.objects.filter(page='jumbotron').get(),
+        has_ended=Content.objects.filter(page='has_ended').get(),
         calendar=Calendar().get_events(),
     ))
     return render_to_response('index.html', c, context_instance=RequestContext(request))
@@ -147,7 +148,8 @@ def payment(request, identifier=None, id=None):
     try:
         c['student'] = Student.objects.get(identifier=identifier)
     except:
-        messages.error(request, 'Could not find Student for identity: %s' % identifier)
+        if not request.GET.get('sponsor'):
+            messages.error(request, 'Could not find Student for identity: %s' % identifier)
         c['error'] = True
     ids = id.split(',')
     donation = Donation()
@@ -231,10 +233,9 @@ def payment(request, identifier=None, id=None):
     return render_to_response('payment.html', c, context_instance=RequestContext(request))
 
 def invite(request, identifier=None):
-    student = Student.objects.get(identifier=identifier)
     c = Context(dict(
         page_title='Invite',
-        student=student,
+        student=Student.objects.get(identifier=identifier),
     ))
     c['messages'] = messages.get_messages(request)
     return render_to_response('invite.html', c, context_instance=RequestContext(request))

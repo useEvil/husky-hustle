@@ -396,9 +396,9 @@ class Student(models.Model):
     def sponsors_teacher(self):
         return Donation.objects.filter(student=self, last_name='teacher').all()
 
-    def sponsored_principle(self):
+    def sponsored_principal(self):
         try:
-            return Donation.objects.filter(student=self, first_name='Mrs. Agopian').get()
+            return Donation.objects.filter(student=self, type=2).get()
         except ObjectDoesNotExist, e:
             return
 
@@ -505,7 +505,7 @@ class Donation(models.Model):
     student = models.ForeignKey(Student, related_name='sponsors')
     donation = CurrencyField(blank=True, null=True)
     donated = CurrencyField(blank=True, null=True)
-    per_lap = models.BooleanField(null=False, default=0)
+    per_lap = models.BooleanField(null=False, default=False)
     paid = models.BooleanField(null=False, default=0)
     paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=PAID_BY)
     type = models.IntegerField(null=False, default=0, choices=TYPES)

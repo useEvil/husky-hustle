@@ -1,0 +1,19 @@
+        <div class="panel panel-default">
+          <div class="panel-heading"><strong>Need to make a payment?</strong></div>
+          <div class="panel-body">
+            <form id="donation_form" action="/make-payment/{% if student %}{{ student.identifier }}{% else %}search{% endif %}" method="GET" class="form-horizontal" role="form">
+              <div class="modal-body">
+                <p>Enter the email address you entered when you made your pledge.</p>
+                <div class="form-group">
+                  <label class="col-sm-4 control-label" for="donation_sponsor"{% if form.donation_sponsor.errors %} class="error"{% endif %}>Email Address:</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" id="donation_sponsor" name="sponsor" value="" placeholder="email@examples.com" />
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary make-donation" id="submit_donation">Make Payment</button>
+              </div>
+            </form>
+          </div>
+        </div>
