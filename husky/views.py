@@ -248,6 +248,7 @@ def donate(request, identifier=None):
         page_title='Donate',
         teachers_donate=Teacher().get_donate_list(),
         student=student,
+        has_error=False,
         donate=True,
     ))
     if request.POST:
@@ -299,14 +300,19 @@ def donate(request, identifier=None):
                     _send_email_teamplate('donate', c)
             except Exception, e:
                 c['make_donation'] = make_donation or False
+                c['has_error'] = True
                 messages.error(request, str(e))
         else:
             c['make_donation'] = make_donation or False
+            c['has_error'] = True
             messages.error(request, 'Failed to Add %s' % (teacher_donation and 'Donation' or 'Sponsor'))
         c['form'] = form
     c['messages'] = messages.get_messages(request)
     c['teacher_donation'] = teacher_donation or False
-    return HttpResponseRedirect('/cart')
+    if c['has_error']:
+        return render_to_response('donate.html', c, context_instance=RequestContext(request))
+    else:
+        return HttpResponseRedirect('/cart')
 
 def donate_direct(request):
     make_donation = None
@@ -834,13 +840,18 @@ def calculate_totals(request, type=None, id=None):
 ## Cart endpoints
 def add_to_cart(request, model, product_id, quantity=1):
     cart = request.cart
+    logger.debug('==== model [%s]'%(model))
     if model == 'shirt':
         product = Shirt.objects.get(pk=product_id)
         cart.add(product, product.price, int(quantity))
     else:
         donation = Donation.objects.get(pk=product_id)
+        logger.debug('==== product_id [%s]'%(product_id))
+        logger.debug('==== donation [%s]'%(donation))
+        logger.debug('==== donation.per_lap [%s]'%(donation.per_lap))
         if not donation.per_lap:
             cart.add(donation, donation.donation, quantity)
+            logger.debug('==== cart [%s]'%(cart))
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Added', 'product_id': product_id}), mimetype='application/json')
 
 def remove_from_cart(request, product_id):
@@ -870,6 +881,7 @@ def get_cart(request):
         logger.debug('==== c [%s]'%(e))
 #         messages.error(request, 'Could not encrypt button for ID: %s' % id)
         c['error'] = True
+    c['messages'] = messages.get_messages(request)
     return render_to_response('cart.html', c, context_instance=RequestContext(request))
 
 def checkout_cart(request):

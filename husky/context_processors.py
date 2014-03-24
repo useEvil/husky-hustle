@@ -26,5 +26,5 @@ def page_content(request):
         donation=Donation()
         context['bar_height'] = donation.bar_height()
         context['arrow_height'] = donation.arrow_height()
-        context['cart'] = request.cart,
+        context['cart'] = request.cart
     return context

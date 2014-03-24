@@ -7,10 +7,10 @@
 
         <ul class="messages"></ul>
         {% if messages %}
-        <div class="alert alert-{% if error %}danger{% else %}success{% endif %}">
+        <div class="alert alert-{% if error or has_error %}danger{% else %}success{% endif %}">
           <ul style="padding-left: 0;">
           {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><strong>{{ message }}</strong></li>
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><strong>{{ message }}</strong></li>
           {% endfor %}
           {% if success %}
             {% if is_per_lap %}

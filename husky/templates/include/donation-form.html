@@ -33,43 +33,43 @@
       <div class="clearfix">&nbsp;</div>
       {% endif %}
 
-      <div class="form-group">
-        <label class="col-sm-3 control-label" for="form_id_first_name"{% if form.first_name.errors %} class="error"{% endif %}>First Name:</label>
+      <div class="form-group{% if form.first_name.errors %} has-error{% endif %}">
+        <label class="col-sm-3 control-label" for="form_id_first_name">First Name:</label>
         <div class="col-sm-4">
-          <input id="form_id_first_name" type="text" name="first_name" value="{{ form.first_name.value }}" class="form-control required" placeholder="First Name" />{% if form.first_name.errors %}<span class="pad-left10 error">* required</span>{% endif %}
+          <input id="form_id_first_name" type="text" name="first_name" value="{{ form.first_name.value }}" class="form-control required" placeholder="First Name" />
+        </div>
+      </div>
+
+      <div class="form-group{% if form.last_name.errors %} has-error{% endif %}">
+        <label class="col-sm-3 control-label" for="form_id_last_name">Last Name:</label>
+        <div class="col-sm-4">
+          <input id="form_id_last_name" type="text" name="last_name" value="{{ form.last_name.value }}" class="form-control required" placeholder="Last Name" />
+        </div>
+      </div>
+
+      <div class="form-group{% if form.email_address.errors %} has-error{% endif %}">
+        <label class="col-sm-3 control-label" for="form_id_email_address">Email Address:</label>
+        <div class="col-sm-4">
+          <input id="form_id_email_address" type="text" name="email_address" value="{{ form.email_address.value }}" class="form-control required" placeholder="email@examples.com" />
         </div>
       </div>
 
       <div class="form-group">
-        <label class="col-sm-3 control-label" for="form_id_last_name"{% if form.last_name.errors %} class="error"{% endif %}>Last Name:</label>
+        <label class="col-sm-3 control-label" for="form_id_phone_number">Phone Number:</label>
         <div class="col-sm-4">
-          <input id="form_id_last_name" type="text" name="last_name" value="{{ form.student_last_name.value }}" class="form-control required" placeholder="Last Name" />{% if form.last_name.errors %}<span class="pad-left10 error">* required</span>{% endif %}
+          <input id="form_id_phone_number" type="text" name="phone_number" value="{{ form.phone_number.value }}" class="form-control required" placeholder="(123) 456-7890" />
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="col-sm-3 control-label" for="form_id_email_address"{% if form.email_address.errors %} class="error"{% endif %}>Email Address:</label>
+      <div class="form-group{% if form.donation.errors %} has-error{% endif %}">
+        <label class="col-sm-3 control-label" for="form_id_donation">Donation:</label>
         <div class="col-sm-4">
-          <input id="form_id_email_address" type="text" name="email_address" value="{{ form.email_address.value }}" class="form-control required" placeholder="email@examples.com" />{% if form.email_address.errors %}<span class="pad-left10 error">* required</span>{% endif %}
+          <input id="form_id_donation" type="text" name="donation" value="{{ form.donation.value }}" class="form-control required" placeholder="0.00" />
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="col-sm-3 control-label" for="form_id_phone_number"{% if form.phone_number.errors %} class="error"{% endif %}>Phone Number:</label>
-        <div class="col-sm-4">
-          <input id="form_id_phone_number" type="text" name="phone_number" value="{{ form.phone_number.value }}" class="form-control required" placeholder="(123) 456-7890" />{% if form.phone_number.errors %}<span class="pad-left10 error">* required</span>{% endif %}
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label" for="form_id_donation"{% if form.donation.errors %} class="error"{% endif %}>Donation:</label>
-        <div class="col-sm-4">
-          <input id="form_id_donation" type="text" name="donation" value="{{ form.donation.value }}" class="form-control required" placeholder="0.00" />{% if form.donation.errors %}<span class="pad-left10 error">* required</span>{% endif %}
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label" for="form_id_per_lap"{% if form.per_lap.errors %} class="error"{% endif %}>&nbsp;</label>
+      <div class="form-group{% if form.per_lap.errors %} has-error{% endif %}">
+        <label class="col-sm-3 control-label" for="form_id_per_lap">&nbsp;</label>
         <div class="col-sm-4">
           <div class="btn-group" data-toggle="buttons">
             <label class="btn btn-info">

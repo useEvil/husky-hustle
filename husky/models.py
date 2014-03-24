@@ -952,12 +952,12 @@ class DonationForm(forms.Form):
     first_name = forms.CharField(max_length=50)
     last_name = forms.CharField(max_length=50)
     email_address = forms.EmailField(max_length=100)
-    donation = CurrencyField()
+    donation = forms.DecimalField(max_digits=100)
 
     def clean(self):
         if 'donation' in self.cleaned_data:
             value  = self.cleaned_data['donation']
-            result = CurrencyField.to_python(value)
+            result = Decimal(value)
             if not result:
                 raise forms.ValidationError("Donation needs to be a Currency value")
             return value
