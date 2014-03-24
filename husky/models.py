@@ -459,7 +459,7 @@ class Student(models.Model):
 
     def grand_totals(self):
         total_due = self.total_due()
-        total_got = self.total_got()
+        total_got = self.total_collected()
         return [total_got, total_due, (total_due + total_got)]
 
     def calculate_totals(self, id=None):
@@ -851,9 +851,11 @@ class Donation(models.Model):
         return 'http://%s/thank-you' % (site.domain)
 
     def payment_url(self, ids=None):
-        site = Site.objects.get_current()
-        if not ids: ids = self.id
-        return 'http://%s/make-payment/%s/%s' % (site.domain, self.student.identifier, ids)
+        url = self.student.payment_url()
+        if ids:
+            return '/%s' % (url, ids)
+        else:
+            return '%s?sponsor=%s' % (url, self.email_address)
 
     def button_data(self, amount=None, ids=None):
         if not amount: amount = self.total()
