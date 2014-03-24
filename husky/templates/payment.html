@@ -21,7 +21,7 @@
               {% else %}
               <td>{{ donation.full_name }} for {{ donation.student.full_name }}</td>
               {% endif %}
-              <td class="amount">${{ donation.donation|floatformat:2|intcomma }}</td>
+              <td class="amount">${{ donation.total|floatformat:2|intcomma }}</td>
             </tr>
             {% endfor %}
             <tr>

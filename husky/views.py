@@ -156,7 +156,7 @@ def payment(request, identifier=None, id=None):
     amount = 0
     if request.GET.get('sponsor'):
         try:
-            sponsors = Pledge.objects.filter(email_address=request.GET.get('sponsor')).all()
+            donations = Donation.objects.filter(email_address=request.GET.get('sponsor')).all()
         except Exception, e:
             logger.debug('==== c [%s]'%(e))
             messages.error(request, 'Could not find Donation for ID: %s' % id)
@@ -165,18 +165,16 @@ def payment(request, identifier=None, id=None):
             return render_to_response('/student-donation/%s' % identifier, c, context_instance=RequestContext(request))
         total_due = 0
         ids = []
-        donations = []
-        for sponsor in sponsors:
-            if sponsor.donation.paid: continue
-            if sponsor.donation.per_lap:
-                total_due += sponsor.donation.donation * (sponsor.donation.student.laps or 0)
-            else:
-                total_due += sponsor.donation.donation
-            ids.append(str(sponsor.donation_id))
-            donations.append(sponsor.donation)
+        items = []
+        for donor in donations:
+            if donor.paid: continue
+            if not donor.student.laps: continue
+            total_due += donor.total()
+            ids.append(str(donor.id))
+            items.append(donor)
         amount = CurrencyField().to_python(total_due)
         ids = ",".join(ids)
-        c['donations'] = donations
+        c['donations'] = items
     elif request.GET.get('amount'):
         if request.GET.get('id') and not id: id = request.GET.get('id')
         amount = CurrencyField().to_python(request.GET.get('amount'))
