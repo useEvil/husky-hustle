@@ -84,8 +84,8 @@ class MostDonationsListFilter(SimpleListFilter):
 
 class StudentAdmin(admin.ModelAdmin):
     fields = ['teacher', 'first_name', 'last_name', 'identifier', 'gender', 'age', 'laps', 'disqualify', 'date_added']
-    list_display = ['last_name', 'first_name', 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_due', 'total_got', 'total_raffle_tickets']
-#    list_display = ['first_name', 'last_name', 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_for_flat', 'total_due', 'total_got', 'total_raffle_tickets']
+    list_display = ['last_name', 'first_name', 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_due', 'total_collected', 'total_raffle_tickets']
+#    list_display = ['first_name', 'last_name', 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_for_flat', 'total_due', 'total_collected', 'total_raffle_tickets']
     search_fields = ['teacher__last_name', 'first_name', 'last_name']
     list_editable = ['laps', 'gender', 'disqualify']
     list_filter = [MostLapsListFilter]
@@ -99,7 +99,7 @@ class ContentModelForm(forms.ModelForm):
 
 class DonationModelForm(forms.ModelForm):
     student = forms.IntegerField(widget=forms.Select(
-        choices=[(s.id, s.form_list_name) for s in Student.objects.all()]
+        choices=[(s.id, s.select_list_name()) for s in Student.objects.all()]
     ), label='Student')
     class Meta:
         model = Student
@@ -154,7 +154,7 @@ class DonationAdmin(admin.ModelAdmin):
     change_list_template = 'admin/husky/donation/change_list.html'
 
     ordering = ('-date_added',)
-    fields = ['student', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'type', 'date_added']
+    fields = ['student', 'type', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'date_added']
     list_display = ['id', list_name, 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'donated', 'date_added', 'paid', 'paid_by', 'type']
     search_fields = ['email_address', 'first_name', 'last_name', 'student__first_name', 'student__last_name', 'student__teacher__last_name', 'paid_by']
     list_editable = ['per_lap', 'donation', 'paid', 'paid_by', 'type']

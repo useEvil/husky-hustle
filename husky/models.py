@@ -308,10 +308,13 @@ class Student(models.Model):
         ordering = ['last_name', 'first_name', 'teacher']
 
     def __unicode__(self):
-        return self.form_list_name()
+        return self.select_list_name()
 
     def form_list_name(self):
         return '%s, %s; %s' % (self.last_name, self.first_name, self.teacher)
+
+    def select_list_name(self):
+        return '%s, %s; %s' % (self.last_name, self.first_name, self.identifier)
 
     def list_name(self):
         return '%s, %s' % (self.last_name, self.first_name)
@@ -441,18 +444,18 @@ class Student(models.Model):
                 total_due += sponsor.total()
         return total_due
 
-    def total_got(self):
-        total_got = 0
+    def total_collected(self):
+        total_collected = 0
         for sponsor in self.sponsors_flat():
             if sponsor.paid:
-                total_got += sponsor.total()
+                total_collected += sponsor.total()
         for sponsor in self.sponsors_perlap():
             if sponsor.paid:
-                total_got += sponsor.total()
+                total_collected += sponsor.total()
         for sponsor in self.sponsors_teacher():
             if sponsor.paid:
-                total_got += sponsor.total()
-        return total_got
+                total_collected += sponsor.total()
+        return total_collected
 
     def grand_totals(self):
         total_due = self.total_due()

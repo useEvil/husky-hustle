@@ -8,8 +8,8 @@
 <script type="text/javascript">
     (function($) {
     if ( $('#id_identifier') ) {
-        $('#id_identifier').live('focus', function (event) {
-        	var reg = new RegExp( '\\((\\d+)\\)' );
+        $('#id_identifier').bind('focus', function (event) {
+            var reg = new RegExp( '\\((\\d+)\\)' );
             var match = $('#id_teacher :selected').text().match(reg);
             var identifier = [$('#id_first_name').val(), $('#id_last_name').val(), match[1]].join('-');
             identifier = identifier.toLowerCase();
@@ -17,6 +17,21 @@
             identifier = identifier.replace(/\s+/g, '-');
             identifier = identifier.replace(/-+/g, '-');
             $('#id_identifier').val(identifier);
+        });
+    }
+    if ( $('#id_student') ) {
+        $('#id_type').bind('change', function (event) {
+            var selected = $('#id_type :selected').val();
+            if (selected === '1') {
+                $('#id_last_name').val('teacher');
+                $('#id_email_address').val('_teacher_@huskyhustle.com');
+            } else if (selected === '2') {
+                $('#id_last_name').val('principal');
+                $('#id_email_address').val('_principal_@huskyhustle.com');
+            } else {
+                if (!$('#id_last_name').val()) $('#id_last_name').val('');
+                if ($('#id_email_address').val().match(/^_/)) $('#id_email_address').val('_sponsor_@huskyhustle.com');
+            }
         });
     }
     })(django.jQuery);
