@@ -23,9 +23,11 @@
         $('#id_type').bind('change', function (event) {
             var selected = $('#id_type :selected').val();
             if (selected === '1') {
+                $('#id_per_lap').attr('checked', false);
                 $('#id_last_name').val('teacher');
                 $('#id_email_address').val('_teacher_@huskyhustle.com');
             } else if (selected === '2') {
+                $('#id_per_lap').attr('checked', false);
                 $('#id_first_name').val('Mrs. Agopian');
                 $('#id_last_name').val('principal');
                 $('#id_email_address').val('_principal_@huskyhustle.com');

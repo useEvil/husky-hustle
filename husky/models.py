@@ -519,6 +519,11 @@ class Donation(models.Model):
     def __unicode__(self):
         return self.full_name()
 
+    def save(self, *args, **kwargs):
+        if self.paid:
+            self.donated = self.total()
+        return super(Donation, self).save(*args, **kwargs)
+
     def full_name(self):
         return '%s %s' % (self.first_name, self.last_name)
 
