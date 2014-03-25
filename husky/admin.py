@@ -130,6 +130,7 @@ class DonationList(ChangeList):
         for donation in self.result_list:
             self.total_pledged += donation.total()
             if donation.paid: self.total_donated += donation.donated or 0
+        self.total_due = self.total_pledged - self.total_donated
 
 class DonationAdmin(admin.ModelAdmin):
 
