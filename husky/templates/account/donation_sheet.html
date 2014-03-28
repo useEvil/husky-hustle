@@ -8,8 +8,9 @@
       a:hover {text-decoration: none;}
       body {color: #3D3D3D;background: #F4F5F5;line-height: 1.8em;font-size: 12.0pt;padding-top: 0;}
       br.clearfix {clear: both;}
-      h1,h2,h3,h4 {text-transform: uppercase;font-weight: normal;margin-bottom: 4em;}
+      h1,h2,h3,h4 {text-transform: uppercase;font-weight: normal;margin-bottom: 2em;}
       a {color: #1F1F1F;}
+      h1 {font-size: 1.80em;}
       h2 {font-size: 1.75em;}
       h2,h3,h4 {margin-bottom: 1em;color: #000;}
       h3 {font-size: 1.5em;}
@@ -20,15 +21,15 @@
       .bold {font-weight: bold;}
       .underline {text-decoration: underline;}
       .center {text-align: center;}
-      .name {width: 20%;}
-      .phone {width: 30%;}
-      .office {width: 15%;}
-      #wrapper {margin: 20px;width: 1180px;position: relative;}
-      #content {color: #3D3D3D;padding: 5px 15px 15px 15px;width: 1110px;}
-      #header {position: absolutes;width: 1110px;height: 35px;}
-      #inner {width: 1015px;margin-top: 10px;background: #fff;border-radius: 5px;box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);border: solid 1px #D4D5D5;}
-      #page {position: relative;margin-top: 0;padding: 0;width: 1180px;}
-      table.donations {width: 965px;border-color: #000;border-style: solid;}
+      .name {width: 15%;}
+      .phone {width: 25%;}
+      .office {width: 10%;}
+      #wrapper {margin: 20px;width: 725px;position: relative;}
+      #content {color: #3D3D3D;padding: 5px 15px 15px 15px;width: 700px;}
+      #header {position: absolutes;width: 725px;height: 35px;}
+      #inner {width: 705px;margin-top: 10px;background: #fff;border-radius: 5px;box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);border: solid 1px #D4D5D5;}
+      #page {position: relative;margin-top: 0;padding: 0;width: 725px;}
+      table.donations {width: 725px;border-color: #000;border-style: solid;}
       table.donations table {border-spacing: 0;border-collapse: collapse;}
       .donations tr {page-break-inside: avoid;page-break-after: auto;}
       .donations td {padding: 4px 10px 4px 10px;}
@@ -46,7 +47,7 @@
   </head>
   <!--body{% if not final %} onLoad="alert('You can Print this page to fill out manually.  Or use to turn in with your Pledge Envelope');"{% endif %}-->
   <body>
-    <div id="wrapper" style="width: 915px;">
+    <div id="wrapper" style="width: 725px;">
       <div id="header">
         <div id="logo">
           <h1><a href="#">Husky Hustle: Pledge Sheet{% if student %}: {{ student.full_name }}{% endif %}</a></h1>
@@ -57,21 +58,19 @@
           {% load humanize %}
           <div id="content">
             <div class="box">
-              <span class="bold">Pledge a flat amount, regardless of how many laps are run (payment to be turned in 3/20)</span>
+              <span class="bold">Pledge a flat amount, regardless of how many laps are run<br />(payment to be turned in 3/20)</span>
               <table class="donations">
                 <tr>
-                  <th class="top-cell name">Sponsor Name<br />(First, Last)</th>
-                  <th class="top-cell phone">Sponsor Phone or Email</th>
-                  <th class="top-cell">Flat Amount<br />(Due 3/20)</th>
-                  <th class="top-cell">Online<br />Donation?</th>
-                  <th class="top-cell">Paid</th>
-                  <th class="top-cell">Amount Enclosed<br />(If Not Paid Online)</th>
-                  <th class="no-cell office">Amount Due<br />(If Any)</th>
+                  <th class="top-cell">Sponsor Name<br />(First, Last)</th>
+                  <th class="top-cell name">Flat Amount<br />(Due 3/20)</th>
+                  <th class="top-cell office">Online<br />Donation?</th>
+                  <th class="top-cell office">Paid</th>
+                  <th class="top-cell office">Amount Enclosed<br />(If Not Paid Online)</th>
+                  <th class="no-cell {% if student %}office{% else %}phone{% endif %}">Amount Due<br />(If Any)</th>
                 </tr>
                 {% if not student %}
                 <tr class="italics">
                   <td class="bold">Example: Joe Smith</td>
-                  <td>(949) 555-5555</td>
                   <td class="amount">$25.00</td>
                   <td class="center">No</td>
                   <td class="center">No</td>
@@ -80,7 +79,6 @@
                 </tr>
                 <tr class="italics">
                   <td class="bold">Example: Joe Smith</td>
-                  <td>(949) 555-5555</td>
                   <td class="amount">$25.00</td>
                   <td class="center">Yes</td>
                   <td class="center">Yes</td>
@@ -92,10 +90,9 @@
                 {% for sponsor in student.sponsors_flat %}
                 <tr>
                   <td class="bold">{{ sponsor.full_name }}</td>
-                  <td>{% if user.is_superuser %}{{ sponsor.phone_number }} - {{ sponsor.email_address }}{% else %}&nbsp;{% endif %}</td>
                   <td class="amount">${{ sponsor.donation|floatformat:2|intcomma }}</td>
                   <td class="center">{{ sponsor.paid_by }}</td>
-                  <td>{% if sponsor.paid %}Yes{% else %}No{% endif %}</td>
+                  <td class="center">{% if sponsor.paid %}Yes{% else %}No{% endif %}</td>
                   <td class="amount">{% if sponsor.paid %}${{ sponsor.total|floatformat:2|intcomma }}{% else %}&nbsp;{% endif %}</td>
                   <td class="amount last-cell">{% if not sponsor.paid %}${{ sponsor.total|floatformat:2|intcomma }}{% else %}&nbsp;{% endif %}</td>
                 </tr>
@@ -109,13 +106,12 @@
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
-                  <td>&nbsp;</td>
                   <td class="amount last-cell">&nbsp;</td>
                 </tr>
                 {% endfor %}
                 {% endif %}
                 <tr>
-                  <td colspan="5" class="total">Total:</td>
+                  <td colspan="4" class="total">Total:</td>
                   <td class="amount">{{ student.total_for_flat|floatformat:2|intcomma }}</td>
                   <td class="last-cell">&nbsp;</td>
                 </tr>
@@ -126,18 +122,16 @@
               </span>
               <table class="donations">
                 <tr>
-                  <th class="top-cell name">Sponsor Name<br />(First, Last)</th>
-                  <th class="top-cell phone">Sponsor Phone or Email</th>
-                  <th class="top-cell">Per Lap<br />(Due Week of<br />3/24 - 3/28)</th>
-                  <th class="top-cell">Online<br />Donation?</th>
-                  <th class="top-cell">Paid</th>
-                  <th class="top-cell">Amount Enclosed<br />(If Not Paid Online)</th>
-                  <th class="no-cell office">Amount Due</th>
+                  <th class="top-cell">Sponsor Name<br />(First, Last)</th>
+                  <th class="top-cell name">Per Lap<br />(Due Week of<br />3/24 - 3/28)</th>
+                  <th class="top-cell office">Online<br />Donation?</th>
+                  <th class="top-cell office">Paid</th>
+                  <th class="top-cell office">Amount Enclosed<br />(If Not Paid Online)</th>
+                  <th class="no-cell {% if student %}office{% else %}phone{% endif %}">Amount Due</th>
                 </tr>
                 {% if not student %}
                 <tr class="italics">
                   <td class="bold">Example: Joe Smith</td>
-                  <td>(949) 555-5555</td>
                   <td class="amount">$5.00</td>
                   <td class="center">No</td>
                   <td class="center">No</td>
@@ -146,7 +140,6 @@
                 </tr>
                 <tr class="italics">
                   <td class="bold">Example: Joe Smith</td>
-                  <td>(949) 555-5555</td>
                   <td class="amount">$2.00</td>
                   <td class="center">Yes</td>
                   <td class="center">Yes</td>
@@ -158,7 +151,6 @@
                 {% for sponsor in student.sponsors_perlap %}
                 <tr>
                   <td class="bold">{{ sponsor.full_name }}</td>
-                  <td>{% if user.is_superuser %}{{ sponsor.phone_number }} - {{ sponsor.email_address }}{% else %}&nbsp;{% endif %}</td>
                   <td class="amount">${{ sponsor.donation|floatformat:2|intcomma }}{% if sponsor.laps %}*{{ sponsor.laps }}{% else %} <span class="foot-note">per lap</span>{% endif %}</td>
                   <td class="center">{{ sponsor.paid_by }}</td>
                   <td class="center">{% if sponsor.paid %}Yes{% else %}No{% endif %}</td>
@@ -175,13 +167,12 @@
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
-                  <td>&nbsp;</td>
                   <td class="last-cell">&nbsp;</td>
                 </tr>
                 {% endfor %}
                 {% endif %}
                 <tr>
-                  <td colspan="5" class="total">Total:</td>
+                  <td colspan="4" class="total">Total:</td>
                   <td class="amount">{{ student.total_for_laps|floatformat:2|intcomma }}</td>
                   <td class="last-cell">&nbsp;</td>
                 </tr>
@@ -205,7 +196,7 @@
                   <th class="top-cell">Online<br />Donation?</th>
                   <th class="top-cell">Paid</th>
                   <th class="top-cell">Amount Enclosed<br />(If Not Paid Online)</th>
-                  <th class="no-cell">Amount Due<br />(If Any)</th>
+                  <th class="no-cell {% if student %}office{% else %}phone{% endif %}">Amount Due<br />(If Any)</th>
                 </tr>
                 {% if student and student.sponsors_teacher %}
                 {% for sponsor in student.sponsors_teacher %}
@@ -233,7 +224,7 @@
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
-                  <td class="amount last-cell">&nbsp;</td>
+                  <td class="amount last-cell">Office Use Only</td>
                 </tr>
                 {% endfor %}
                 {% endif %}
@@ -248,7 +239,7 @@
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
-                  <td class="amount last-cell">&nbsp;</td>
+                  <td class="amount last-cell">Office Use Only</td>
                 </tr>
                 {% endif %}
                 <tr>

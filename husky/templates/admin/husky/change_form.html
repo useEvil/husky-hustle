@@ -5,6 +5,7 @@
 
 {% block submit_buttons_bottom %}
 {% submit_row %}
+{{ teachers }}
 <script type="text/javascript">
     (function($) {
     if ( $('#id_identifier') ) {
@@ -23,6 +24,11 @@
         $('#id_type').bind('change', function (event) {
             var selected = $('#id_type :selected').val();
             if (selected === '1') {
+                var reg = new RegExp( '\\w+-\\w+-(\\d+)' );
+                var match = $('#id_student :selected').text().match(reg);
+                var name = $('#'+match[1]).text();
+                name = name.replace(/\s+/g, ' ');
+                $('#id_first_name').val(name);
                 $('#id_per_lap').attr('checked', false);
                 $('#id_last_name').val('teacher');
                 $('#id_email_address').val('_teacher_@huskyhustle.com');

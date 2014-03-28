@@ -7,10 +7,13 @@ from django.contrib.admin.views.main import ChangeList
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
 from django.db.models import Count, Sum, Avg, Max
 
 from husky.models import Student, Pledge, Content, Blog, Message, Link, Donation, Grade, Teacher, Shirt, ShirtOrder
 
+import logging
+logger = logging.getLogger(__name__)
 
 class MostLapsListFilter(SimpleListFilter):
     # Human-readable title which will be displayed in the
@@ -97,12 +100,12 @@ class ContentModelForm(forms.ModelForm):
     class Meta:
         model = Content
 
-class DonationModelForm(forms.ModelForm):
-    student = forms.IntegerField(widget=forms.Select(
-        choices=[(s.id, s.select_list_name()) for s in Student.objects.all()]
-    ), label='Student')
-    class Meta:
-        model = Student
+# class DonationModelForm(forms.ModelForm):
+#     student = forms.IntegerField(widget=AdminStudentWidget(
+#         choices=[(s.id, s.select_list_name()) for s in Student.objects.all()]
+#     ), label='Student Name')
+#     class Meta:
+#         model = Student
 
 class ContentAdmin(admin.ModelAdmin):
     fields = ['page', 'content', 'date_added']
@@ -133,7 +136,6 @@ class DonationList(ChangeList):
         self.total_due = self.total_pledged - self.total_donated
 
 class DonationAdmin(admin.ModelAdmin):
-
     # create a link for the student name
     def list_name(obj):
         return '<a href="/admin/husky/student/%d/" class="nowrap">%s</a>' % (obj.student.id, obj.student.list_name())
@@ -153,6 +155,25 @@ class DonationAdmin(admin.ModelAdmin):
     def get_changelist(self, request):
         return DonationList
     change_list_template = 'admin/husky/donation/change_list.html'
+
+    def teacher_html(self):
+        teachers = Teacher.objects.exclude(list_type=2).all()
+        output = []
+        for teacher in teachers:
+            output.append('<span id="%s" style="display: none;">%s</span>' % (teacher.room_number, teacher.full_name()))
+        return mark_safe("".join(output))
+
+    def add_view(self, request, form_url='', extra_context=None):
+        context = {}
+        context.update(extra_context or {})
+        context.update({'teachers': self.teacher_html()})
+        return super(DonationAdmin, self).add_view(request, form_url, extra_context=context)
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        context = {}
+        context.update(extra_context or {})
+        context.update({'teachers': self.teacher_html()})
+        return super(DonationAdmin, self).change_view(request, object_id, form_url, extra_context=context)
 
     ordering = ('-date_added',)
     fields = ['student', 'type', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'date_added']

@@ -391,13 +391,13 @@ class Student(models.Model):
         return Donation.objects.filter(student=self).count()
 
     def sponsors_flat(self):
-        return Donation.objects.filter(student=self, per_lap=False).exclude(last_name='teacher').all()
+        return Donation.objects.filter(student=self, per_lap=False).exclude(type__in=[1,2]).all()
 
     def sponsors_perlap(self):
         return Donation.objects.filter(student=self, per_lap=True).all()
 
     def sponsors_teacher(self):
-        return Donation.objects.filter(student=self, last_name='teacher').all()
+        return Donation.objects.filter(student=self, type__in=[1,2]).all()
 
     def sponsored_principal(self):
         try:
@@ -709,7 +709,7 @@ class Donation(models.Model):
             end = date.datetime(now.year, now.month, now.day, 23, 59, 59, 0, pytz.utc) - date.timedelta(index-1)
             start = date.datetime(now.year, now.month, now.day, 23, 59, 59, 0, pytz.utc) - date.timedelta(index)
             json['values'].append({'label': end.strftime('%m/%d/%Y'), 'values': [], 'labels': []})
-            results = Donation.objects.filter(date_added__range=(start, end)).exclude(last_name='teacher').order_by('-donated')
+            results = Donation.objects.filter(date_added__range=(start, end)).exclude(type__in=[1,2]).order_by('-donated')
             for result in results:
                 json['values'][index-1]['values'].append(float(result.donated or 0))
                 json['values'][index-1]['labels'].append('<span id="%d">%s (%s)</span>'%(result.id, result.full_name(), result.student))

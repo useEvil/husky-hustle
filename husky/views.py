@@ -168,7 +168,7 @@ def payment(request, identifier=None, id=None):
         items = []
         for donor in donations:
             if donor.paid: continue
-            if not donor.student.laps: continue
+            if not donor.total(): continue
             total_due += donor.total()
             ids.append(str(donor.id))
             items.append(donor)
