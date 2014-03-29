@@ -22,7 +22,7 @@
           </tr>
           {% for sponsor in student.sponsors.all %}
           <tr>
-            <td>{{ sponsor.full_name }}</td>
+            <td>{% if sponsor.type == 1 %}For {{ sponsor.first_name }}{% else %}{{ sponsor.full_name }}{% endif %}</td>
             <td class="amount">${{ sponsor.donation|floatformat:2|intcomma }}</td>
             <td class="center">{% if sponsor.per_lap %}<strong class="text-primary">Yes</strong>{% else %}No{% endif %}</td>
             <td class="amount">${{ sponsor.total|floatformat:2|intcomma }}</td>

@@ -522,14 +522,15 @@ def reminders(request, identifier=None):
         c['custom_message'] = request.POST.get('custom_message')
     data = []
     for donation in student.sponsors.exclude(paid=True).all():
-        c['name'] = donation.full_name()
-        c['email_address'] = donation.email_address
-        c['student_name'] = donation.student.full_name()
-        c['student_laps'] = donation.student.laps
-        c['student_identifier'] = donation.student.identifier
-        c['donation_id'] = donation.id
-        c['payment_url'] = donation.payment_url()
-        data.append(_send_email_teamplate('reminder', c, 1))
+        if not donation.type:
+            c['name'] = donation.full_name()
+            c['email_address'] = donation.email_address
+            c['student_name'] = donation.student.full_name()
+            c['student_laps'] = donation.student.laps
+            c['student_identifier'] = donation.student.identifier
+            c['donation_id'] = donation.id
+            c['payment_url'] = donation.payment_url()
+            data.append(_send_email_teamplate('reminder', c, 1))
     _send_mass_mail(data)
     messages.success(request, 'Successfully Sent Reminders')
     if request.POST.get('return_url'):
@@ -838,26 +839,21 @@ def calculate_totals(request, type=None, id=None):
 ## Cart endpoints
 def add_to_cart(request, model, product_id, quantity=1):
     cart = request.cart
-    logger.debug('==== model [%s]'%(model))
     if model == 'shirt':
         product = Shirt.objects.get(pk=product_id)
         cart.add(product, product.price, int(quantity))
     else:
         donation = Donation.objects.get(pk=product_id)
-        logger.debug('==== product_id [%s]'%(product_id))
-        logger.debug('==== donation [%s]'%(donation))
-        logger.debug('==== donation.per_lap [%s]'%(donation.per_lap))
         if not donation.per_lap:
             cart.add(donation, donation.donation, quantity)
-            logger.debug('==== cart [%s]'%(cart))
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Added', 'product_id': product_id}), mimetype='application/json')
 
 def remove_from_cart(request, product_id):
     if product_id:
         cart = request.cart
-        item = cart.get_item(product_id).get_product()
         cart.remove_item(product_id)
-        item.delete()
+        item = cart.get_item(product_id).get_product()
+        if not item.paid: item.delete()
         return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Removed', 'product_id': product_id}), mimetype='application/json')
     else:
         return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 400, 'message': 'No Product ID given'}), mimetype='application/json')
@@ -995,8 +991,7 @@ def _send_email_teamplate(template, data, mass=None):
         return mail.EmailMessage(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']], headers={'Reply-To': data['reply_to']})
     else:
         ## need to send and replace first and last name with sponsor's
-        if not regexp.match('^(_sponsor_)', data['email_address']) or data['last_name'] != 'teacher':
-            mail.send_mail(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']])
+        mail.send_mail(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']])
 
 def _send_mass_mail(messages):
     connection = mail.get_connection()

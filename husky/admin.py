@@ -7,13 +7,10 @@ from django.contrib.admin.views.main import ChangeList
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from django.utils.safestring import mark_safe
 from django.db.models import Count, Sum, Avg, Max
 
 from husky.models import Student, Pledge, Content, Blog, Message, Link, Donation, Grade, Teacher, Shirt, ShirtOrder
 
-import logging
-logger = logging.getLogger(__name__)
 
 class MostLapsListFilter(SimpleListFilter):
     # Human-readable title which will be displayed in the
@@ -25,15 +22,33 @@ class MostLapsListFilter(SimpleListFilter):
 
     def lookups(self, request, model_admin):
         return (
-            ('laps', _('Most Laps')),
-            ('by_laps', _('By Laps')),
+            ('0_laps', _('Most Laps (K)')),
+            ('1_laps', _('Most Laps (1)')),
+            ('2_laps', _('Most Laps (2)')),
+            ('3_laps', _('Most Laps (3)')),
+            ('4_laps', _('Most Laps (4)')),
+            ('laps_girls', _('Most Laps by Girls')),
+            ('laps_boys', _('Most Laps by Boys')),
+            ('per_laps', _('Has Per Lap')),
             ('no_laps', _('Missing Laps')),
             ('outstanding', _('Outstanding')),
         )
     def queryset(self, request, queryset):
-        if self.value() == 'laps':
-            return queryset.exclude(laps=None).order_by('-laps').all()
-        elif self.value() == 'by_laps':
+        if self.value() == '0_laps':
+            return queryset.filter(teacher__grade__grade=0).order_by('-laps').all()
+        elif self.value() == '1_laps':
+            return queryset.filter(teacher__grade__grade=1).order_by('-laps').all()
+        elif self.value() == '2_laps':
+            return queryset.filter(teacher__grade__grade=2).order_by('-laps').all()
+        elif self.value() == '3_laps':
+            return queryset.filter(teacher__grade__grade=3).order_by('-laps').all()
+        elif self.value() == '4_laps':
+            return queryset.filter(teacher__grade__grade=4).order_by('-laps').all()
+        elif self.value() == 'laps_girls':
+            return queryset.filter(gender='F').exclude(laps=None).order_by('-laps').all()
+        elif self.value() == 'laps_boys':
+            return queryset.filter(gender='M').exclude(laps=None).order_by('-laps').all()
+        elif self.value() == 'per_laps':
             return queryset.filter(sponsors__per_lap=True).all()
         elif self.value() == 'no_laps':
             return queryset.filter(laps=None).all()
@@ -121,7 +136,7 @@ class MessageAdmin(admin.ModelAdmin):
     list_display = ['title', 'content', 'date_added']
 
 class DonationList(ChangeList):
-
+    # get results and totals
     def get_results(self, *args, **kwargs):
         super(DonationList, self).get_results(*args, **kwargs)
         results1 = Donation.objects.filter(per_lap=False).aggregate(donated=Sum('donated'))
@@ -158,9 +173,10 @@ class DonationAdmin(admin.ModelAdmin):
 
     def teacher_html(self):
         teachers = Teacher.objects.exclude(list_type=2).all()
-        output = []
+        output = ['<div style="display: none;">']
         for teacher in teachers:
-            output.append('<span id="%s" style="display: none;">%s</span>' % (teacher.room_number, teacher.full_name()))
+            output.append('<span id="%s">%s</span>' % (teacher.room_number, teacher.full_name()))
+        output.append('</div>')
         return mark_safe("".join(output))
 
     def add_view(self, request, form_url='', extra_context=None):
