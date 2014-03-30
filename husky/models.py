@@ -818,15 +818,17 @@ class Donation(models.Model):
                 ids = row['Item ID'].split('-')[-1]
                 if regexp.match('[0-9.,]+', ids):
                     total_paid += float(row['Gross'])
+                    gross = row['Gross']
                     for id in ids.split(','):
                         count += 1
                         try:
                             donation = Donation.objects.filter(id=id).get()
                             if not grade or donation.student.teacher.grade.title == grade:
                                 total_donated += donation.donated or 0
-                                data.append({'id': count, 'date': row['Date'], 'student': donation.student, 'teacher': donation.student.teacher, 'name': row['Name'], 'emnail': row['From Email Address'], 'item': row['Item ID'], 'gross': row['Gross'], 'donation': donation.donated or 0, 'paid': donation.paid and 'Yes' or 'No'})
+                                data.append({'id': count, 'date': row['Date'], 'student': donation.student, 'teacher': donation.student.teacher, 'name': row['Name'], 'emnail': row['From Email Address'], 'item': row['Item ID'], 'gross': gross, 'donation': donation.donated or 0, 'paid': donation.paid and 'Yes' or 'No'})
                         except:
-                            data.append({'id': count, 'date': row['Date'], 'student': 'N/A', 'teacher': 'N/A', 'name': row['Name'], 'emnail': row['From Email Address'], 'item': row['Item ID'], 'gross': row['Gross'], 'donation': 'N/A', 'paid': 'N/A'})
+                            data.append({'id': count, 'date': row['Date'], 'student': 'N/A', 'teacher': 'N/A', 'name': row['Name'], 'emnail': row['From Email Address'], 'item': row['Item ID'], 'gross': gross, 'donation': 'N/A', 'paid': 'N/A'})
+                        gross = ''
                 else:
                     count += 1
                     try:

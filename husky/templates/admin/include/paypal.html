@@ -33,7 +33,7 @@
         <td>{{ result.student.full_name|safe }}</td>
         <td>{{ result.teacher|safe }}</td>
         <td>{{ result.item|safe }}</td>
-        <td align="right">${{ result.gross|floatformat:2|intcomma }}</td>
+        <td align="right">{% if result.gross %}${{ result.gross|floatformat:2|intcomma }}{% endif %}</td>
         <td align="right">${{ result.donation|floatformat:2|intcomma }}</td>
         <td>{{ result.paid|safe }}</td>
       </tr>
