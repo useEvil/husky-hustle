@@ -21,6 +21,13 @@
         });
     }
     if ( $('#id_student') ) {
+        $('#id_student').bind('change', function (event) {
+            var selected = $('#id_student :selected').text();
+            var group = selected.split(';');
+            var name = group[0].split(', ');
+            $('#id_first_name').val(name[1]);
+            $('#id_last_name').val(name[0]);
+        });
         $('#id_type').bind('change', function (event) {
             var selected = $('#id_type :selected').val();
             if (selected === '1') {

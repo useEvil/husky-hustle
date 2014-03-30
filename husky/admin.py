@@ -111,6 +111,10 @@ class StudentAdmin(admin.ModelAdmin):
     save_on_top = True
     list_per_page = 40
 
+    # override the tempalte to show results
+    def get_changelist(self, request):
+        return StudentList
+
 class ContentModelForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea(attrs={'cols': 125, 'rows': 50}))
     class Meta:
@@ -135,6 +139,18 @@ class BlogAdmin(admin.ModelAdmin):
 class MessageAdmin(admin.ModelAdmin):
     fields = ['title', 'content', 'author', 'date_added']
     list_display = ['title', 'content', 'date_added']
+
+class StudentList(ChangeList):
+    # get results and totals
+    def get_results(self, *args, **kwargs):
+        super(StudentList, self).get_results(*args, **kwargs)
+        self.total_laps = 0
+        self.total_due = 0
+        self.total_collected = 0
+        for student in self.result_list:
+            self.total_laps += student.laps or 0
+            self.total_due += student.total_due()
+            self.total_collected += student.total_collected()
 
 class DonationList(ChangeList):
     # get results and totals
