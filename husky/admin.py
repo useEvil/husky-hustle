@@ -33,8 +33,10 @@ class MostLapsListFilter(SimpleListFilter):
             ('per_laps', _('Has Per Lap')),
             ('no_laps', _('Missing Laps')),
             ('outstanding', _('Outstanding')),
+            ('by_teacher', _('By Teacher')),
         )
     def queryset(self, request, queryset):
+        query = request.GET.get('q')
         if self.value() == '0_laps':
             return queryset.filter(teacher__grade__grade=0).order_by('-laps').all()
         elif self.value() == '1_laps':
@@ -55,6 +57,8 @@ class MostLapsListFilter(SimpleListFilter):
             return queryset.filter(laps=None).all()
         elif self.value() == 'outstanding':
             return queryset.filter(sponsors__paid=False).distinct().all()
+        elif self.value() == 'by_teacher':
+            return queryset.filter(teacher__last_name__icontains=query).all()
         else:
             return queryset.all()
 

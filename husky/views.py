@@ -789,7 +789,7 @@ def send_unpaid_reports(request):
     _send_mass_mail(data)
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200}), mimetype='application/json')
 
-def send_unpaid_reminders(request, type=None, donation_id=None):
+def send_unpaid_reminders(request, type=None, donation_id=None, grade=None):
     c = Context(dict(
         subject='Hicks Canyon Jog-A-Thon: Pledge Reminder',
         reply_to=settings.EMAIL_HOST_USER,
@@ -798,9 +798,11 @@ def send_unpaid_reminders(request, type=None, donation_id=None):
         donations = [Donation.objects.filter(id=donation_id).order_by('student__last_name', 'student__first_name').get()]
     elif type:
         flag = type == 'per_lap' and 1 or 0
-        donations = Donation.objects.filter(per_lap=flag).exclude(paid=1).order_by('student__last_name', 'student__first_name')
+        donations = Donation.objects.filter(paid_by='online', per_lap=flag).exclude(paid=1).order_by('student__last_name', 'student__first_name')
+    elif grade:
+        donations = Donation.objects.filter(paid_by='online', student__teacher__grade=grade).order_by('student__last_name', 'student__first_name')
     else:
-        donations = Donation.objects.exclude(paid=1).order_by('student__last_name', 'student__first_name')
+        donations = Donation.objects.filter(paid_by='online').exclude(paid=1).order_by('student__last_name', 'student__first_name')
     data = []
     sponsors = {}
     for donation in donations:
@@ -991,7 +993,8 @@ def _send_email_teamplate(template, data, mass=None):
         return mail.EmailMessage(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']], headers={'Reply-To': data['reply_to']})
     else:
         ## need to send and replace first and last name with sponsor's
-        mail.send_mail(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']])
+        if not regexp.match('^(_sponsor_)', data['email_address']):
+            mail.send_mail(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']])
 
 def _send_mass_mail(messages):
     connection = mail.get_connection()

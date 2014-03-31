@@ -24,7 +24,7 @@ SECRET_KEY = ''
 DEBUG = False
 
 TEMPLATE_DEBUG = False
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'husky/templates'))
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'huskyhustle/husky/templates'))
 
 MEDIA_ROOT = 'husky/static'
 MEDIA_URL = '/media/'
