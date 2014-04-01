@@ -1,5 +1,5 @@
 {% extends "admin/app_index.html" %}
-{% load i18n %}
+{% load i18n humanize %}
 
 {% block coltype %}colMS{% endblock %}
 
@@ -213,22 +213,22 @@
       <tr>
         <th scope="row" class="bold-left">Grand Total Pledged</th>
         <td>&nbsp;</td>
-        <td class="bold-right">${{ grand_pledged.donated }}</td>
+        <td class="bold-right">${{ grand_pledged.donated|floatformat:2|intcomma }}</td>
       </tr>
       <tr>
         <th scope="row" class="bold-left">Grand Total Collected</th>
         <td>&nbsp;</td>
-        <td class="bold-right">${{ grand_donated.donated }}</td>
+        <td class="bold-right">${{ grand_donated.donated|floatformat:2|intcomma }}</td>
       </tr>
       <tr>
         <th scope="row" class="bold-left">Total Collected Online</th>
         <td>&nbsp;</td>
-        <td class="bold-right">${{ online_collected.donated }}</td>
+        <td class="bold-right">${{ online_collected.donated|floatformat:2|intcomma }}</td>
       </tr>
       <tr>
         <th scope="row" class="bold-left">Total Colected Offline</th>
         <td>&nbsp;</td>
-        <td class="bold-right">${{ monies_collected.donated }}</td>
+        <td class="bold-right">${{ monies_collected.donated|floatformat:2|intcomma }}</td>
       </tr>
     </table>
   </div>

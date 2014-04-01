@@ -1,4 +1,4 @@
-{% load i18n admin_static %}{% load cycle from future %}
+{% load i18n admin_static humanize %}{% load cycle from future %}
 {% if result_hidden_fields %}
 <div class="hiddenfields">{# DIV for HTML validation #}
 {% for item in result_hidden_fields %}{{ item }}{% endfor %}
@@ -36,8 +36,8 @@
     <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
     <td style="font-weight: bold;">{{ cl.total_laps }}</td>
     <td>&nbsp;</td>
-    <td style="font-weight: bold;">{{ cl.total_collected }}</td>
-    <td style="font-weight: bold;">{{ cl.total_due }}</td>
+    <td style="font-weight: bold;">${{ cl.total_collected|floatformat:2|intcomma }}</td>
+    <td style="font-weight: bold;">${{ cl.total_due|floatformat:2|intcomma }}</td>
     <td>&nbsp;</td>
   </tr>
 </tbody>

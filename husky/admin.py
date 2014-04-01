@@ -113,13 +113,12 @@ class StudentAdmin(admin.ModelAdmin):
 
     # create a link for the student name
     def first_name_link(obj):
-        return '<a href="/admin/husky/donation/?q=%s" class="nowrap">%s</a>' % (urllib.urlencode(obj.full_name()), obj.first_name)
+        return '<a href="/admin/husky/donation/?q=%s" class="nowrap" style="font-weight: bold;font-size: 12px;">%s</a>' % (urllib.quote_plus(obj.full_name()), obj.first_name)
     first_name_link.allow_tags = True
     first_name_link.short_description = "First Name"
 
     fields = ['teacher', 'first_name', 'last_name', 'identifier', 'gender', 'age', 'laps', 'disqualify', 'date_added']
     list_display = ['last_name', first_name_link, 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_collected', 'total_due', 'total_raffle_tickets']
-#    list_display = ['first_name', 'last_name', 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_for_flat', 'total_due', 'total_collected', 'total_raffle_tickets']
     search_fields = ['teacher__last_name', 'first_name', 'last_name']
     list_editable = ['laps', 'gender', 'disqualify']
     list_filter = [MostLapsListFilter]
