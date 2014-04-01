@@ -58,6 +58,19 @@
     .hidden {
         display: none;
     }
+    .bold-left {
+        font-weight: bold;
+        text-align: left;
+    }
+    .bold-right {
+        font-weight: bold;
+        text-align: right;
+    }
+    .bold-center {
+        color: green;
+        font-weight: bold;
+        text-align: center;
+    }
   </style>
   <script type="text/javascript" src="/static/js/jquery.js"></script>
   <script type="text/javascript" src="/static/js/husky-hustle.js"></script>
@@ -146,29 +159,51 @@
         <td><a href="/admin/results/verify-paypal-donations" class="view-result">View</a></td>
       </tr>
       <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
+        <td colspan="3" class="bold-center">&nbsp;<span id="message">&nbsp;</span></td>
       </tr>
       <tr>
-        <th scope="row"><a href="#" action="/admin/both/calculate_totals" name="calculate_result_totals" class="run-calculations">Run Calculations for Results</a></th>
+        <th scope="row"><a href="#" action="/admin/both/calculate_totals" name="calculate_result_totals" message="Finished!!!" class="run-calculations">Run Calculations for Results</a></th>
         <td><img id="calculate_result_totals_loader" class="hidden loading" src="/static/images/loading.gif" /></td>
-        <td><a href="#" action="/admin/both/calculate_totals" name="calculate_result_totals" class="run-calculations calculator">Run</a></td>
+        <td><a href="#" action="/admin/both/calculate_totals" name="calculate_result_totals" message="Finished!!!" class="run-calculations calculator">Run</a></td>
       </tr>
       <tr>
-        <th scope="row"><a href="#" action="/admin/donation/calculate_totals" name="calculate_donation_totals" class="run-calculations">Run Calculations for Donations</a></th>
+        <th scope="row"><a href="#" action="/admin/donation/calculate_totals" name="calculate_donation_totals" message="Finished!!!" class="run-calculations">Run Calculations for Donations</a></th>
         <td><img id="calculate_donation_totals_loader" class="hidden loading" src="/static/images/loading.gif" /></td>
-        <td><a href="#" action="/admin/donation/calculate_totals" name="calculate_donation_totals" class="run-calculations calculator">Run</a></td>
+        <td><a href="#" action="/admin/donation/calculate_totals" name="calculate_donation_totals" message="Finished!!!" class="run-calculations calculator">Run</a></td>
       </tr>
       <tr>
-        <th scope="row"><a href="#" action="/admin/studentren/calculate_totals" name="calculate_student_totals" class="run-calculations">Run Calculations for Students</a></th>
+        <th scope="row"><a href="#" action="/admin/studentren/calculate_totals" name="calculate_student_totals" message="Finished!!!" class="run-calculations">Run Calculations for Students</a></th>
         <td><img id="calculate_student_totals_loader" class="hidden loading" src="/static/images/loading.gif" /></td>
-        <td><a href="#" action="/admin/students/calculate_totals" name="calculate_student_totals" class="run-calculations calculator">Run</a></td>
+        <td><a href="#" action="/admin/students/calculate_totals" name="calculate_student_totals" message="Finished!!!" class="run-calculations calculator">Run</a></td>
       </tr>
       <tr>
-        <th scope="row"><a href="#" action="/admin/send_teacher_reports" name="run_teacher_report_emails" class="run-calculations">Run Teacher Report Emails</a></th>
+        <th scope="row"><a href="#" action="/admin/send_teacher_reports" name="run_teacher_report_emails" message="Finished!!!" class="run-calculations">Run Teacher Report Emails</a></th>
         <td><img id="run_teacher_report_emails_loader" class="hidden loading" src="/static/images/loading.gif" /></td>
-        <td><a href="#" action="/admin/send_teacher_reports" name="run_teacher_report_emails" class="run-calculations calculator">Run</a></td>
+        <td><a href="#" action="/admin/send_teacher_reports" name="run_teacher_report_emails" message="Finished!!!" class="run-calculations calculator">Run</a></td>
+      </tr>
+      <tr>
+        <th scope="row"><a href="#" class="show-form" name="send_unpaid_reminders">Send Unpaid Reminders</a></th>
+        <td colspan="2">&nbsp;</td>
+      </tr>
+      <tr style="display: none;" id="send_unpaid_reminders">
+        <td colspan="3" class="bold-right">
+          <form id="send_unpaid_reminders" action="#" method="GET">
+            <img id="send_unpaid_reminders_loader" class="hidden" src="/static/images/loading.gif" />
+            <input type="text" id="donation_id" name="donation_id" value="" size="10" placeholder="Donation ID" />
+            <select name="type" id="type">
+              <option value="both">both</option>
+              <option value="per_lap">per_lap</option>
+              <option value="flat">flat</option>
+            </select>
+            <select name="grade" id="grade">
+              <option value="all">All</option>
+              {% for grade in grades %}
+              <option value="{{ grade.id }}">{{ grade.title }}</option>
+              {% endfor %}
+            </select>
+            <input type="submit" class="submit-form" name="send_unpaid_reminders" value=" Send > " />
+          </form>
+        </td>
       </tr>
     </table>
   </div>
@@ -176,24 +211,24 @@
     <table summary="Donation Results.">
     <caption>Donation Results</caption>
       <tr>
-        <th scope="row" style="font-weight: bold;text-align: left;">Grand Total Pledged</th>
+        <th scope="row" class="bold-left">Grand Total Pledged</th>
         <td>&nbsp;</td>
-        <td style="font-weight: bold;text-align: right;">${{ grand_pledged.donated }}</td>
+        <td class="bold-right">${{ grand_pledged.donated }}</td>
       </tr>
       <tr>
-        <th scope="row" style="font-weight: bold;text-align: left;">Grand Total Collected</th>
+        <th scope="row" class="bold-left">Grand Total Collected</th>
         <td>&nbsp;</td>
-        <td style="font-weight: bold;text-align: right;">${{ grand_donated.donated }}</td>
+        <td class="bold-right">${{ grand_donated.donated }}</td>
       </tr>
       <tr>
-        <th scope="row" style="font-weight: bold;text-align: left;">Total Collected Online</th>
+        <th scope="row" class="bold-left">Total Collected Online</th>
         <td>&nbsp;</td>
-        <td style="font-weight: bold;text-align: right;">${{ online_collected.donated }}</td>
+        <td class="bold-right">${{ online_collected.donated }}</td>
       </tr>
       <tr>
-        <th scope="row" style="font-weight: bold;text-align: left;">Total Colected Offline</th>
+        <th scope="row" class="bold-left">Total Colected Offline</th>
         <td>&nbsp;</td>
-        <td style="font-weight: bold;text-align: right;">${{ monies_collected.donated }}</td>
+        <td class="bold-right">${{ monies_collected.donated }}</td>
       </tr>
     </table>
   </div>
@@ -202,18 +237,28 @@
       function () {
         var showOverlay = function (name) {
           $('#'+name+'_loader').show();
-          $('#overlay').show();
+          clearMessage();
           return false;
         };
         var hideOverlay = function (name) {
           $('#'+name+'_loader').hide();
-          $('#'+name).hide();
-          $('#overlay').hide();
           return false;
         };
-        var runCalculations = function () {
-          var name = $(this).attr('name');
-          var action = $(this).attr('action');
+        var showMessage = function (message) {
+            $('#message').show();
+            $('#message').html(message);
+        };
+        var clearMessage = function () {
+            $('#message').hide();
+            $('#message').html("");
+        };
+        var showForm = function () {
+          $('#'+$(this).attr('name')).toggle();
+        };
+        var processRequests = function (event, name, action, message) {
+          if (!name) name = $(this).attr('name');
+          if (!message) message = $(this).attr('message');
+          if (!action) action = $(this).attr('action');
           showOverlay(name);
           $.ajax(
             {
@@ -221,13 +266,38 @@
               type: 'get',
               dataType: 'json',
               timeout: 30000000,
-              success: function (results) { alert('Success!'); hideOverlay(name); },
-              error: function (results) { alert('Failed!'); hideOverlay(name); }
+              success: function (results) {
+                showMessage(message);
+                hideOverlay(name);
+                if (name === 'send_unpaid_reminders') {
+                  window.location.reload();
+                }
+              },
+              error: function (xhr, stat, err) {
+                hideOverlay(name);
+                if (stat == 'timeout') {
+                  alert('Timed out, try smaller set!');
+                } else {
+                  alert('Failed! ' + err);
+                }
+              }
             }
           );
           return false;
         };
-        $('.run-calculations').bind('click', runCalculations);
+        var submitForm = function (event, donation_id, type, grade) {
+          var name = $(this).attr('name');
+          if (!donation_id) donation_id = $('#donation_id').val() || 0;
+          if (!type) type = $('#type :selected').val();
+          if (!grade) grade = $('#grade :selected').val();
+          var action = ['/admin/send_unpaid_reminders', type, donation_id, grade].join('/');
+          showOverlay(name);
+          processRequests(event, name, action);
+          return false;
+        };
+        $('.run-calculations').bind('click', processRequests);
+        $('.show-form').bind('click', showForm);
+        $('.submit-form').bind('click', submitForm);
       }
     );
   </script>

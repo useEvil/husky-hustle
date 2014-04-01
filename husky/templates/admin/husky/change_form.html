@@ -29,11 +29,12 @@
             $('#id_last_name').val(name[0]);
         });
         $('#id_type').bind('change', function (event) {
-            var selected = $('#id_type :selected').val();
+            var selected, match, name, group, reg;
+            selected = $('#id_type :selected').val();
             if (selected === '1') {
-                var reg = new RegExp( '\\w+-\\w+-(\\d+)' );
-                var match = $('#id_student :selected').text().match(reg);
-                var name = $('#'+match[1]).text();
+                reg = new RegExp( '\\w+-\\w+-(\\d+)' );
+                match = $('#id_student :selected').text().match(reg);
+                name = $('#'+match[1]).text();
                 name = name.replace(/\s+/g, ' ');
                 $('#id_first_name').val(name);
                 $('#id_per_lap').attr('checked', false);
@@ -45,7 +46,11 @@
                 $('#id_last_name').val('principal');
                 $('#id_email_address').val('_principal_@huskyhustle.com');
             } else {
-                if (!$('#id_last_name').val()) $('#id_last_name').val('');
+                selected = $('#id_student :selected').text();
+                group = selected.split(';');
+                name = group[0].split(', ');
+                $('#id_first_name').val(name[1]);
+                $('#id_last_name').val(name[0]);
                 if ($('#id_email_address').val().match(/^_/)) $('#id_email_address').val('_sponsor_@huskyhustle.com');
             }
         });

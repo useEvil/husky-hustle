@@ -20,7 +20,7 @@ Dear {{ name }},
 {% if custom_message %}{{ custom_message }}
 {% endif %}
 You are receiving this email because you sponsored {{ student_name }} for the Hicks Canyon 
-Husky Hustle.  {% if student_laps %}{{ student_name }} ran an amazing {{ student_laps }} laps.{% endif %}
+Husky Hustle.  {{ student_name }} ran an amazing {{ student_laps }} laps.
 
 Our records indicate that your pledge has not been funded.  Please refer to the link below to 
 make your payment.  Your contribution ensures that the students at Hicks Canyon will continue 

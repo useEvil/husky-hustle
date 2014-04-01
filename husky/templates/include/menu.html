@@ -13,7 +13,7 @@
       <ul class="nav navbar-nav">
         <li{% if path == '/' %} class="active"{% endif %}><a href="/">Home</a></li>
         <li{% if 'donat' in path %} class="active"{% endif %}><a href="/student-donation/search">Donate</a></li>
-        <li{% if 'results' in path and user.is_superuser %} class="active"{% endif %}><a href="/results">Results</a></li>
+        {% if user.is_superuser %}<!--li{% if 'results' in path %} class="active"{% endif %}><a href="/results">Results</a></li-->{% endif %}
         <li{% if 'photos' in path %} class="active"{% endif %}><a href="/nav/photos">Photos</a></li>
         <li{% if 'blog' in path %} class="active"{% endif %}><a href="/nav/blog">Blog</a></li>
         <li{% if 'links' in path %} class="active"{% endif %}><a href="/nav/links">Links</a></li>

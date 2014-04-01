@@ -860,7 +860,7 @@ class Donation(models.Model):
     def payment_url(self, ids=None):
         url = self.student.payment_url()
         if ids:
-            return '/%s' % (url, ids)
+            return '%s/%s' % (url, ids)
         else:
             return '%s?sponsor=%s' % (url, self.email_address)
 

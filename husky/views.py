@@ -794,33 +794,32 @@ def send_unpaid_reminders(request, type=None, donation_id=None, grade=None):
         subject='Hicks Canyon Jog-A-Thon: Pledge Reminder',
         reply_to=settings.EMAIL_HOST_USER,
     ))
-    if donation_id:
+    if donation_id and donation_id != '0':
         donations = [Donation.objects.filter(id=donation_id).order_by('student__last_name', 'student__first_name').get()]
-    elif type:
+    elif type and type != 'both':
         flag = type == 'per_lap' and 1 or 0
-        donations = Donation.objects.filter(paid_by='online', per_lap=flag).exclude(paid=1).order_by('student__last_name', 'student__first_name')
-    elif grade:
-        donations = Donation.objects.filter(paid_by='online', student__teacher__grade=grade).order_by('student__last_name', 'student__first_name')
+        donations = Donation.objects.filter(type=0, per_lap=flag).exclude(paid=1).order_by('student__last_name', 'student__first_name')
+    elif grade and grade != 'all':
+        donations = Donation.objects.filter(type=0, student__teacher__grade=grade).order_by('student__last_name', 'student__first_name')
     else:
-        donations = Donation.objects.filter(paid_by='online').exclude(paid=1).order_by('student__last_name', 'student__first_name')
+        donations = Donation.objects.filter(type=0).exclude(paid=1).order_by('student__last_name', 'student__first_name')
     data = []
     sponsors = {}
     for donation in donations:
         email_address = donation.email_address
-        if donation.last_name == 'teacher': continue
+        if regexp.match('^(_sponsor_)', email_address): continue
         if not sponsors.has_key(email_address):
             sponsors[email_address] = []
         sponsors[email_address].append(donation)
     for email, donations in iter(sponsors.iteritems()):
         donation = donations[0]
-        ids = ','.join(str(d.id) for d in donations)
         c['name'] = donation.full_name()
         c['email_address'] = settings.DEBUG and settings.EMAIL_HOST_USER or email
         c['student_name'] = donation.student.full_name()
         c['student_laps'] = donation.student.laps
         c['student_identifier'] = donation.student.identifier
         c['donation_id'] = donation.id
-        c['payment_url'] = donation.payment_url(ids)
+        c['payment_url'] = donation.payment_url()
         data.append(_send_email_teamplate('reminder', c, 1))
         if settings.DEBUG: break
     _send_mass_mail(data)
