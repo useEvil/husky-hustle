@@ -584,7 +584,6 @@ def paid(request, donation_id=None):
                 # update totals
                 donation.calculate_totals(donation.id)
 #                 calculate_totals_signal.send(sender=None, donation=donation)
-                calculate_totals_signal.send(sender=None, donation=donation)
                 c['code'] = result
                 c['query'] = query
                 c['name'] = donation.full_name()
@@ -800,7 +799,7 @@ def send_unpaid_reminders(request, type=None, donation_id=None, grade=None):
         flag = type == 'per_lap' and 1 or 0
         donations = Donation.objects.filter(type=0, per_lap=flag).exclude(paid=1).order_by('student__last_name', 'student__first_name')
     elif grade and grade != 'all':
-        donations = Donation.objects.filter(type=0, student__teacher__grade=grade).order_by('student__last_name', 'student__first_name')
+        donations = Donation.objects.filter(type=0, student__teacher__grade=grade).exclude(paid=1).order_by('student__last_name', 'student__first_name')
     else:
         donations = Donation.objects.filter(type=0).exclude(paid=1).order_by('student__last_name', 'student__first_name')
     data = []

@@ -1,3 +1,4 @@
+import urllib
 import re as regexp
 
 from django import forms
@@ -106,8 +107,18 @@ class MostDonationsListFilter(SimpleListFilter):
             return queryset.all()
 
 class StudentAdmin(admin.ModelAdmin):
+    # override the tempalte to show results
+    def get_changelist(self, request):
+        return StudentList
+
+    # create a link for the student name
+    def first_name_link(obj):
+        return '<a href="/admin/husky/donation/?q=%s" class="nowrap">%s</a>' % (urllib.urlencode(obj.full_name()), obj.first_name)
+    first_name_link.allow_tags = True
+    first_name_link.short_description = "First Name"
+
     fields = ['teacher', 'first_name', 'last_name', 'identifier', 'gender', 'age', 'laps', 'disqualify', 'date_added']
-    list_display = ['last_name', 'first_name', 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_collected', 'total_due', 'total_raffle_tickets']
+    list_display = ['last_name', first_name_link, 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_collected', 'total_due', 'total_raffle_tickets']
 #    list_display = ['first_name', 'last_name', 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_for_flat', 'total_due', 'total_collected', 'total_raffle_tickets']
     search_fields = ['teacher__last_name', 'first_name', 'last_name']
     list_editable = ['laps', 'gender', 'disqualify']
@@ -115,9 +126,6 @@ class StudentAdmin(admin.ModelAdmin):
     save_on_top = True
     list_per_page = 40
 
-    # override the tempalte to show results
-    def get_changelist(self, request):
-        return StudentList
 
 class ContentModelForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea(attrs={'cols': 125, 'rows': 50}))
