@@ -27,6 +27,12 @@
             $('#id_first_name').val(name[1]);
             $('#id_last_name').val(name[0]);
         });
+        $('#id_paid_by').bind('change', function (event) {
+            var selected = $('#id_paid_by :selected').val();
+            if (!selected) {
+              $('#id_paid').attr('checked', false);
+            }
+        }
         $('#id_type').bind('change', function (event) {
             var selected, match, name, group, reg;
             selected = $('#id_type :selected').val();

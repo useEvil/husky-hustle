@@ -73,6 +73,7 @@ class MostDonationsListFilter(SimpleListFilter):
 
     def lookups(self, request, model_admin):
         return (
+            ('unpaid', _('All Unpaid')),
             ('unpaid_lap', _('Unpaid Per Lap')),
             ('unpaid_flat', _('Unpaid Flat')),
             ('perlap', _('Paid Per Lap')),
@@ -85,7 +86,9 @@ class MostDonationsListFilter(SimpleListFilter):
             ('to_principal', _('To Principal')),
         )
     def queryset(self, request, queryset):
-        if self.value() == 'unpaid_lap':
+        if self.value() == 'unpaid':
+            return queryset.filter(paid=False).order_by('email_address').all()
+        elif self.value() == 'unpaid_lap':
             return queryset.filter(paid=False, per_lap=True).order_by('email_address').all()
         elif self.value() == 'unpaid_flat':
             return queryset.filter(paid=False, per_lap=False).order_by('email_address').all()
