@@ -68,7 +68,9 @@ class MostLapsListFilter(SimpleListFilter):
             match = regexp.match('by_(?P<teacher>\w+)', self.value())
             if match:
                 last_name = match.group('teacher')
-            return queryset.filter(teacher__last_name__icontains=last_name).all()
+                return queryset.filter(teacher__last_name__icontains=last_name).all()
+            else:
+                return queryset.filter(teacher__last_name__icontains=query).all()
         else:
             return queryset.all()
 
