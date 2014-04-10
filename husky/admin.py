@@ -23,7 +23,8 @@ class MostLapsListFilter(SimpleListFilter):
     parameter_name = ''
 
     def lookups(self, request, model_admin):
-        return (
+        teachers = Teacher().get_list()
+        filters = [
             ('0_laps', _('Most Laps (K)')),
             ('1_laps', _('Most Laps (1)')),
             ('2_laps', _('Most Laps (2)')),
@@ -35,9 +36,12 @@ class MostLapsListFilter(SimpleListFilter):
             ('no_laps', _('Missing Laps')),
             ('outstanding', _('Outstanding')),
             ('by_teacher', _('By Teacher')),
-        )
+        ]
+        for teacher in teachers:
+            filters.append( ('by_{0}'.format(teacher.last_name.lower()), _('By {0} ({1})'.format(teacher.last_name, teacher.grade))) )
+        return filters
     def queryset(self, request, queryset):
-        query = request.GET.get('q')
+        query = request.GET.get('q') or ''
         if self.value() == '0_laps':
             return queryset.filter(teacher__grade__grade=0).order_by('-laps').all()
         elif self.value() == '1_laps':
@@ -60,6 +64,11 @@ class MostLapsListFilter(SimpleListFilter):
             return queryset.filter(sponsors__paid=False).distinct().all()
         elif self.value() == 'by_teacher':
             return queryset.filter(teacher__last_name__icontains=query).all()
+        elif regexp.match('by_', self.value()):
+            match = regexp.match('by_(?P<teacher>\w+)', self.value())
+            if match:
+                last_name = match.group('teacher')
+            return queryset.filter(teacher__last_name__icontains=last_name).all()
         else:
             return queryset.all()
 
@@ -161,6 +170,7 @@ class StudentList(ChangeList):
         self.total_laps = 0
         self.total_due = 0
         self.total_collected = 0
+        self.student_page = True
         for student in self.result_list:
             self.total_laps += student.laps or 0
             self.total_due += student.total_due()
@@ -173,13 +183,16 @@ class DonationList(ChangeList):
         results1 = Donation.objects.all().aggregate(pledged=Sum('donated'))
         results2 = Donation.objects.filter(paid=True).aggregate(donated=Sum('donated'))
         self.grand_pledged = results1['pledged'] or 0
-        self.grand_donated = results2['donated'] or 0
+        self.grand_collected = results2['donated'] or 0
+        self.total_laps = 0
         self.total_pledged = 0
-        self.total_donated = 0
+        self.total_collected = 0
+        self.donation_page = True
         for donation in self.result_list:
+            self.total_laps += donation.student.laps or 0
             self.total_pledged += donation.total()
-            if donation.paid: self.total_donated += donation.donated or 0
-        self.total_due = self.total_pledged - self.total_donated
+            if donation.paid: self.total_collected += donation.donated or 0
+        self.total_due = self.total_pledged - self.total_collected
 
 class DonationAdmin(admin.ModelAdmin):
     # create a link for the student name

@@ -7,7 +7,7 @@
 {{ teachers }}
 <script type="text/javascript">
     (function($) {
-    if ( $('#id_identifier') ) {
+    if ($('#id_identifier')) {
         $('#id_identifier').bind('focus', function (event) {
             var reg = new RegExp( '\\((\\d+)\\)' );
             var match = $('#id_teacher :selected').text().match(reg);
@@ -19,7 +19,7 @@
             $('#id_identifier').val(identifier);
         });
     }
-    if ( $('#id_student') ) {
+    if ($('#id_student')) {
         $('#id_student').bind('change', function (event) {
             var selected = $('#id_student :selected').text();
             var group = selected.split(';');
@@ -32,7 +32,7 @@
             if (!selected) {
               $('#id_paid').attr('checked', false);
             }
-        }
+        });
         $('#id_type').bind('change', function (event) {
             var selected, match, name, group, reg;
             selected = $('#id_type :selected').val();
