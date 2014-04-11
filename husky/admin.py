@@ -141,6 +141,7 @@ class StudentAdmin(admin.ModelAdmin):
     list_filter = [MostLapsListFilter]
     save_on_top = True
     list_per_page = 40
+    ordering = ('teacher', 'last_name')
 
 
 class ContentModelForm(forms.ModelForm):
@@ -262,7 +263,7 @@ class TeacherAdmin(admin.ModelAdmin):
     fields = ['grade', 'list_type', 'title', 'first_name', 'last_name', 'room_number', 'email_address', 'phone_number', 'website']
     list_display = ['grade', 'list_type', 'title', 'last_name', 'room_number', 'email_address', 'get_donations', 'total_students', 'total_participation']
     list_editable = ['list_type', 'last_name', 'room_number', 'email_address']
-#     ordering = ('grade', 'last_name')
+    ordering = ('grade', 'last_name')
 
 class GradeAdmin(admin.ModelAdmin):
     fields = ['grade', 'title']
