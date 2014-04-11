@@ -25,33 +25,33 @@ class MostLapsListFilter(SimpleListFilter):
     def lookups(self, request, model_admin):
         teachers = Teacher().get_list()
         filters = [
-            ('0_laps', _('Most Laps (K)')),
-            ('1_laps', _('Most Laps (1)')),
-            ('2_laps', _('Most Laps (2)')),
-            ('3_laps', _('Most Laps (3)')),
-            ('4_laps', _('Most Laps (4)')),
+            ('by_teacher', _('By Teacher')),
+            ('by_kinder', _('By Kindergarten')),
+            ('by_first', _('By First')),
+            ('by_second', _('By Second')),
+            ('by_third', _('By Third')),
+            ('by_fourth', _('By Fourth')),
             ('laps_girls', _('Most Laps by Girls')),
             ('laps_boys', _('Most Laps by Boys')),
             ('per_laps', _('Has Per Lap')),
             ('no_laps', _('Missing Laps')),
             ('outstanding', _('Outstanding')),
-            ('by_teacher', _('By Teacher')),
         ]
         for teacher in teachers:
             filters.append( ('by_{0}'.format(teacher.last_name.lower()), _('By {0} ({1})'.format(teacher.last_name, teacher.grade))) )
         return filters
     def queryset(self, request, queryset):
         query = request.GET.get('q') or ''
-        if self.value() == '0_laps':
-            return queryset.filter(teacher__grade__grade=0).order_by('-laps').all()
-        elif self.value() == '1_laps':
-            return queryset.filter(teacher__grade__grade=1).order_by('-laps').all()
-        elif self.value() == '2_laps':
-            return queryset.filter(teacher__grade__grade=2).order_by('-laps').all()
-        elif self.value() == '3_laps':
-            return queryset.filter(teacher__grade__grade=3).order_by('-laps').all()
-        elif self.value() == '4_laps':
-            return queryset.filter(teacher__grade__grade=4).order_by('-laps').all()
+        if self.value() == 'by_kinder':
+            return queryset.filter(teacher__grade__grade=0).exclude(teacher__in=[1,17]).all()
+        elif self.value() == 'by_first':
+            return queryset.filter(teacher__grade__grade=1).all()
+        elif self.value() == 'by_second':
+            return queryset.filter(teacher__grade__grade=2).all()
+        elif self.value() == 'by_third':
+            return queryset.filter(teacher__grade__grade=3).all()
+        elif self.value() == 'by_fourth':
+            return queryset.filter(teacher__grade__grade=4).all()
         elif self.value() == 'laps_girls':
             return queryset.filter(gender='F').exclude(laps=None).order_by('-laps').all()
         elif self.value() == 'laps_boys':
@@ -89,7 +89,6 @@ class MostDonationsListFilter(SimpleListFilter):
             ('unpaid_flat', _('Unpaid Flat')),
             ('perlap', _('Paid Per Lap')),
             ('flat', _('Paid Flat')),
-#             ('direct', _('Direct')),
             ('online', _('Via Online')),
             ('check_cash', _('Via Cash/Check')),
             ('brooke_bree', _('Brooke+Bree')),
@@ -97,6 +96,7 @@ class MostDonationsListFilter(SimpleListFilter):
             ('to_principal', _('To Principal')),
         )
     def queryset(self, request, queryset):
+        query = request.GET.get('q') or ''
         if self.value() == 'unpaid':
             return queryset.filter(paid=False).order_by('email_address').all()
         elif self.value() == 'unpaid_lap':
@@ -108,7 +108,10 @@ class MostDonationsListFilter(SimpleListFilter):
         elif self.value() == 'flat':
             return queryset.filter(paid=True, per_lap=False).all()
         elif self.value() == 'online':
-            return queryset.filter(paid_by='online').all()
+            if query:
+                return queryset.filter(paid_by='online', student__teacher__last_name__icontains=query).all()
+            else:
+                return queryset.filter(paid_by='online').all()
         elif self.value() == 'check_cash':
             return queryset.filter(paid_by__in=['check', 'cash']).all()
         elif self.value() == 'brooke_bree':
