@@ -64,7 +64,7 @@ class MostLapsListFilter(SimpleListFilter):
             return queryset.filter(sponsors__paid=False).distinct().all()
         elif self.value() == 'by_teacher':
             return queryset.filter(teacher__last_name__icontains=query).all()
-        elif regexp.match('by_', self.value()):
+        elif self.value() and regexp.match('by_', self.value()):
             match = regexp.match('by_(?P<teacher>\w+)', self.value())
             if match:
                 last_name = match.group('teacher')
