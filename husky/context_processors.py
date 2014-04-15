@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db.models import Sum
 
-from husky.models import Donation, Grade
+from husky.models import Donation, Grade, Content
 from husky.helpers import *
 
 import logging
@@ -28,4 +28,5 @@ def page_content(request):
         context['bar_height'] = donation.bar_height()
         context['arrow_height'] = donation.arrow_height()
         context['cart'] = request.cart
+        context['has_ended'] = Content.objects.filter(page='has_ended').get()
     return context

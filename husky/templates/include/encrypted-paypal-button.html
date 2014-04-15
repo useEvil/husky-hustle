@@ -1,4 +1,6 @@
-{% load humanize %}
+{% load custom_filters humanize %}
+
+{% if has_ended.content == '' %}
 <form action="{{ paypal_ipn_url }}" method="POST">
   <p>
     If you are ready to make your payment.  Please submit your payment by using the button below.  
@@ -12,3 +14,6 @@
     <input type="image" src="/static/images/credit-card-paypal.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
   </p>
 </form>
+{% else %}
+{{ has_ended.content|safe }}
+{% endif %}

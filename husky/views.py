@@ -44,7 +44,6 @@ def index(request):
         motd=Message.objects.latest('date_added'),
         content=Content.objects.filter(page='index').get(),
         jumbotron=Content.objects.filter(page='jumbotron').get(),
-        has_ended=Content.objects.filter(page='has_ended').get(),
         calendar=Calendar().get_events(),
     ))
     return render_to_response('index.html', c, context_instance=RequestContext(request))
