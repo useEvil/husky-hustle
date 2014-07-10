@@ -8,7 +8,7 @@ import gdata.photos.service as gdata
 import husky.helpers as h
 import datetime as date
 import json as simplejson
-import re as regexp
+import re as regex
 
 from django.db import IntegrityError
 from django.core import mail
@@ -327,7 +327,7 @@ def donate_direct(request):
             first_name = request.POST.get('student_first_name').strip()
             last_name = request.POST.get('student_last_name').strip()
             per_lap = request.POST.get('per_lap')
-            identifier = '%s-%s-%s'%(_replace_space(first_name), _replace_space(last_name), teacher.room_number)
+            identifier = '%s-%s-%s'%(replace_space(first_name), replace_space(last_name), teacher.room_number)
             try:
                 student = Student.objects.get(identifier=identifier)
             except Exception, e:
@@ -498,7 +498,7 @@ def emails(request):
             return HttpResponse(simplejson.dumps({'result': 'NOTOK', 'status': 400, 'message': 'You must provide email addresses.', 'is_modal': is_modal}), mimetype='application/json')
         else:
             messages.success(request, 'You must provide email addresses')
-    p = regexp.compile(r'\s*,\s*')
+    p = regex.compile(r'\s*,\s*')
     addresses = filter(None, p.split(addresses))
     data = []
     for address in addresses:
@@ -598,7 +598,7 @@ def paid(request, donation_id=None):
         c['amount'] = '0.00'
         c['subject'] = 'Hicks Canyon Jog-A-Thon: Payment Failed'
         _send_email_teamplate('paid', c)
-    elif regexp.match('[^\d,]+', donation_id):
+    elif regex.match('[^\d,]+', donation_id):
         logger.debug('Successfully Received Payment For: %s' % donation_id)
     else:
         for id in donation_id.split(','):
@@ -805,7 +805,7 @@ def send_unpaid_reminders(request, type=None, donation_id=None, grade=None):
     sponsors = {}
     for donation in donations:
         email_address = donation.email_address
-        if regexp.match('^(_sponsor_)', email_address): continue
+        if regex.match('^(_sponsor_)', email_address): continue
         if not sponsors.has_key(email_address):
             sponsors[email_address] = []
         sponsors[email_address].append(donation)
@@ -898,7 +898,7 @@ def order_form(request, identifier=None):
         if form.is_valid():
             cart = request.cart
             for key in request.POST.iterkeys():
-                match = regexp.match('quantity-(?P<product_id>\d+)', key)
+                match = regex.match('quantity-(?P<product_id>\d+)', key)
                 if match:
                     quantity = int(request.POST.get(key))
                     if quantity:
@@ -990,18 +990,12 @@ def _send_email_teamplate(template, data, mass=None):
         return mail.EmailMessage(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']], headers={'Reply-To': data['reply_to']})
     else:
         ## need to send and replace first and last name with sponsor's
-        if not regexp.match('^(_sponsor_)', data['email_address']):
+        if not regex.match('^(_sponsor_)', data['email_address']):
             mail.send_mail(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']])
 
 def _send_mass_mail(messages):
     connection = mail.get_connection()
     connection.send_messages(messages)
-
-def _replace_space(string):
-     # Replace all runs of whitespace with a single dash
-     string = regexp.sub(r"\s+", '-', string.lower())
-
-     return string
 
 class BlogFeed(Feed):
     title = "Husky Hustle Site News"

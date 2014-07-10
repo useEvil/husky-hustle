@@ -5,7 +5,7 @@ import math
 import base64
 import urllib
 import logging
-import re as regexp
+import re as regex
 import datetime as date
 import husky.bitly as bitly
 import gdata.media as media
@@ -74,8 +74,8 @@ class Calendar(object):
 
     def get_events(self):
         query = cdata.CalendarEventQuery()
-        query.start_min = date.datetime.now().strftime('%Y-%m-%d')
-#        query.start_max = (date.datetime.now() + date.timedelta(days=14)).strftime('%Y-%m-%d')
+        query.start_min = date.datetime.now(pytz.utc).strftime('%Y-%m-%d')
+#        query.start_max = (date.datetime.now(pytz.utc) + date.timedelta(days=14)).strftime('%Y-%m-%d')
         feed = self.gd_client.GetCalendarEventFeed(q=query, visibility='public', sortorder='ascending', orderby='starttime')
         return feed
 
@@ -118,7 +118,7 @@ class Content(models.Model):
 
     page = models.CharField(max_length=100)
     content = models.TextField(max_length=65000, blank=True, null=True)
-    date_added = models.DateTimeField(default=date.datetime.now())
+    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
 
 
 class Blog(models.Model):
@@ -126,7 +126,7 @@ class Blog(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey(User)
     content = models.TextField(max_length=4000)
-    date_added = models.DateTimeField(default=date.datetime.now())
+    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
 
 
 class Message(models.Model):
@@ -134,7 +134,7 @@ class Message(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey(User)
     content = models.TextField(max_length=4000)
-    date_added = models.DateTimeField(default=date.datetime.now())
+    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
 
 
 class Link(models.Model):
@@ -295,7 +295,7 @@ class Student(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     identifier = models.CharField(max_length=100, unique=True)
-    date_added = models.DateTimeField(default=date.datetime.now())
+    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
     laps = models.IntegerField(blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=1, blank=True, null=True, choices=(('M', 'Boy'), ('F', 'Girl')))
@@ -512,7 +512,7 @@ class Donation(models.Model):
     paid = models.BooleanField(null=False, default=0)
     paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=PAID_BY)
     type = models.IntegerField(null=False, default=0, choices=TYPES)
-    date_added = models.DateTimeField(default=date.datetime.now())
+    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
     class Meta:
         ordering = ['last_name', 'first_name']
 
@@ -816,7 +816,7 @@ class Donation(models.Model):
                     continue
                 row = dict(zip(fields, row))
                 ids = row['Item ID'].split('-')[-1]
-                if regexp.match('[0-9.,]+', ids):
+                if regex.match('[0-9.,]+', ids):
                     total_paid += float(row['Gross'])
                     gross = row['Gross']
                     for id in ids.split(','):
@@ -949,7 +949,7 @@ class ShirtOrder(models.Model):
     price = CurrencyField(blank=True, null=True)
     paid = models.BooleanField(null=False, default=0)
     paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=(('cash','cash'), ('check','check'), ('online','online')))
-    date_added = models.DateTimeField(default=date.datetime.now())
+    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
 
 
 class ShirtOrderForm(forms.Form):
@@ -973,8 +973,8 @@ class DonationForm(forms.Form):
 
         if 'phone_number' in self.cleaned_data:
             value = self.cleaned_data['phone_number']
-            phoneMatchRegex = regexp.compile(r"^[0-9\-\(\) \.]*$")
-            phoneSplitRegex = regexp.compile(r"[\-\(\) \.]")
+            phoneMatchRegex = regex.compile(r"^[0-9\-\(\) \.]*$")
+            phoneSplitRegex = regex.compile(r"[\-\(\) \.]")
             if not value:
                 raise forms.ValidationError("Phone number is required")
             if not phoneMatchRegex.match(value):

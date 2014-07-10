@@ -7,6 +7,7 @@ available to Controllers. This module is available to templates as 'h'.
 #from webhelpers.html.tags import checkbox, password
 import cgi
 import locale
+import re as regexp
 import datetime as date
 
 from functools import wraps
@@ -107,3 +108,9 @@ def getHttpRequest(uri=None, data=None):
     try: content = response.read()
     except Exception, e: print "Failed to content: "%(e.reason)
     return content
+
+def replace_space(string):
+     # Replace all runs of whitespace with a single dash
+     string = regexp.sub(r"\s+", '-', string.lower())
+     return string
+
