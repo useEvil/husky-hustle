@@ -3,6 +3,7 @@
 *.pyc
 *-local*
 *.sql
+*.pem
 
 devlop/
 fabfile.py

@@ -50,10 +50,12 @@ class Command(BaseCommand):
                             student = Student(
                                 first_name=row['first_name'],
                                 last_name=row['last_name'],
+                                gender=row['gender'],
                                 teacher=teacher
                             )
                         finally:
                             student.identifier = student.get_identifier
+                            student.gender = row['gender']
                             if self.save:
                                 try:
                                     student.save()
