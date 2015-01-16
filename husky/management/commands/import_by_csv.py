@@ -39,26 +39,14 @@ class Command(BaseCommand):
                         teacher_name = regex.sub(r'\d+', '', row['teacher'])
                         grade = Grade.objects.get(grade=int(row['grade']))
                         try:
-                            teacher = Teacher.objects.get(last_name__icontains=teacher_name)
-                        except MultipleObjectsReturned as e:
-                            print '==== teacher.multiple.e [{0}][{1}][{2}]'.format(teacher_name, grade, e)
-#                             teacher = Teacher.objects.get(last_name=teacher_name, grade=grade)
-#                         except ObjectDoesNotExist as e:
                             teacher = Teacher.objects.get(last_name__icontains=teacher_name, grade=grade)
                         except ObjectDoesNotExist as e:
                             print '==== teacher.exist.e [{0}][{1}][{2}]'.format(teacher_name, grade, e)
                             continue
-#                         finally:
-#                             print '==== teacher [{0}]'.format(teacher)
 
                         try:
-#                             print '==== student.multiple.e [{0}][{1}][{2}]'.format(row['last_name'], row['first_name'], e)
                             student = Student.objects.get(first_name=row['first_name'], last_name=row['last_name'], teacher=teacher)
                         except ObjectDoesNotExist as e:
-#                             student = Student.objects.get(first_name=row['first_name'], last_name=row['last_name'], teacher__grade__grade=grade)
-#                             print '==== student.found [{0}][{1}][{2}]'.format(row['last_name'], row['first_name'], grade)
-#                         except MultipleObjectsReturned as e:
-                            print '==== student.exist.e [{0}][{1}][{2}]'.format(row['last_name'], row['first_name'], e)
                             student = Student(
                                 first_name=row['first_name'],
                                 last_name=row['last_name'],
