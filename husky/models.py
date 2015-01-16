@@ -349,10 +349,10 @@ class Student(models.Model):
     @property
     def get_identifier(self):
         identifier = '{0}-{1}-{2}'.format(self.first_name, self.last_name, self.teacher.room_number)
-        identifier = regex.sub(r'/^\s+|\s+$/g', '', identifier)
-        identifier = regex.sub(r'/\.+/g', '-', identifier)
-        identifier = regex.sub(r'/\s+/g', '-', identifier)
-        identifier = regex.sub(r'/-+/g', '-', identifier)
+        identifier = regex.sub(r'^(\s+|\s+)$', '', identifier)
+        identifier = regex.sub(r'(\.+)', '-', identifier)
+        identifier = regex.sub(r'(\s+)', '-', identifier)
+        identifier = regex.sub(r'(-+)', '-', identifier)
         return identifier.lower()
 
     def get_collected_list(self):

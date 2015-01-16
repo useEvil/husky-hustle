@@ -6,16 +6,16 @@ import datetime as date
 from bs4 import BeautifulSoup
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.conf import settings
-
 
 from husky.models import Student, Grade, Teacher
 from husky.helpers import *
 
 class Command(BaseCommand):
     args = '<filename filename ...>'
-    help = 'Import Teacher/Student Info from PDFtoHTML file'
+    help = 'Import Teacher/Student Info from CSV file'
     soup = None
     save = False
 
@@ -37,29 +37,42 @@ class Command(BaseCommand):
                     reader = csv.DictReader(csv_file)
                     for row in reader:
                         teacher_name = regex.sub(r'\d+', '', row['teacher'])
-                        grade = int(row['grade']) - 1
+                        grade = Grade.objects.get(grade=int(row['grade']))
                         try:
-                            teacher = Teacher.objects.get(last_name=teacher_name)
-                        except Exception as e:
-                            print '==== e [{0}][{1}]'.format(teacher_name, e)
+                            teacher = Teacher.objects.get(last_name__icontains=teacher_name)
+                        except MultipleObjectsReturned as e:
+                            print '==== teacher.multiple.e [{0}][{1}][{2}]'.format(teacher_name, grade, e)
+#                             teacher = Teacher.objects.get(last_name=teacher_name, grade=grade)
+#                         except ObjectDoesNotExist as e:
+                            teacher = Teacher.objects.get(last_name__icontains=teacher_name, grade=grade)
+                        except ObjectDoesNotExist as e:
+                            print '==== teacher.exist.e [{0}][{1}][{2}]'.format(teacher_name, grade, e)
                             continue
+#                         finally:
+#                             print '==== teacher [{0}]'.format(teacher)
+
                         try:
-                            student = Student.objects.get(first_name=row['first_name'], last_name=row['last_name'], teacher__grade__grade=grade)
-                        except Exception as e:
+#                             print '==== student.multiple.e [{0}][{1}][{2}]'.format(row['last_name'], row['first_name'], e)
+                            student = Student.objects.get(first_name=row['first_name'], last_name=row['last_name'], teacher=teacher)
+                        except ObjectDoesNotExist as e:
+#                             student = Student.objects.get(first_name=row['first_name'], last_name=row['last_name'], teacher__grade__grade=grade)
+#                             print '==== student.found [{0}][{1}][{2}]'.format(row['last_name'], row['first_name'], grade)
+#                         except MultipleObjectsReturned as e:
+                            print '==== student.exist.e [{0}][{1}][{2}]'.format(row['last_name'], row['first_name'], e)
                             student = Student(
                                 first_name=row['first_name'],
                                 last_name=row['last_name'],
                                 teacher=teacher
                             )
+                        finally:
                             student.identifier = student.get_identifier
-                            student.save()
-#                             print '==== student.create [{0}]'.format(student)
-                        else:
-                            student.teacher = teacher
-                            student.identifier = student.get_identifier
-                            student.save()
-#                             print '==== student.save [{0}]'.format(student)
-                        count += 1
+                            if self.save:
+                                try:
+                                    student.save()
+                                    count += 1
+                                except Exception as e:
+                                    print '==== student.save.e [{0}]'.format(e)
+                            print '==== student.save [{0}]'.format(student)
 
 
             self.stdout.write('Successfully Imported {0} Students from "{1}"'.format(count, filename))
