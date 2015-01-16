@@ -12,7 +12,7 @@ class StudentTestCase(TestCase):
         self.grade = Grade.objects.get(pk=5)
 
     def test_student_one(self):
-        self.student = Student.objects.get(pk=2868)
+        self.student = Student.objects.get(first_name='Brooke', last_name='Nguyen')
 
         ## check if instance matches
         self.failUnlessEqual(isinstance(self.student, Student), True)
@@ -23,7 +23,7 @@ class StudentTestCase(TestCase):
         self.assertEqual(self.student.get_identifier, 'brooke-nguyen-635')
 
     def test_student_two(self):
-        self.student = Student.objects.get(pk=2866)
+        self.student = Student.objects.get(first_name='Syna', last_name='Mirsoltani Fallahi')
 
         ## check if instance matches
         self.failUnlessEqual(isinstance(self.student, Student), True)
@@ -59,3 +59,11 @@ class StudentTestCase(TestCase):
         self.assertEqual(self.teacher.last_name, 'Bailey')
         self.assertEqual(self.teacher.room_number, '635')
         self.assertEqual(self.teacher.grade, self.grade)
+
+    def test_grade(self):
+        ## check if instance matches
+        self.failUnlessEqual(isinstance(self.grade, Grade), True)
+
+        ## check if info matches
+        self.assertEqual(self.grade.grade, 4)
+        self.assertEqual(self.grade.title, '4th')
