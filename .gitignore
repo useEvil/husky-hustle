@@ -2,6 +2,7 @@
 .DS_Store
 *.pyc
 *-local*
+*.sql
 
 devlop/
 fabfile.py

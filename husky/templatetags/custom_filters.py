@@ -14,6 +14,10 @@ register = template.Library()
 
 @register.filter(name='date_format')
 def date_format(value, format='%m/%d/%Y @ %I:%M%p'):
+    return value.strftime(format)
+
+@register.filter(name='date_format_google')
+def date_format_google(value, format='%m/%d/%Y @ %I:%M%p'):
     try:
         value = re.sub('(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})\.\d{3}(-\d{2}:\d{2})*$', '\\1', value)
         date  = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S')

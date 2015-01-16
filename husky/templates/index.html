@@ -42,8 +42,8 @@
         <div class="panel panel-danger" style="min-height: 225px;">
           <div class="panel-heading"><strong>Dates to Remember</strong></div>
             <div class="panel-body">
-            {% for entry in calendar.entry %}
-            <p style="font-size: 0.85em;"><a href="{{ entry.link.0.href }}">{{ entry.title.text }} on {{ entry.when.0.start|date_format }}</a></p>
+            {% for entry in calendar %}
+            <p style="font-size: 0.85em;"><strong>{{ entry.title }}</strong> on <strong>{{ entry.date_of_event|date_format }}</strong>{% if entry.duration %} for <strong>{{ entry.duration }}</strong>{% endif %}</p>
             {% endfor %}
             <div class="clearfix">&nbsp;</div>
           </div>

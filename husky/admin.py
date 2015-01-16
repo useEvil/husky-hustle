@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import Count, Sum, Avg, Max
 from django.utils.safestring import mark_safe
 
-from husky.models import Student, Pledge, Content, Blog, Message, Link, Donation, Grade, Teacher, Shirt, ShirtOrder
+from husky.models import Student, Pledge, Content, Calendar, Blog, Message, Link, Donation, Grade, Teacher, Shirt, ShirtOrder
 
 
 class MostLapsListFilter(SimpleListFilter):
@@ -294,11 +294,16 @@ class ShirtOrderAdmin(admin.ModelAdmin):
     fields = ['student', 'shirt', 'email_address', 'quantity', 'price', 'paid', 'paid_by', 'date_added']
     list_display = ['student', 'shirt', 'email_address', 'quantity', 'price', 'paid', 'paid_by', 'date_added']
 
+class CalendarAdmin(admin.ModelAdmin):
+    fields = ['title', 'date_of_event', 'duration', 'date_added']
+    list_display = ['title', 'date_of_event', 'duration']
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Content, ContentAdmin)
 admin.site.register(Blog, BlogAdmin)
+admin.site.register(Calendar, CalendarAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(Donation, DonationAdmin)
 admin.site.register(Pledge, PledgeAdmin)

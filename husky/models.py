@@ -1,10 +1,5 @@
-import os
-import csv
-import pytz
-import math
-import base64
-import urllib
-import logging
+import os, csv, pytz, math, base64, urllib, logging
+
 import re as regex
 import datetime as date
 import husky.bitly as bitly
@@ -68,16 +63,31 @@ class GooglePhotoConnect(object):
         return self.gd_client
 
 
-class Calendar(object):
+class CalendarGoogle(object):
 
     gd_client = GoogleCalendarConnect().client()
 
     def get_events(self):
         query = cdata.CalendarEventQuery()
         query.start_min = date.datetime.now(pytz.utc).strftime('%Y-%m-%d')
-#        query.start_max = (date.datetime.now(pytz.utc) + date.timedelta(days=14)).strftime('%Y-%m-%d')
+        query.start_max = (date.datetime.now(pytz.utc) + date.timedelta(days=14)).strftime('%Y-%m-%d')
         feed = self.gd_client.GetCalendarEventFeed(q=query, visibility='public', sortorder='ascending', orderby='starttime')
         return feed
+
+
+class Calendar(models.Model):
+
+    title = models.CharField(max_length=100)
+    content = models.TextField(max_length=65000, blank=True, null=True)
+    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
+    date_of_event = models.DateTimeField(default=date.datetime.now(pytz.utc))
+    duration = models.CharField(max_length=25, blank=True, null=True, verbose_name="Duration (ie. 1 hour)")
+
+    def get_events(self):
+        start_min = date.datetime.now(pytz.utc).strftime('%Y-%m-%d')
+        start_max = (date.datetime.now(pytz.utc) + date.timedelta(days=144)).strftime('%Y-%m-%d')
+        feed = Calendar.objects.filter(date_of_event__gt=start_min, date_of_event__lte=start_max)
+        return feed.all()
 
 
 class Photo(object):
@@ -335,6 +345,15 @@ class Student(models.Model):
         except ObjectDoesNotExist, e:
             logger.debug('==== e [%s]'%(e))
             return
+
+    @property
+    def get_identifier(self):
+        identifier = '{0}-{1}-{2}'.format(self.first_name, self.last_name, self.teacher.room_number)
+        identifier = regex.sub(r'/^\s+|\s+$/g', '', identifier)
+        identifier = regex.sub(r'/\.+/g', '-', identifier)
+        identifier = regex.sub(r'/\s+/g', '-', identifier)
+        identifier = regex.sub(r'/-+/g', '-', identifier)
+        return identifier.lower()
 
     def get_collected_list(self):
         return Student.objects.filter(collected__gt=0).order_by('-collected').all()
