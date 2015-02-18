@@ -1,6 +1,6 @@
 {% load custom_filters humanize %}
 
-{% if has_ended.content == '' %}
+{% if has_ended.content == 'false' %}
 <form action="{{ paypal_ipn_url }}" method="POST">
   <p>
     If you are ready to make your payment.  Please submit your payment by using the button below.  

@@ -22,7 +22,7 @@
     </div>
     <div class="row box-shadow">
       <div class="col-lg-12">
-      {% if has_ended.content == 'true' %}
+      {% if has_ended.content == 'false' %}
       {% include "include/need-to-make-payment-form.html" %}
       {% endif %}
       {{ content.content|safe }}
