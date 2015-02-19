@@ -9,6 +9,7 @@ django-piston>=0.2.3
 django-staticfiles>=1.2.1
 django-changuito>=0.7
 django-pipeline>=1.3.23
+django-import-export>=0.2.6
 facebook-sdk>=0.4.0
 gdata>=2.0.18
 Markdown>=2.3.1

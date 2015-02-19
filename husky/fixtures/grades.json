@@ -1,0 +1,50 @@
+[
+{
+  "pk": 1, 
+  "model": "husky.grade", 
+  "fields": {
+    "grade": 0, 
+    "title": "Kindergarten"
+  }
+},
+{
+  "pk": 2, 
+  "model": "husky.grade", 
+  "fields": {
+    "grade": 1, 
+    "title": "1st"
+  }
+},
+{
+  "pk": 3, 
+  "model": "husky.grade", 
+  "fields": {
+    "grade": 2, 
+    "title": "2nd"
+  }
+},
+{
+  "pk": 4, 
+  "model": "husky.grade", 
+  "fields": {
+    "grade": 3, 
+    "title": "3rd"
+  }
+},
+{
+  "pk": 5, 
+  "model": "husky.grade", 
+  "fields": {
+    "grade": 4, 
+    "title": "4th"
+  }
+},
+{
+  "pk": 6, 
+  "model": "husky.grade", 
+  "fields": {
+    "grade": 101, 
+    "title": "Principal"
+  }
+}
+]

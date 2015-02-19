@@ -1,0 +1,594 @@
+[
+{
+  "pk": 1, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "Cruz", 
+    "title": "Mrs.", 
+    "grade": 3, 
+    "shorten": null, 
+    "room_number": "301", 
+    "list_type": 1, 
+    "email_address": "tcruz@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 2, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://mrsbaxterskindergarten201213.shutterfly.com/", 
+    "first_name": "", 
+    "last_name": "Baxter", 
+    "title": "Mrs.", 
+    "grade": 1, 
+    "shorten": null, 
+    "room_number": "201", 
+    "list_type": 1, 
+    "email_address": "kbaxter@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 3, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://mrscunninghamsclass2013.shutterfly.com/", 
+    "first_name": "", 
+    "last_name": "Cunningham", 
+    "title": "Mrs.", 
+    "grade": 1, 
+    "shorten": null, 
+    "room_number": "205", 
+    "list_type": 1, 
+    "email_address": "kcunningham@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 4, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "Pacelli", 
+    "title": "Mrs.", 
+    "grade": 1, 
+    "shorten": null, 
+    "room_number": "204", 
+    "list_type": 1, 
+    "email_address": "epacelli@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 5, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "Sanchez", 
+    "title": "Mrs.", 
+    "grade": 1, 
+    "shorten": null, 
+    "room_number": "202", 
+    "list_type": 1, 
+    "email_address": "ksanchez@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 6, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://mrskwrightsparadisecove.shutterfly.com/", 
+    "first_name": "", 
+    "last_name": "Wright", 
+    "title": "Mrs.", 
+    "grade": 1, 
+    "shorten": null, 
+    "room_number": "203", 
+    "list_type": 1, 
+    "email_address": "kwright@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 7, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/thavens/hickscanyon1stgrade/cms_page/view/3166118", 
+    "first_name": "", 
+    "last_name": "Biehl", 
+    "title": "Mrs.", 
+    "grade": 2, 
+    "shorten": null, 
+    "room_number": "303", 
+    "list_type": 1, 
+    "email_address": "hbiehl@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 8, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/thavens/hickscanyon1stgrade/cms_page/view/3166124", 
+    "first_name": "", 
+    "last_name": "Cahalan (1st)", 
+    "title": "Ms.", 
+    "grade": 2, 
+    "shorten": null, 
+    "room_number": "305", 
+    "list_type": 1, 
+    "email_address": "jcahalan@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 9, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/thavens/hickscanyon1stgrade/cms_page/view/3166116", 
+    "first_name": "", 
+    "last_name": "Edwards", 
+    "title": "Mrs.", 
+    "grade": 2, 
+    "shorten": null, 
+    "room_number": "304", 
+    "list_type": 3, 
+    "email_address": "redwards@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 10, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/thavens/hickscanyon1stgrade/cms_page/view/3166116", 
+    "first_name": "", 
+    "last_name": "Havens", 
+    "title": "Mrs.", 
+    "grade": 2, 
+    "shorten": null, 
+    "room_number": "304", 
+    "list_type": 3, 
+    "email_address": "thavens@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 11, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/thavens/hickscanyon1stgrade/cms_page/view/3166132", 
+    "first_name": "", 
+    "last_name": "Hyon", 
+    "title": "Mrs.", 
+    "grade": 2, 
+    "shorten": null, 
+    "room_number": "308", 
+    "list_type": 1, 
+    "email_address": "chyon@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 12, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/thavens/hickscanyon1stgrade/cms_page/view/3166128", 
+    "first_name": "", 
+    "last_name": "Martin", 
+    "title": "Mrs.", 
+    "grade": 3, 
+    "shorten": null, 
+    "room_number": "403", 
+    "list_type": 1, 
+    "email_address": "llmartin@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 13, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/thavens/hickscanyon1stgrade/cms_page/view/3166122", 
+    "first_name": "", 
+    "last_name": "Pessy", 
+    "title": "Mrs.", 
+    "grade": 2, 
+    "shorten": null, 
+    "room_number": "302", 
+    "list_type": 1, 
+    "email_address": "spessy@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 14, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://teacherweb.com/CA/HicksCanyonElementarySchool/2ndGrade/apt1.aspx", 
+    "first_name": "", 
+    "last_name": "Berg", 
+    "title": "Mrs.", 
+    "grade": 3, 
+    "shorten": "", 
+    "room_number": "407", 
+    "list_type": 3, 
+    "email_address": "dberg@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 15, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://teacherweb.com/CA/HicksCanyonElementarySchool/2ndGrade/apt1.aspx", 
+    "first_name": "", 
+    "last_name": "Gilliam", 
+    "title": "Mrs.", 
+    "grade": 3, 
+    "shorten": "", 
+    "room_number": "408", 
+    "list_type": 1, 
+    "email_address": "jgilliam@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 16, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://teacherweb.com/CA/HicksCanyonElementarySchool/2ndgrade/apt12.aspx", 
+    "first_name": "", 
+    "last_name": "Godwin", 
+    "title": "Ms.", 
+    "grade": 3, 
+    "shorten": "", 
+    "room_number": "402", 
+    "list_type": 1, 
+    "email_address": "agodwin@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 18, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://teacherweb.com/CA/HicksCanyonElementarySchool/2ndGrade/apt1.aspx", 
+    "first_name": "", 
+    "last_name": "Hubbard", 
+    "title": "Mrs.", 
+    "grade": 3, 
+    "shorten": "", 
+    "room_number": "407", 
+    "list_type": 3, 
+    "email_address": "jhubbard@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 19, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://teacherweb.com/CA/HicksCanyonElementarySchool/2ndGrade/apt1.aspx", 
+    "first_name": "", 
+    "last_name": "Mann", 
+    "title": "Mrs.", 
+    "grade": 3, 
+    "shorten": "", 
+    "room_number": "404", 
+    "list_type": 1, 
+    "email_address": "rmann@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 20, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://teacherweb.com/CA/HicksCanyonElementarySchool/2ndGrade/apt1.aspx", 
+    "first_name": "", 
+    "last_name": "Morrow", 
+    "title": "Mrs.", 
+    "grade": 3, 
+    "shorten": "", 
+    "room_number": "406", 
+    "list_type": 1, 
+    "email_address": "jmorrow@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 21, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://teacherweb.com/CA/HicksCanyonElementarySchool/2ndGrade/apt1.aspx", 
+    "first_name": "", 
+    "last_name": "Sherer", 
+    "title": "Mrs.", 
+    "grade": 4, 
+    "shorten": "", 
+    "room_number": "602", 
+    "list_type": 1, 
+    "email_address": "csherer@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 22, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/tpilon/triciapilon/cms_page/view/3302946", 
+    "first_name": "", 
+    "last_name": "Bauer", 
+    "title": "Mrs.", 
+    "grade": 4, 
+    "shorten": "", 
+    "room_number": "606", 
+    "list_type": 1, 
+    "email_address": "mbauer@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 23, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/tpilon/triciapilon/cms_page/view/3302930", 
+    "first_name": "", 
+    "last_name": "Baran", 
+    "title": "Mrs.", 
+    "grade": 4, 
+    "shorten": "", 
+    "room_number": "601", 
+    "list_type": 1, 
+    "email_address": "jbaran@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 24, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/tpilon/triciapilon/cms_page/view/3302926", 
+    "first_name": "", 
+    "last_name": "Cooperrider", 
+    "title": "Mrs.", 
+    "grade": 4, 
+    "shorten": "", 
+    "room_number": "603", 
+    "list_type": 1, 
+    "email_address": "mcooperrider@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 25, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/tpilon/triciapilon/cms_page/view/3304622", 
+    "first_name": "", 
+    "last_name": "DeSoto", 
+    "title": "Mrs.", 
+    "grade": 4, 
+    "shorten": "", 
+    "room_number": "605", 
+    "list_type": 1, 
+    "email_address": "sdesoto@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 26, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/tpilon/triciapilon/cms_page/view/3302954", 
+    "first_name": "", 
+    "last_name": "Pilon", 
+    "title": "Mrs.", 
+    "grade": 4, 
+    "shorten": "", 
+    "room_number": "604", 
+    "list_type": 1, 
+    "email_address": "tpilon@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 28, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "Bailey", 
+    "title": "Mrs.", 
+    "grade": 5, 
+    "shorten": "", 
+    "room_number": "635", 
+    "list_type": 1, 
+    "email_address": "kbailey@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 29, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/tcheney/mrs.cheneys4thgrade/cms_page/view", 
+    "first_name": "", 
+    "last_name": "Cheney", 
+    "title": "Mrs.", 
+    "grade": 5, 
+    "shorten": "", 
+    "room_number": "633", 
+    "list_type": 1, 
+    "email_address": "tcheney@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 30, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "Gumz", 
+    "title": "Mrs.", 
+    "grade": 5, 
+    "shorten": "", 
+    "room_number": "632", 
+    "list_type": 1, 
+    "email_address": "cgumz@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 31, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "John", 
+    "title": "Mrs.", 
+    "grade": 5, 
+    "shorten": "", 
+    "room_number": "634", 
+    "list_type": 1, 
+    "email_address": "rmckinsey@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 32, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "Lehman", 
+    "title": "Mrs.", 
+    "grade": 5, 
+    "shorten": "", 
+    "room_number": "631", 
+    "list_type": 1, 
+    "email_address": "klehman@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 33, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "Lindauer", 
+    "title": "Mrs.", 
+    "grade": 5, 
+    "shorten": "", 
+    "room_number": "636", 
+    "list_type": 1, 
+    "email_address": "alindauer@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 34, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "Silberman", 
+    "title": "Mrs.", 
+    "grade": 4, 
+    "shorten": "", 
+    "room_number": "401", 
+    "list_type": 1, 
+    "email_address": "lsilberman@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 35, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://tusd.haikulearning.com/thavens/hickscanyon1stgrade/cms_page/view/3166116", 
+    "first_name": "", 
+    "last_name": "Edwards/Havens", 
+    "title": "Mrs.", 
+    "grade": 2, 
+    "shorten": null, 
+    "room_number": "304", 
+    "list_type": 2, 
+    "email_address": "redwards@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 36, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://teacherweb.com/CA/HicksCanyonElementarySchool/2ndGrade/apt1.aspx", 
+    "first_name": "", 
+    "last_name": "Berg/Hubbard", 
+    "title": "Mrs.", 
+    "grade": 3, 
+    "shorten": "", 
+    "room_number": "407", 
+    "list_type": 2, 
+    "email_address": "dberg@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 38, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "Meade", 
+    "title": "Mrs.", 
+    "grade": 2, 
+    "shorten": null, 
+    "room_number": "306", 
+    "list_type": 1, 
+    "email_address": "rmeade@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 39, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "", 
+    "first_name": "", 
+    "last_name": "Agopian", 
+    "title": "Mrs.", 
+    "grade": 6, 
+    "shorten": "", 
+    "room_number": "101", 
+    "list_type": 3, 
+    "email_address": "cagopian@tustin.k12.ca.us"
+  }
+},
+{
+  "pk": 40, 
+  "model": "husky.teacher", 
+  "fields": {
+    "phone_number": "(714) 734-1878", 
+    "website": "http://www.tustin.k12.ca.us/domain/614", 
+    "first_name": "", 
+    "last_name": "Cahalan (Kinder)", 
+    "title": "Mrs.", 
+    "grade": 1, 
+    "shorten": null, 
+    "room_number": "305", 
+    "list_type": 1, 
+    "email_address": "jcahalan@tustin.k12.ca.us"
+  }
+}
+]
