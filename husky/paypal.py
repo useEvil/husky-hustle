@@ -1,12 +1,9 @@
-import os
-import urllib, urllib2
-import json as simplejson
+import os, urllib, urllib2, json, logging
 
 from M2Crypto import BIO, SMIME, X509
 
 from django.conf import settings
 
-import logging
 logger = logging.getLogger(__name__)
 
 cwd = os.path.dirname(os.path.realpath(__file__))
@@ -85,7 +82,7 @@ class PayPal(object):
     def create_payment(self, data=None):
         code, content = self._makeRequest(data)
 #         print '==== content [%s][%s]'%(code, content)
-        resopnse = simplejson.loads(content)
+        resopnse = json.loads(content)
 #         print '==== resopnse [%s]'%(resopnse)
         if resopnse['state'] == 'approved':
             self.finalize_payment(resopnse['links'][0]['href'], resopnse['id'])
@@ -93,7 +90,7 @@ class PayPal(object):
 #             print '==== content [%s][%s]'%(code, content)
 
     def finalize_payment(self, uri=None, id=None):
-        data = simplejson.dumps({'payer_id': id})
+        data = json.dumps({'payer_id': id})
         request = urllib2.Request('%s/execute'%(uri), data)
         request.add_header('Content-Type', 'application/json')
         request.add_header('Authorization', 'Bearer %s' % (settings.PAYPAL_REST_API_ACCESS_TOKEN))
@@ -113,7 +110,7 @@ class PayPal(object):
         uri = '%s/v1/payments/payment' % (settings.PAYPAL_REST_API_ENDPOINT)
 #         print '==== data [%s]'%(data)
 #         print '==== uri [%s]'%(uri)
-        data = simplejson.dumps(data)
+        data = json.dumps(data)
         request = urllib2.Request(uri, data)
         request.add_header('Content-Type', 'application/json')
         request.add_header('Authorization', 'Bearer %s' % (settings.PAYPAL_REST_API_ACCESS_TOKEN))

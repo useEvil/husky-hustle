@@ -1,10 +1,7 @@
 import urllib, urllib2
 import urlparse
 import string
-try:
-   import simplejson
-except ImportError:
-   import json as simplejson
+import json
 
 from re import findall
 

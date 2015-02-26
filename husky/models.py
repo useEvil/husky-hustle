@@ -541,7 +541,12 @@ class Donation(models.Model):
     def save(self, *args, **kwargs):
         if self.paid:
             self.donated = self.total()
-        return super(Donation, self).save(*args, **kwargs)
+        super(Donation, self).save(*args, **kwargs)
+        if not self.pledges.exists():
+            pledge = Pledge.objects.create(
+                email_address=self.email_address,
+                donation=self,
+            )
 
     def full_name(self):
         return '%s %s' % (self.first_name, self.last_name)
@@ -918,6 +923,37 @@ class Pledge(models.Model):
     def get_donations(self, email_address=None):
         if not email_address: return
         return Pledge.objects.filter(email_address=email_address)
+
+
+# Generating public/private keys
+# openssl genrsa -out private_key.pem 1024
+# openssl req -new -key private_key.pem -x509 -days 365 -out public_key.pem
+class PaymentGateway(models.Model):
+
+    gateway = models.CharField(max_length=100, blank=False, null=False, default=None)
+    api_key = models.CharField(max_length=250, blank=True, null=True, default=None)
+    api_secret = models.CharField(max_length=250, blank=True, null=True, default=None)
+    client_id = models.CharField(max_length=250, blank=True, null=True, default=None)
+    business_id = models.CharField(max_length=250, blank=True, null=True, default=None)
+    public_cert = models.TextField(max_length=65000, blank=True, null=True, default=None)
+    public_key = models.TextField(max_length=65000, blank=True, null=True, default=None)
+    private_key = models.TextField(max_length=65000, blank=True, null=True, default=None)
+    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
+
+    @property
+    def decode_business_id(self):
+        return base64.b64decode(self.business_id)
+
+    @property
+    def decode_business_id(self):
+        return base64.b64decode(self.business_id)
+
+    def save(self, *args, **kwargs):
+#         if self.client_id:
+#             self.client_id = base64.b64encode(self.client_id)
+#         if self.business_id:
+#             self.business_id = base64.b64encode(self.business_id)
+        return super(PaymentGateway, self).save(*args, **kwargs)
 
 
 class Shirt(models.Model):

@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import Count, Sum, Avg, Max
 from django.utils.safestring import mark_safe
 
-from husky.models import Student, Pledge, Content, Calendar, Blog, Message, Link, Donation, Grade, Teacher, Shirt, ShirtOrder
+from husky.models import Student, Pledge, Content, Calendar, Blog, Message, Link, Donation, Grade, Teacher, Shirt, ShirtOrder, PaymentGateway
 
 
 class MostLapsListFilter(SimpleListFilter):
@@ -123,6 +123,13 @@ class MostDonationsListFilter(SimpleListFilter):
         else:
             return queryset.all()
 
+
+class DonationInline(admin.TabularInline):
+    model = Donation
+    extra = 10
+    verbose_name_plural = 'donations'
+
+
 class StudentAdmin(admin.ModelAdmin):
     # override the tempalte to show results
     def get_changelist(self, request):
@@ -139,6 +146,7 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['teacher__last_name', 'first_name', 'last_name']
     list_editable = ['laps', 'gender', 'disqualify']
     list_filter = [MostLapsListFilter]
+    inlines = [DonationInline]
     save_on_top = True
     list_per_page = 40
     ordering = ('teacher', 'last_name')
@@ -298,6 +306,11 @@ class CalendarAdmin(admin.ModelAdmin):
     fields = ['title', 'date_of_event', 'duration', 'date_added']
     list_display = ['title', 'date_of_event', 'duration']
 
+class PaymentGatewayAdmin(admin.ModelAdmin):
+    fields = ['gateway', 'client_id', 'business_id', 'api_key', 'api_secret', 'public_cert', 'private_key', 'public_key', 'date_added']
+    list_display = ['gateway', 'client_id', 'business_id', 'api_key', 'date_added']
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Student, StudentAdmin)
@@ -312,3 +325,4 @@ admin.site.register(Grade, GradeAdmin)
 admin.site.register(Teacher, TeacherAdmin)
 admin.site.register(Shirt, ShirtAdmin)
 admin.site.register(ShirtOrder, ShirtOrderAdmin)
+admin.site.register(PaymentGateway, PaymentGatewayAdmin)

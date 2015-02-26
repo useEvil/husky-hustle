@@ -160,6 +160,8 @@ TWITTER_AUTHORIZATION_URL = 'https://api.twitter.com/oauth/authorize'
 BITLY_LOGIN = ''
 BITLY_APIKEY = ''
 
+PAYMENT_GATEWAY = 'paypal'
+
 # PayPal BUTTON API CONSTANTS
 PAYPAL_PAYPAL_CERT = 'certs/paypal_cert.pem'
 PAYPAL_PRIVATE_KEY = 'certs/private_key.pem'

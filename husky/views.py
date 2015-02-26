@@ -1,14 +1,11 @@
-import csv
-import pytz
-import base64
-import random
-import logging
-import django.contrib.staticfiles
+import csv, pytz, base64, random, logging
+
 import gdata.photos.service as gdata
 import husky.helpers as h
 import datetime as date
 import json as simplejson
 import re as regex
+
 
 from django.db import IntegrityError
 from django.core import mail
@@ -79,7 +76,7 @@ def student(request, identifier=None):
     amount = request.cart.cart.total_price()
     ids = []
     for item in request.cart.cart.item_set.all():
-        if item.product.__class__ == Donation:
+        if isinstance(item.product, Donation):
             ids.append(str(item.product.id))
     c['amount'] = amount
     c['paypal_ipn_url'] = settings.PAYPAL_IPN_URL
@@ -153,6 +150,7 @@ def payment(request, identifier=None, id=None):
     ids = id.split(',')
     donation = Donation()
     amount = 0
+    ## get totals from a sponsors email address
     if request.GET.get('sponsor'):
         try:
             donations = Donation.objects.filter(email_address=request.GET.get('sponsor')).all()
@@ -174,12 +172,13 @@ def payment(request, identifier=None, id=None):
         amount = CurrencyField().to_python(total_due)
         ids = ",".join(ids)
         c['donations'] = items
+    ## direct payment amount
     elif request.GET.get('amount'):
         if request.GET.get('id') and not id: id = request.GET.get('id')
         amount = CurrencyField().to_python(request.GET.get('amount'))
         student = Student.objects.get(identifier=id)
         try:
-            donation = Donation(
+            donation = Donation.objects.create(
                 first_name='Direct',
                 last_name='Payment',
                 email_address='_sponsor_@huskyhustle.com',
@@ -189,12 +188,6 @@ def payment(request, identifier=None, id=None):
                 date_added=date.datetime.now(pytz.utc),
                 student=student,
             )
-            donation.save()
-            pledge = Pledge(
-                email_address='_sponsor_@huskyhustle.com',
-                donation=donation,
-            )
-            pledge.save()
             messages.success(request, 'Thank you for making a pledge to %s' % (teacher_donation and donation.first_name or student.full_name()))
             # add to cart
             add_to_cart(request, 'donation', donation.id, 1)
@@ -205,9 +198,11 @@ def payment(request, identifier=None, id=None):
             logger.debug('==== c [%s]'%(e))
             messages.error(request, 'Could not create donation for Student ID: %s' % ids)
             c['error'] = True
+    ## get totals for a list of donations
     elif len(ids) > 1:
         amount = donation.get_total(ids)
         ids = id
+    ## get total single donation amount
     else:
         try:
             donation = Donation.objects.get(id=id)
@@ -218,6 +213,8 @@ def payment(request, identifier=None, id=None):
             logger.debug('==== c [%s]'%(e))
             messages.error(request, 'Could not find Donation for ID: %s' % id)
             c['error'] = True
+
+    ## create payment button
     try:
         c['paypal_ipn_url'] = settings.PAYPAL_IPN_URL
         c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, ids))
@@ -255,7 +252,7 @@ def donate(request, identifier=None):
         form = DonationForm(request.POST)
         if form.is_valid():
             try:
-                donation = Donation(
+                donation = Donation.objects.create(
                     first_name=request.POST.get('first_name'),
                     last_name=request.POST.get('last_name'),
                     email_address=request.POST.get('email_address'),
@@ -268,12 +265,6 @@ def donate(request, identifier=None):
                 )
                 if teacher_donation:
                     donation.type = donation.first_name == 'Mrs. Agopian' and 2 or 1
-                donation.save()
-                pledge = Pledge(
-                    email_address=request.POST.get('email_address'),
-                    donation=donation,
-                )
-                pledge.save()
                 messages.success(request, 'Thank you for making a pledge to %s' % (teacher_donation and donation.first_name or student.full_name()))
                 # add to cart
                 add_to_cart(request, 'donation', donation.id, 1)
@@ -340,7 +331,7 @@ def donate_direct(request):
                 )
                 student.save()
             try:
-                donation = Donation(
+                donation = Donation.objects.create(
                     first_name=request.POST.get('first_name'),
                     last_name=request.POST.get('last_name'),
                     email_address=request.POST.get('email_address'),
@@ -350,12 +341,6 @@ def donate_direct(request):
                     date_added=date.datetime.now(pytz.utc),
                     student=student,
                 )
-                donation.save()
-                pledge = Pledge(
-                    email_address=request.POST.get('email_address'),
-                    donation=donation,
-                )
-                pledge.save()
                 messages.success(request, 'Thank you for making a pledge to %s' % (teacher_donation and donation.first_name or student.full_name()))
                 # add to cart
                 add_to_cart(request, 'donation', donation.id, 1)
@@ -864,7 +849,7 @@ def get_cart(request):
     amount = request.cart.cart.total_price()
     ids = []
     for item in request.cart.cart.item_set.all():
-        if item.product.__class__ == Donation:
+        if isinstance(item.product, Donation):
             ids.append(str(item.product.id))
     try:
         c['amount'] = amount
@@ -908,7 +893,7 @@ def order_form(request, identifier=None):
                                 cart.add(shirt, shirt.price, quantity)
             # add cart item to shirt order table
 #             for item in cart.cart.item_set.all():
-#                 if item.product.__class__ == ShirtOrder:
+#                 if isinstance(item.product, ShirtOrder):
 #                     try:
 #                         order = ShirtOrder(
 #                             email_address=request.POST.get('email_address'),
