@@ -128,6 +128,7 @@ class DonationInline(admin.TabularInline):
     model = Donation
     extra = 10
     verbose_name_plural = 'donations'
+    exclude = ('email_address', 'donated', 'phone_number', 'date_added')
 
 
 class StudentAdmin(admin.ModelAdmin):
