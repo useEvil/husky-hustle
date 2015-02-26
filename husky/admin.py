@@ -126,7 +126,7 @@ class MostDonationsListFilter(SimpleListFilter):
 
 class DonationInline(admin.TabularInline):
     model = Donation
-    extra = 10
+    extra = 0
     verbose_name_plural = 'donations'
     exclude = ('email_address', 'donated', 'phone_number', 'date_added')
 

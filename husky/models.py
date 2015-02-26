@@ -430,19 +430,19 @@ class Student(models.Model):
     def total_for_laps(self):
         total_due = 0
         for sponsor in self.sponsors_perlap():
-            total_due += sponsor.total()
+            total_due += sponsor.total() or 0
         return total_due
 
     def total_for_flat(self):
         total_due = 0
         for sponsor in self.sponsors_flat():
-            total_due += sponsor.total() 
+            total_due += sponsor.total() or 0
         return total_due
 
     def total_for_sponsors(self):
         total_due = 0
         for sponsor in self.sponsors_teacher():
-            total_due += sponsor.total()
+            total_due += sponsor.total() or 0
         return total_due
 
     def total_raffle_tickets(self):
@@ -454,26 +454,26 @@ class Student(models.Model):
         total_due = 0
         for sponsor in self.sponsors_flat():
             if not sponsor.paid:
-                total_due += sponsor.total() 
+                total_due += sponsor.total() or 0
         for sponsor in self.sponsors_perlap():
             if not sponsor.paid:
-                total_due += sponsor.total()
+                total_due += sponsor.total() or 0
         for sponsor in self.sponsors_teacher():
             if not sponsor.paid:
-                total_due += sponsor.total()
+                total_due += sponsor.total() or 0
         return total_due
 
     def total_collected(self):
         total_collected = 0
         for sponsor in self.sponsors_flat():
             if sponsor.paid:
-                total_collected += sponsor.total()
+                total_collected += sponsor.total() or 0
         for sponsor in self.sponsors_perlap():
             if sponsor.paid:
-                total_collected += sponsor.total()
+                total_collected += sponsor.total() or 0
         for sponsor in self.sponsors_teacher():
             if sponsor.paid:
-                total_collected += sponsor.total()
+                total_collected += sponsor.total() or 0
         return total_collected
 
     def grand_totals(self):
@@ -540,7 +540,7 @@ class Donation(models.Model):
 
     def save(self, *args, **kwargs):
         if self.paid:
-            self.donated = self.total()
+            self.donated = self.total() or 0
         super(Donation, self).save(*args, **kwargs)
         if not self.pledges.exists():
             pledge = Pledge.objects.create(
@@ -869,12 +869,12 @@ class Donation(models.Model):
     def calculate_totals(self, id=None):
         if id:
             donation = (self.id == id) and self or Donation.objects.get(pk=id)
-            donation.donated = donation.total()
+            donation.donated = donation.total() or 0
             donation.save()
         else:
             donations = Donation.objects.all()
             for donation in donations:
-                donation.donated = donation.total()
+                donation.donated = donation.total() or 0
                 donation.save()
 
     def thank_you_url(self):
@@ -889,7 +889,7 @@ class Donation(models.Model):
             return '%s?sponsor=%s' % (url, self.email_address)
 
     def button_data(self, amount=None, ids=None):
-        if not amount: amount = self.total()
+        if not amount: amount = self.total() or 0
         if not ids: ids = self.id
         site = Site.objects.get_current()
         data = {
