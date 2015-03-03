@@ -11,6 +11,7 @@ $('.pre-set-amount').bind('change', setPreSetAmount);
 $('.to-teacher').bind('change', setPreSetAmount);
 $('.remove-items').bind('click', removeCartItems);
 $('.select-all-items').bind('change', selectAllItems);
+$('#submit_donation').bind('click', submitDonationForm);
 $('#modal-box-donation').on('show.bs.modal', function(e){ makeDonation(e.relatedTarget) });
 $('#modal-box-reminder').on('show.bs.modal', function(e){ sendReminder(e.relatedTarget) });
 
@@ -200,6 +201,12 @@ function submitForm(event) {
         }
     );
     return false;
+};
+
+function submitDonationForm(event) {
+    var donation = $('#form_id_donation').val().replace(/[\$,]+/g, '');
+    $('#form_id_donation').val(donation);
+    $('#pledge_form').submit();
 };
 
 function submitFormAction(event) {

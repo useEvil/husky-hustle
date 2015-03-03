@@ -892,6 +892,7 @@ class Donation(models.Model):
         if not amount: amount = self.total() or 0
         if not ids: ids = self.id
         site = Site.objects.get_current()
+        now = date.datetime.now(pytz.utc)
         data = {
             'rm': 1,
             'lc': 'US',
@@ -900,8 +901,8 @@ class Donation(models.Model):
             'cmd': '_donations',
             'currency_code': 'USD',
             'business': settings.PAYPAL_BUS_ID,
-            'item_number': 'husky-hustle-donation-%s' % (ids),
-            'item_name': 'Husky Hustle Online Donations 2014',
+            'item_number': 'husky-hustle-donation-{0}'.format(ids),
+            'item_name': 'Husky Hustle Online Donations {0}'.format(now.year),
             'return': 'http://%s/thank-you' % (site.domain),
             'notify_url': 'http://%s/paid/%s' % (site.domain, ids),
             'cert_id': settings.PAYPAL_CERT_ID,
@@ -1016,7 +1017,7 @@ class DonationForm(forms.Form):
     first_name = forms.CharField(max_length=50)
     last_name = forms.CharField(max_length=50)
     email_address = forms.EmailField(max_length=100)
-    donation = forms.DecimalField(max_digits=100)
+    donation = CurrencyField(max_digits=100)
 
     def clean(self):
         if 'donation' in self.cleaned_data:
