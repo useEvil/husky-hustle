@@ -138,12 +138,18 @@ class StudentAdmin(admin.ModelAdmin):
 
     # create a link for the student name
     def first_name_link(obj):
-        return '<a href="/admin/husky/donation/?q=%s" class="nowrap" style="font-weight: bold;font-size: 12px;">%s</a>' % (urllib.quote_plus(obj.full_name()), obj.first_name)
+        return '<a href="/admin/husky/donation/?q={0}" class="nowrap" style="font-weight: bold;font-size: 12px;">{1}</a>'.format(urllib.quote_plus(obj.full_name()), obj.first_name)
     first_name_link.allow_tags = True
     first_name_link.short_description = "First Name"
 
+    # create a link for the student name
+    def donation_sheet_link(obj):
+        return '<a href="/donation-sheet/{0}/" class="nowrap" target="donation-sheet">{0}</a>'.format(obj.student.identifier)
+    donation_sheet_link.allow_tags = True
+    donation_sheet_link.short_description = "Donation Sheet"
+
     fields = ['teacher', 'first_name', 'last_name', 'identifier', 'gender', 'age', 'laps', 'disqualify', 'date_added']
-    list_display = ['last_name', first_name_link, 'teacher', 'identifier', 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_collected', 'total_due', 'total_raffle_tickets']
+    list_display = ['last_name', first_name_link, 'teacher', donation_sheet_link, 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_collected', 'total_due', 'total_raffle_tickets']
     search_fields = ['teacher__last_name', 'first_name', 'last_name']
     list_editable = ['laps', 'gender', 'disqualify']
     list_filter = [MostLapsListFilter]
@@ -212,7 +218,7 @@ class DonationList(ChangeList):
 class DonationAdmin(admin.ModelAdmin):
     # create a link for the student name
     def list_name(obj):
-        return '<a href="/admin/husky/student/%d/" class="nowrap">%s</a>' % (obj.student.id, obj.student.list_name())
+        return '<a href="/admin/husky/student/{0}/" class="nowrap">{1}</a>'.format(obj.student.id, obj.student.list_name())
     list_name.allow_tags = True
     list_name.short_description = "Student"
 
@@ -221,7 +227,7 @@ class DonationAdmin(admin.ModelAdmin):
         if obj.last_name == 'teacher':
             return obj.total()
         else:
-            return '<a href="%s" target="_payment_url">%s</a>' % (obj.payment_url(), obj.total())
+            return '<a href="{0}" target="_payment_url">{1}</a>'.format(obj.payment_url(), obj.total())
     total_link.allow_tags = True
     total_link.short_description = "Pledged"
 
@@ -234,7 +240,7 @@ class DonationAdmin(admin.ModelAdmin):
         teachers = Teacher.objects.exclude(list_type=2).all()
         output = ['<div style="display: none;">']
         for teacher in teachers:
-            output.append('<span id="%s">%s</span>' % (teacher.room_number, teacher.full_name()))
+            output.append('<span id="{0}">{1}</span>'.format(teacher.room_number, teacher.full_name()))
         output.append('</div>')
         return mark_safe("".join(output))
 
