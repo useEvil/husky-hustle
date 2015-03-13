@@ -128,7 +128,7 @@ class DonationInline(admin.TabularInline):
     model = Donation
     extra = 0
     verbose_name_plural = 'donations'
-    exclude = ('email_address', 'donated', 'phone_number', 'date_added')
+    exclude = ('donated', 'phone_number', 'date_added')
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -211,7 +211,7 @@ class DonationList(ChangeList):
         self.donation_page = True
         for donation in self.result_list:
             self.total_laps += donation.student.laps or 0
-            self.total_pledged += donation.total()
+            self.total_pledged += donation.total() or 0
             if donation.paid: self.total_collected += donation.donated or 0
         self.total_due = self.total_pledged - self.total_collected
 
