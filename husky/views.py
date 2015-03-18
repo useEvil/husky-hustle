@@ -244,6 +244,7 @@ def donate(request, identifier=None):
         student=student,
         has_error=False,
         donate=True,
+        reply_to=settings.EMAIL_HOST_USER,
     ))
     if request.POST:
         make_donation = request.POST.get('make_donation')
@@ -308,6 +309,7 @@ def donate_direct(request):
     c = Context(dict(
         page_title='Donator',
         donate=True,
+        reply_to=settings.EMAIL_HOST_USER,
     ))
     if request.POST:
         make_donation = request.POST.get('make_donation')
@@ -548,6 +550,7 @@ def paid(request, donation_id=None):
     c = Context(dict(
         subject='Hicks Canyon Jog-A-Thon: Payment Received',
         email_address=settings.EMAIL_HOST_USER,
+        reply_to=settings.EMAIL_HOST_USER,
     ))
     result = None
     query  = request.POST and request.POST.urlencode() or request.GET.urlencode() or None
@@ -871,6 +874,7 @@ def order_form(request, identifier=None):
     c = Context(dict(
         page_title='T-Shirt Order Form',
         shirts=Shirt.objects.all(),
+        reply_to=settings.EMAIL_HOST_USER,
     ))
     try:
         c['student'] = Student.objects.get(identifier=identifier)
