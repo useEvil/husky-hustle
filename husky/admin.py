@@ -144,7 +144,7 @@ class StudentAdmin(admin.ModelAdmin):
 
     # create a link for the student name
     def donation_sheet_link(obj):
-        return '<a href="/donation-sheet/{0}/" class="nowrap" target="donation-sheet">{0}</a>'.format(obj.student.identifier)
+        return '<a href="/donation-sheet/{0}/" class="nowrap" target="donation-sheet">{0}</a>'.format(obj.identifier)
     donation_sheet_link.allow_tags = True
     donation_sheet_link.short_description = "Donation Sheet"
 

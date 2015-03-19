@@ -63,7 +63,7 @@ def nav(request, page='index', id=None):
             c['entries'] = [ Blog.objects.get(pk=id) ]
         else:
             c['entries'] = Blog.objects.order_by('-date_added')[:15]
-    return render_to_response('%s.html'%page, c, context_instance=RequestContext(request))
+    return render_to_response('{}.html'.format(page), c, context_instance=RequestContext(request))
 
 def student(request, identifier=None):
     c = Context(dict(
@@ -97,7 +97,7 @@ def student_donation(request, identifier=None):
             teacher_name = request.GET.get('teacher_last_name') or None
             if first_name or last_name or teacher_name:
                 if first_name and last_name:
-                    c['search'] = '%s %s' % (first_name, last_name)
+                    c['search'] = '{} {}'.format(first_name, last_name)
                 else:
                     c['search'] = first_name or last_name or teacher_name
 
@@ -105,7 +105,7 @@ def student_donation(request, identifier=None):
                 if students.count():
                     c['students'] = students
                 else:
-                    messages.error(request, 'Could not find Records matching: %s' % (c['search']))
+                    messages.error(request, 'Could not find Records matching: {}'.format(c['search']))
                     c['error'] = True
             else:
                 messages.error(request, 'You must provide a first or last name')
@@ -114,7 +114,7 @@ def student_donation(request, identifier=None):
         try:
             c['student'] = Student.objects.get(identifier=identifier)
         except:
-            messages.error(request, 'Could not find Student for identity: %s' % identifier)
+            messages.error(request, 'Could not find Student for identity: {}'.format(identifier))
             c['error'] = True
     c['messages'] = messages.get_messages(request)
     return render_to_response('donate.html', c, context_instance=RequestContext(request))
@@ -132,7 +132,7 @@ def teacher_donation(request, identifier=None):
     try:
         c['student'] = Student.objects.get(identifier=identifier)
     except:
-        messages.error(request, 'Could not find Student for identity: %s' % identifier)
+        messages.error(request, 'Could not find Student for identity: {}'.format(identifier))
         c['error'] = True
     c['messages'] = messages.get_messages(request)
     return render_to_response('donate.html', c, context_instance=RequestContext(request))
@@ -145,7 +145,7 @@ def payment(request, identifier=None, id=None):
         c['student'] = Student.objects.get(identifier=identifier)
     except:
         if not request.GET.get('sponsor'):
-            messages.error(request, 'Could not find Student for identity: %s' % identifier)
+            messages.error(request, 'Could not find Student for identity: {}'.format(identifier))
         c['error'] = True
     ids = id.split(',')
     donation = Donation()
@@ -155,11 +155,11 @@ def payment(request, identifier=None, id=None):
         try:
             donations = Donation.objects.filter(email_address=request.GET.get('sponsor')).all()
         except Exception, e:
-            logger.debug('==== c [%s]'%(e))
-            messages.error(request, 'Could not find Donation for ID: %s' % id)
+            logger.debug('==== payment.sponsor.e [{}]'.format(e))
+            messages.error(request, 'Could not find Donation for ID: {}'.format(id))
             c['error'] = True
             c['messages'] = messages.get_messages(request)
-            return render_to_response('/student-donation/%s' % identifier, c, context_instance=RequestContext(request))
+            return render_to_response('/student-donation/{}'.format(identifier), c, context_instance=RequestContext(request))
         total_due = 0
         ids = []
         items = []
@@ -188,15 +188,15 @@ def payment(request, identifier=None, id=None):
                 date_added=date.datetime.now(pytz.utc),
                 student=student,
             )
-            messages.success(request, 'Thank you for making a pledge to %s' % (teacher_donation and donation.first_name or student.full_name()))
+            messages.success(request, 'Thank you for making a pledge to {}'.format(teacher_donation and donation.first_name or student.full_name()))
             # add to cart
             add_to_cart(request, 'donation', donation.id, 1)
             # update totals
             donation.calculate_totals(donation.id)
             ids = donation.id
         except Exception, e:
-            logger.debug('==== c [%s]'%(e))
-            messages.error(request, 'Could not create donation for Student ID: %s' % ids)
+            logger.debug('==== payment.amount.e [{}]'.format(e))
+            messages.error(request, 'Could not create donation for Student ID: {}'.format(ids))
             c['error'] = True
     ## get totals for a list of donations
     elif len(ids) > 1:
@@ -210,8 +210,8 @@ def payment(request, identifier=None, id=None):
             amount = donation.total()
             ids = donation.id
         except Exception, e:
-            logger.debug('==== c [%s]'%(e))
-            messages.error(request, 'Could not find Donation for ID: %s' % id)
+            logger.debug('==== payment.else.e [{}]'.format(e))
+            messages.error(request, 'Could not find Donation for ID: {}'.format(id))
             c['error'] = True
 
     ## create payment button
@@ -219,8 +219,8 @@ def payment(request, identifier=None, id=None):
         c['paypal_ipn_url'] = settings.PAYPAL_IPN_URL
         c['encrypted_block'] = donation.encrypted_block(donation.button_data(amount, ids))
     except Exception, e:
-        logger.debug('==== c [%s]'%(e))
-#         messages.error(request, 'Could not encrypt button for ID: %s' % id)
+        logger.debug('==== payment.create.e [{}]'.format(e))
+#         messages.error(request, 'Could not encrypt button for ID: {}'.format(id))
         c['error'] = True
     c['amount'] = amount
     c['messages'] = messages.get_messages(request)
@@ -266,7 +266,7 @@ def donate(request, identifier=None):
                 )
                 if teacher_donation:
                     donation.type = donation.first_name == 'Mrs. Agopian' and 2 or 1
-                messages.success(request, 'Thank you for making a pledge to %s' % (teacher_donation and donation.first_name or student.full_name()))
+                messages.success(request, 'Thank you for making a pledge to {}'.format(teacher_donation and donation.first_name or student.full_name()))
                 # add to cart
                 add_to_cart(request, 'donation', donation.id, 1)
                 # update totals
@@ -294,7 +294,7 @@ def donate(request, identifier=None):
         else:
             c['make_donation'] = make_donation or False
             c['has_error'] = True
-            messages.error(request, 'Failed to Add %s' % (teacher_donation and 'Donation' or 'Sponsor'))
+            messages.error(request, 'Failed to Add {}'.format(teacher_donation and 'Donation' or 'Sponsor'))
         c['form'] = form
     c['messages'] = messages.get_messages(request)
     c['teacher_donation'] = teacher_donation or False
@@ -320,7 +320,7 @@ def donate_direct(request):
             first_name = request.POST.get('student_first_name').strip()
             last_name = request.POST.get('student_last_name').strip()
             per_lap = request.POST.get('per_lap')
-            identifier = '%s-%s-%s'%(replace_space(first_name), replace_space(last_name), teacher.room_number)
+            identifier = '{}-{}-{}'.format(replace_space(first_name), replace_space(last_name), teacher.room_number)
             try:
                 student = Student.objects.get(identifier=identifier)
             except Exception, e:
@@ -343,7 +343,7 @@ def donate_direct(request):
                     date_added=date.datetime.now(pytz.utc),
                     student=student,
                 )
-                messages.success(request, 'Thank you for making a pledge to %s' % (teacher_donation and donation.first_name or student.full_name()))
+                messages.success(request, 'Thank you for making a pledge to {}'.format(teacher_donation and donation.first_name or student.full_name()))
                 # add to cart
                 add_to_cart(request, 'donation', donation.id, 1)
                 # update totals
@@ -380,16 +380,16 @@ def donation_sheet(request, identifier=None, final=None):
     if identifier and identifier == 'pdf':
         response = HttpResponse(mimetype='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="donation-sheet.pdf"'
-        response.write(file("%s/docs/donation_sheet.pdf" % settings.MEDIA_ROOT).read())
+        response.write(file('{}/docs/donation_sheet.pdf'.format(settings.MEDIA_ROOT)).read())
         return response
     elif identifier and identifier == 'print':
         c['page_title'] = 'Pledge Sheet'
     elif identifier:
         try:
             c['student'] = Student.objects.get(identifier=identifier)
-            c['page_title'] = 'Pledge Sheet: %s' % (c['student'])
+            c['page_title'] = 'Pledge Sheet: {}'.format(c['student'])
         except:
-            messages.error(request, 'Could not find Student for identity: %s' % identifier)
+            messages.error(request, 'Could not find Student for identity: {}'.format(identifier))
     c['messages'] = messages.get_messages(request)
     return render_to_response('account/donation_sheet.html', c, context_instance=RequestContext(request))
 
@@ -430,7 +430,7 @@ def contact(request):
             recipients = [settings.EMAIL_HOST_USER]
             if cc_myself:
                 recipients.append(sender)
-            mail.send_mail(subject, "%s\n\nSender: %s" % (message, sender), sender, recipients)
+            mail.send_mail(subject, "{}\n\nSender: {}".format(message, sender), sender, recipients)
             # set message or return json message
             if request.GET.get('format') == 'ajax':
                 return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'message': 'Successfully Sent'}), mimetype='application/json')
@@ -474,7 +474,7 @@ def reporting(request, type=None):
 
 def emails(request):
     c = Context(dict(
-        subject='Hicks Canyon Jog-A-Thon: Help Support %s' % request.POST.get('student_first_name'),
+        subject='Hicks Canyon Jog-A-Thon: Help Support {}'.format(request.POST.get('student_first_name')),
         body=request.POST.get('custom_message'),
         reply_to=settings.EMAIL_HOST_USER,
     ))
@@ -556,18 +556,21 @@ def paid(request, donation_id=None):
     query  = request.POST and request.POST.urlencode() or request.GET.urlencode() or None
     if query:
         try:
-            result = getHttpRequest(settings.PAYPAL_IPN_URL, 'cmd=_notify-validate&%s' % query)
+            result = getHttpRequest(settings.PAYPAL_IPN_URL, 'cmd=_notify-validate&{}'.format(query))
         except Exception, e:
-            logger.debug('Failed IPN handshake: %s' % str(e))
+            logger.debug('Failed IPN handshake: {}: {}'.format(e, query))
     if result == 'VERIFIED':
         data = []
         for id in donation_id.split(','):
             try:
                 donation = Donation.objects.get(pk=id)
+            except Exception, e:
+                logger.debug('Failed to set Donation to Paid: VERIFIED: {}: {}'.fomrat(e, query))
+            else:
                 donation.paid = True
                 donation.donated = donation.total()
                 donation.save()
-                logger.debug('Successfully set Donation to Paid for ID: %s' % id)
+                logger.debug('Successfully set Donation to Paid for ID: VERIFIED: {}'.format(id))
                 # update totals
                 donation.calculate_totals(donation.id)
 #                 calculate_totals_signal.send(sender=None, donation=donation)
@@ -576,8 +579,6 @@ def paid(request, donation_id=None):
                 c['name'] = donation.full_name()
                 c['amount'] = donation.donated
                 data.append(_send_email_teamplate('paid', c, 1))
-            except Exception, e:
-                logger.debug('Failed to set Donation to Paid: %s' % str(e))
         _send_mass_mail(data)
     elif result:
         c['code'] = result
@@ -587,7 +588,7 @@ def paid(request, donation_id=None):
         c['subject'] = 'Hicks Canyon Jog-A-Thon: Payment Failed'
         _send_email_teamplate('paid', c)
     elif regex.match('[^\d,]+', donation_id):
-        logger.debug('Successfully Received Payment For: %s' % donation_id)
+        logger.debug('Successfully Received Payment For: {}'.format(donation_id))
     else:
         for id in donation_id.split(','):
             try:
@@ -595,12 +596,12 @@ def paid(request, donation_id=None):
                 donation.paid = True
                 donation.donated = donation.total()
                 donation.save()
-                logger.debug('Successfully set Donation to Paid for ID: %s' % id)
+                logger.debug('Successfully set Donation to Paid for ID: {}'.format(id))
                 # update totals
                 donation.calculate_totals(donation.id)
 #                 calculate_totals_signal.send(sender=None, donation=donation)
             except Exception, e:
-                logger.debug('Failed to set Donation to Paid: %s' % str(e))
+                logger.debug('Failed to set Donation to Paid: {}: {}'.format(e, query))
     return HttpResponse(simplejson.dumps({'result': 'OK', 'status': 200, 'code': result}), mimetype='application/json')
 
 @csrf_exempt
@@ -619,7 +620,7 @@ def thank_you(request, donation_id=None):
             donation.calculate_totals(donation.id)
 #             calculate_totals_signal.send(sender=None, donation=donation)
         except Exception, e:
-            messages.error(request, 'Failed to set Sponsor to Paid: %s' % str(e))
+            messages.error(request, 'Failed to set Sponsor to Paid: {}'.format(e))
     else:
         request.cart.checkout()
         request.cart.clear()
@@ -859,8 +860,8 @@ def get_cart(request):
         c['paypal_ipn_url'] = settings.PAYPAL_IPN_URL
         c['encrypted_block'] = Donation().encrypted_block(Donation().button_data(amount, ",".join(ids)))
     except Exception, e:
-        logger.debug('==== c [%s]'%(e))
-#         messages.error(request, 'Could not encrypt button for ID: %s' % id)
+        logger.debug('==== get_cart.e [{}]'.format(e))
+#         messages.error(request, 'Could not encrypt button for ID: {}'.format(id))
         c['error'] = True
     c['messages'] = messages.get_messages(request)
     return render_to_response('cart.html', c, context_instance=RequestContext(request))
@@ -879,8 +880,8 @@ def order_form(request, identifier=None):
     try:
         c['student'] = Student.objects.get(identifier=identifier)
     except Exception, e:
-        logger.debug('==== c [%s]'%(e))
-        messages.error(request, 'Could not find Student for identity: %s' % identifier)
+        logger.debug('==== order_form.e [{}]'.format(e))
+        messages.error(request, 'Could not find Student for identity: {}'.format(identifier))
         c['error'] = True
     if request.method == 'POST':
         form = ShirtOrderForm(request.POST)
@@ -909,7 +910,7 @@ def order_form(request, identifier=None):
 #                         )
 #                         order.save()
 #                     except Exception, e:
-#                         logger.debug('==== order error [%s]'%(str(e)))
+#                         logger.debug('==== order_form.e [{}]'.format(e))
 #                         messages.error(request, str(e))
             # this should happen at order paid, have to figure out how to do that
             c['subject'] = 'T-Shirt Order Form'
@@ -943,37 +944,37 @@ def _formatData(data, total):
         row = {'id': donation.id, 'cell': [ donation.id ]}
         if donation.last_name == 'teacher':
             row['cell'].append(donation.first_name)
-            row['cell'].append('<span class="hidden">%s</span>' % donation.last_name)
-            row['cell'].append('<span class="hidden">%s</span>' % donation.email_address)
-            row['cell'].append('<span class="hidden">%s</span>' % donation.phone_number)
+            row['cell'].append('<span class="hidden">{}</span>'.format(donation.last_name))
+            row['cell'].append('<span class="hidden">{}</span>'.format(donation.email_address))
+            row['cell'].append('<span class="hidden">{}</span>'.format(donation.phone_number))
             row['cell'].append(donation.date_added.strftime('%m/%d/%Y'))
             row['cell'].append('<span class="hidden">0</span>')
         else:
-            row['cell'].append(donation.paid and donation.first_name or '<a href="#" class="show-edit" id="edit_sponsor_%s">%s</a>' % (donation.id, donation.first_name))
+            row['cell'].append(donation.paid and donation.first_name or '<a href="#" class="show-edit" id="edit_sponsor_{}">{}</a>'.format(donation.id, donation.first_name))
             row['cell'].append(donation.last_name)
             row['cell'].append(donation.email_address)
             row['cell'].append(donation.phone_number)
             row['cell'].append(donation.date_added.strftime('%m/%d/%Y'))
             row['cell'].append(donation.student.laps or 0)
-        row['cell'].append("%01.2f" % (donation.donation or 0))
-        row['cell'].append('<span abbr="total">%01.2f</span>' % (donation.total()))
+        row['cell'].append('{0:.2f}'.format(donation.donation or 0))
+        row['cell'].append('<span abbr="total">{0:.2f}</span>'.format(donation.total()))
         if donation.last_name == 'teacher':
             row['cell'].append('<span class="hidden">no</span>')
         else:
             row['cell'].append(donation.per_lap and 'yes' or 'no')
-        row['cell'].append(donation.paid and '<span class="success">Paid</span>' or '<input type="checkbox" value="paid" name="paid" id="paid-%s" class="set-paid" title="If your Sponsor has paid you, you can mark their Donation as Paid." />' % donation.id)
-        row['cell'].append('<input type="checkbox" value="%s" name="reminder" id="reminder-%s" class="set-reminder" />' % (donation.id, donation.id))
+        row['cell'].append(donation.paid and '<span class="success">Paid</span>' or '<input type="checkbox" value="paid" name="paid" id="paid-{}" class="set-paid" title="If your Sponsor has paid you, you can mark their Donation as Paid." />'.format(donation.id))
+        row['cell'].append('<input type="checkbox" value="{}" name="reminder" id="reminder-{}" class="set-reminder" />'.format(donation.id, donation.id))
         result['rows'].append(row)
         count += 1
         funds += donation.total()
-    result['rows'].append({'id': None, 'cell': [ 'Total', None, None, None, None, None, None, "%01.2f" % (funds), None, None, None, None ]})
+    result['rows'].append({'id': None, 'cell': [ 'Total', None, None, None, None, None, None, '{0:.2f}'.format(funds), None, None, None, None ]})
     return result
 
 def _send_email_teamplate(template, data, mass=None):
     if data.has_key('body'):
         body = data['body']
     else:
-        t = loader.get_template('email/%s.txt' % template)
+        t = loader.get_template('email/{}.txt'.format(template))
         body = t.render(data)
     if mass:
         return mail.EmailMessage(data['subject'], body, settings.EMAIL_HOST_USER, [data['email_address']], headers={'Reply-To': data['reply_to']})
@@ -1008,6 +1009,6 @@ class BlogFeed(Feed):
 
     def item_link(self, item):
         domain = Site.objects.get_current().domain
-        return 'http://%s/nav/blog/%d' % (domain, item.id)
+        return 'http://{}/nav/blog/{}'.format(domain, item.id)
 
 request_finished.connect(calculate_totals_callback, dispatch_uid="calculate_totals_callback")

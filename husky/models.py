@@ -536,7 +536,7 @@ class Donation(models.Model):
         ordering = ['last_name', 'first_name']
 
     def __unicode__(self):
-        return self.full_name()
+        return '{0}: [{1}]'.format(self.full_name(), self.id)
 
     def save(self, *args, **kwargs):
         if self.paid:
