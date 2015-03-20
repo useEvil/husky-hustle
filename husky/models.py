@@ -96,16 +96,16 @@ class Photo(object):
 
     def get_photo(self, album_id=None, photo_id=None):
         if not photo_id or not photo_id: return
-        photo = self.gd_client.GetFeed('/data/feed/api/user/default/albumid/%s/photoid/%s' % (album_id, photo_id))
+        photo = self.gd_client.GetFeed('/data/feed/api/user/default/albumid/{0}/photoid/{1}'.format(album_id, photo_id))
         return photo
 
     def get_photos(self, album_id=None):
         if not album_id: return
-        photos = self.gd_client.GetFeed('/data/feed/api/user/default/albumid/%s?kind=photo' % (album_id))
+        photos = self.gd_client.GetFeed('/data/feed/api/user/default/albumid/{0}?kind=photo'.format(album_id))
         return photos
 
     def get_photos_by_tags(self, tags='huskyhustle'):
-        photos = self.gd_client.GetFeed('/data/feed/api/all?kind=photo&tag=%s' % (tags))
+        photos = self.gd_client.GetFeed('/data/feed/api/all?kind=photo&tag={0}'.format(tags))
         return photos
 
 
@@ -224,13 +224,13 @@ class Teacher(models.Model):
         ordering = ['last_name', 'first_name']
 
     def __unicode__(self):
-        return '%s (%s) %s' % (self.full_name(), self.room_number, self.grade)
+        return '{0} ({1}) {2}'.format(self.full_name(), self.room_number, self.grade)
 
     def full_name(self):
-        return '%s %s %s' % (self.title, self.first_name, self.last_name)
+        return '{0} {1} {2}'.format(self.title, self.first_name, self.last_name)
 
     def title_name(self):
-        return '%s %s' % (self.title, self.last_name)
+        return '{0} {1}'.format(self.title, self.last_name)
 
     def find(self, last_name=None):
         try:
@@ -284,7 +284,7 @@ class Teacher(models.Model):
     def donate_url(self, identifier=None):
         if not identifier: return
         site = Site.objects.get_current()
-        donate_url = 'http://%s/teacher-donation/%s' % (site.domain, identifier)
+        donate_url = 'http://{0}/teacher-donation/{1}'.format(site.domain, identifier)
         return donate_url
 
     def shortened(self):
@@ -296,7 +296,7 @@ class Teacher(models.Model):
 
     def reports_url(self):
         site = Site.objects.get_current()
-        reports_url = 'http://%s/admin/results/donations-by-teacher?id=%s' % (site.domain, self.id)
+        reports_url = 'http://{0}/admin/results/donations-by-teacher?id={1}'.format(site.domain, self.id)
         return reports_url
 
 
@@ -321,16 +321,16 @@ class Student(models.Model):
         return self.select_list_name()
 
     def form_list_name(self):
-        return '%s, %s; %s' % (self.last_name, self.first_name, self.teacher)
+        return '{0}, {1}; {2}'.format(self.last_name, self.first_name, self.teacher)
 
     def select_list_name(self):
-        return '%s, %s; %s' % (self.last_name, self.first_name, self.identifier)
+        return '{0}, {1}; {2}'.format(self.last_name, self.first_name, self.identifier)
 
     def list_name(self):
-        return '%s, %s' % (self.last_name, self.first_name)
+        return '{0}, {1}'.format(self.last_name, self.first_name)
 
     def full_name(self):
-        return '%s %s' % (self.first_name, self.last_name)
+        return '{0} {1}'.format(self.first_name, self.last_name)
 
     def find(self, first_name=None, last_name=None, teacher_name=None):
         try:
@@ -343,7 +343,7 @@ class Student(models.Model):
             elif teacher_name:
                 return Student.objects.filter(teacher__last_name__icontains=teacher_name).distinct().all()
         except ObjectDoesNotExist, e:
-            logger.debug('==== e [%s]'%(e))
+            logger.debug('==== e [{0}]'.format(e))
             return
 
     @property
@@ -387,18 +387,25 @@ class Student(models.Model):
 
     def set_url(self, page=None):
         site = Site.objects.get_current()
-        return 'http://%s/%s/%s' % (site.domain, page, self.identifier)
+        return 'http://{0}/{1}/{2}'.format(site.domain, page, self.identifier)
 
     def facebook_share_url(self):
         site = Site.objects.get_current()
-        params = 'app_id=' + settings.FACEBOOK_APP_ID + '&link=' + self.donate_url() + '&picture=' + ('http://%s/static/images/hickslogo-1.jpg' % site.domain) + '&name=' + urllib.quote('Husky Hustle') + '&caption=' + urllib.quote('Donate to %s' % self.full_name()) + '&description=' + urllib.quote("Donate and help further our student's education.") + '&redirect_uri=' + 'http://%s/' % site.domain
+        params = 'app_id={0}&link={1}&picture=http://{2}/static/images/hickslogo-1.jpg&name={3}&caption={4}&description={5}&redirect_uri=http://{2}/'.format(
+            settings.FACEBOOK_APP_ID,
+            self.donate_url(),
+            site.domain,
+            urllib.quote('Husky Hustle'),
+            urllib.quote('Donate to {0}'.format(self.full_name())),
+            urllib.quote("Donate and help further our student's education.")
+        )
         return 'https://www.facebook.com/dialog/feed?' + params
 
     def twitter_share_url(self):
-        return 'https://twitter.com/intent/tweet?button_hashtag=HuskyHustle&url=%s' % self.donate_url()
+        return 'https://twitter.com/intent/tweet?button_hashtag=HuskyHustle&url={0}'.format(self.donate_url())
 
     def google_share_url(self):
-        return 'https://plus.google.com/share?url=%s' % self.donate_url()
+        return 'https://plus.google.com/share?url={0}'.format(self.donate_url())
 
     def grades(self):
         return Grade.objects.all()
@@ -549,7 +556,7 @@ class Donation(models.Model):
             )
 
     def full_name(self):
-        return '%s %s' % (self.first_name, self.last_name)
+        return '{0} {1}'.format(self.first_name, self.last_name)
 
     def laps(self):
         return self.student.laps or 0
@@ -592,7 +599,7 @@ class Donation(models.Model):
         try:
             limited = int(limit) + int(offset)
             if sortorder == 'desc':
-                sortname = '-%s'%sortname
+                sortname = '-{0}'.format(sortname)
             if query:
                 if field == 'last_name':
                     results = Donation.objects.filter(student__identifier__in=student, last_name__contains=query).order_by(sortname)[offset:limited]
@@ -641,7 +648,7 @@ class Donation(models.Model):
         for index, grade in enumerate(grades):
             json['values'].append({'label': grade.title, 'values': [], 'labels': []})
             json['values'][index]['values'].append(grade.total_collected())
-            json['values'][index]['labels'].append('Laps: %d; Donations' % grade.total_laps())
+            json['values'][index]['labels'].append('Laps: {0}; Donations'.format(grade.total_laps()))
         return json
 
     def reports_most_laps_by_grade(self):
@@ -736,7 +743,7 @@ class Donation(models.Model):
             results = Donation.objects.filter(date_added__range=(start, end)).exclude(type__in=[1,2]).order_by('-donated')
             for result in results:
                 json['values'][index-1]['values'].append(float(result.donated or 0))
-                json['values'][index-1]['labels'].append('<span id="%d">%s (%s)</span>'%(result.id, result.full_name(), result.student))
+                json['values'][index-1]['labels'].append('<span id="{0}">{1} ({2})</span>'.format(result.id, result.full_name(), result.student))
         return json
 
     def reports_most_donations_by_day(self):
@@ -879,14 +886,14 @@ class Donation(models.Model):
 
     def thank_you_url(self):
         site = Site.objects.get_current()
-        return 'http://%s/thank-you' % (site.domain)
+        return 'http://{0}/thank-you'.format(site.domain)
 
     def payment_url(self, ids=None):
         url = self.student.payment_url()
         if ids:
-            return '%s/%s' % (url, ids)
+            return '{0}/{1}'.format(url, ids)
         else:
-            return '%s?sponsor=%s' % (url, self.email_address)
+            return '{0}?sponsor={1}'.format(url, self.email_address)
 
     def button_data(self, amount=None, ids=None):
         if not amount: amount = self.total() or 0
@@ -903,8 +910,8 @@ class Donation(models.Model):
             'business': settings.PAYPAL_BUS_ID,
             'item_number': 'husky-hustle-donation-{0}'.format(ids),
             'item_name': 'Husky Hustle Online Donations {0}'.format(now.year),
-            'return': 'http://%s/thank-you' % (site.domain),
-            'notify_url': 'http://%s/paid/%s' % (site.domain, ids),
+            'return': 'http://{0}/thank-you'.format(site.domain),
+            'notify_url': 'http://{0}/paid/{1}'.format(site.domain, ids),
             'cert_id': settings.PAYPAL_CERT_ID,
             'amount': amount,
         }
@@ -983,7 +990,7 @@ class Shirt(models.Model):
         return self.full_name()
 
     def full_name(self):
-        return '%s %s' % (self.type_display(), self.size_display())
+        return '{0} {1}'.format(self.type_display(), self.size_display())
 
     def type_display(self):
         d = dict(self.TYPES)
