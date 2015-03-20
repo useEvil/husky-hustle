@@ -153,17 +153,23 @@ def payment(request, identifier=None, id=None):
     ## get totals from a sponsors email address
     if request.GET.get('sponsor'):
         try:
-            donations = Donation.objects.filter(email_address=request.GET.get('sponsor')).all()
+            donations = Donation.objects.filter(email_address=request.GET.get('sponsor'))
         except Exception, e:
             logger.debug('==== payment.sponsor.e [{0}][{1}][{2}]'.format(identifier, id, e))
             messages.error(request, 'Could not find Donation for ID: {0}'.format(id))
             c['error'] = True
             c['messages'] = messages.get_messages(request)
-            return render_to_response('/student-donation/{0}'.format(identifier), c, context_instance=RequestContext(request))
+            return HttpResponseRedirect('/student-donation/{0}'.format(identifier))
+        if not donations.exists():
+            logger.debug('==== payment.donations.e [{0}][{1}][{2}]'.format(identifier, id, donations.count()))
+            messages.error(request, 'Could not find Donations for the Email: {0}'.format(request.GET.get('sponsor')))
+            c['error'] = True
+            c['messages'] = messages.get_messages(request)
+            return HttpResponseRedirect('/student-donation/{0}'.format(identifier))
         total_due = 0
         ids = []
         items = []
-        for donor in donations:
+        for donor in donations.all():
             if donor.paid: continue
             if not donor.total(): continue
             total_due += donor.total()
