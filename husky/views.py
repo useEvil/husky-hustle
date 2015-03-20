@@ -153,7 +153,7 @@ def payment(request, identifier=None, id=None):
     ## get totals from a sponsors email address
     if request.GET.get('sponsor'):
         try:
-            donations = Donation.objects.filter(email_address=request.GET.get('sponsor'))
+            donations = Donation.objects.filter(email_address=request.GET.get('sponsor')).exclude(paid=True).exclude(per_lap=True, student__laps=None)
         except Exception, e:
             logger.debug('==== payment.sponsor.e [{0}][{1}][{2}]'.format(identifier, id, e))
             messages.error(request, 'Could not find Donation for ID: {0}'.format(id))
@@ -170,7 +170,6 @@ def payment(request, identifier=None, id=None):
         ids = []
         items = []
         for donor in donations.all():
-            if donor.paid: continue
             if not donor.total(): continue
             total_due += donor.total()
             ids.append(str(donor.id))
