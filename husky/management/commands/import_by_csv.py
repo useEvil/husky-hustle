@@ -3,7 +3,6 @@ import os, csv, sys, pytz
 import re as regex
 import datetime as date
 
-from bs4 import BeautifulSoup
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
