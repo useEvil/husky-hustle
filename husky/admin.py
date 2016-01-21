@@ -162,6 +162,7 @@ class StudentAdmin(admin.ModelAdmin):
 class ContentModelForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea(attrs={'cols': 125, 'rows': 50}))
     class Meta:
+        exclude = ()
         model = Content
 
 # class DonationModelForm(forms.ModelForm):

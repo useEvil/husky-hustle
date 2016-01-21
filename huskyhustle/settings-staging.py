@@ -24,7 +24,7 @@ SECRET_KEY = ''
 DEBUG = True
 
 TEMPLATE_DEBUG = True
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'huskyhustle/husky/templates'))
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'huskyhustle/husky/templates'),)
 
 MEDIA_ROOT = 'husky/static'
 MEDIA_URL = '/media/'
@@ -112,24 +112,26 @@ SITE_ID = 2
 STATIC_URL = '/static/'
 
 # Static CSS and JS file compression
-PIPELINE = True
-PIPELINE_STORAGE = 'pipeline.storage.PipelineFinderStorage'
-STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
-PIPELINE_CSS = {
-    'huskyhustle': {
-        'source_filenames': (
-            'css/husky-hustle.css',
-        ),
-        'output_filename': 'css/husky-hustle.min.css',
+PIPELINE = {
+    'PIPELINE_ENABLED': True,
+    'STYLESHEETS': {
+        'huskyhustle': {
+            'source_filenames': (
+                'css/husky-hustle.css',
+            ),
+            'output_filename': 'css/husky-hustle.min.css',
+#             'extra_context': {
+#                 'media': 'screen,projection',
+#             },
+        },
     },
-}
-
-PIPELINE_JS = {
-    'huskyhustle': {
-        'source_filenames': (
-            'js/husky-hustle.js',
-        ),
-        'output_filename': 'js/husky-hustle.min.js',
+    'JAVASCRIPT': {
+        'huskyhustle': {
+            'source_filenames': (
+                'js/husky-hustle.js',
+            ),
+            'output_filename': 'js/husky-hustle.min.js',
+        }
     }
 }
 

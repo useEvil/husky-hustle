@@ -42,13 +42,13 @@ class CurrencyField(models.DecimalField):
 
 
 # Google Classes
-class GoogleCalendarConnect(object):
-
-    gd_client = cdata.CalendarClient(source=settings.PICASA_STORAGE_OPTIONS['source'])
-    gd_client.ClientLogin(settings.PICASA_STORAGE_OPTIONS['email'], settings.PICASA_STORAGE_OPTIONS['password'], gd_client.source)
-
-    def client(self):
-        return self.gd_client
+# class GoogleCalendarConnect(object):
+# 
+#     gd_client = cdata.CalendarClient(source=settings.PICASA_STORAGE_OPTIONS['source'])
+#     gd_client.ClientLogin(settings.PICASA_STORAGE_OPTIONS['email'], settings.PICASA_STORAGE_OPTIONS['password'], gd_client.source)
+# 
+#     def client(self):
+#         return self.gd_client
 
 
 class GooglePhotoConnect(object):
@@ -63,24 +63,24 @@ class GooglePhotoConnect(object):
         return self.gd_client
 
 
-class CalendarGoogle(object):
-
-    gd_client = GoogleCalendarConnect().client()
-
-    def get_events(self):
-        query = cdata.CalendarEventQuery()
-        query.start_min = date.datetime.now(pytz.utc).strftime('%Y-%m-%d')
-        query.start_max = (date.datetime.now(pytz.utc) + date.timedelta(days=14)).strftime('%Y-%m-%d')
-        feed = self.gd_client.GetCalendarEventFeed(q=query, visibility='public', sortorder='ascending', orderby='starttime')
-        return feed
+# class CalendarGoogle(object):
+# 
+#     gd_client = GoogleCalendarConnect().client()
+# 
+#     def get_events(self):
+#         query = cdata.CalendarEventQuery()
+#         query.start_min = date.datetime.now(pytz.utc).strftime('%Y-%m-%d')
+#         query.start_max = (date.datetime.now(pytz.utc) + date.timedelta(days=14)).strftime('%Y-%m-%d')
+#         feed = self.gd_client.GetCalendarEventFeed(q=query, visibility='public', sortorder='ascending', orderby='starttime')
+#         return feed
 
 
 class Calendar(models.Model):
 
     title = models.CharField(max_length=100)
     content = models.TextField(max_length=65000, blank=True, null=True)
-    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
-    date_of_event = models.DateTimeField(default=date.datetime.now(pytz.utc))
+    date_added = models.DateTimeField(auto_now_add=True)
+    date_of_event = models.DateTimeField(auto_now_add=True)
     duration = models.CharField(max_length=25, blank=True, null=True, verbose_name="Duration (ie. 1 hour)")
 
     def get_events(self):
@@ -128,7 +128,7 @@ class Content(models.Model):
 
     page = models.CharField(max_length=100)
     content = models.TextField(max_length=65000, blank=True, null=True)
-    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
+    date_added = models.DateTimeField(auto_now_add=True)
 
 
 class Blog(models.Model):
@@ -136,7 +136,7 @@ class Blog(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey(User)
     content = models.TextField(max_length=4000)
-    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
+    date_added = models.DateTimeField(auto_now_add=True)
 
 
 class Message(models.Model):
@@ -144,7 +144,7 @@ class Message(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey(User)
     content = models.TextField(max_length=4000)
-    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
+    date_added = models.DateTimeField(auto_now_add=True)
 
 
 class Link(models.Model):
@@ -305,7 +305,7 @@ class Student(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     identifier = models.CharField(max_length=100, unique=True)
-    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
+    date_added = models.DateTimeField(auto_now_add=True)
     laps = models.IntegerField(blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=1, blank=True, null=True, choices=(('M', 'Boy'), ('F', 'Girl')))
@@ -538,7 +538,7 @@ class Donation(models.Model):
     paid = models.BooleanField(null=False, default=0)
     paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=PAID_BY)
     type = models.IntegerField(null=False, default=0, choices=TYPES)
-    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
+    date_added = models.DateTimeField(auto_now_add=True)
     class Meta:
         ordering = ['last_name', 'first_name']
 
@@ -946,7 +946,7 @@ class PaymentGateway(models.Model):
     public_cert = models.TextField(max_length=65000, blank=True, null=True, default=None)
     public_key = models.TextField(max_length=65000, blank=True, null=True, default=None)
     private_key = models.TextField(max_length=65000, blank=True, null=True, default=None)
-    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
+    date_added = models.DateTimeField(auto_now_add=True)
 
     @property
     def decode_business_id(self):
@@ -1012,7 +1012,7 @@ class ShirtOrder(models.Model):
     price = CurrencyField(blank=True, null=True)
     paid = models.BooleanField(null=False, default=0)
     paid_by = models.CharField(max_length=6, blank=True, null=True, default='online', choices=(('cash','cash'), ('check','check'), ('online','online')))
-    date_added = models.DateTimeField(default=date.datetime.now(pytz.utc))
+    date_added = models.DateTimeField(auto_now_add=True)
 
 
 class ShirtOrderForm(forms.Form):
