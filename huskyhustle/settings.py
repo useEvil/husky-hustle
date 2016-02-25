@@ -50,8 +50,14 @@ TEMPLATES = [
     },
 ]
 
-MEDIA_ROOT = 'husky/static'
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.6/howto/static-files/
+
+STATIC_URL = '/static/'
+STATIC_ROOT = 'husky/static'
+
 MEDIA_URL = '/media/'
+MEDIA_ROOT = 'husky/media'
 ADMIN_MEDIA_PREFIX = '/media/'
 
 ALLOWED_HOSTS = [
