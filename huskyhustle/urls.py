@@ -5,7 +5,7 @@ import husky.views
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Site
     url(r'^$', husky.views.index, name='index'),
     url(r'^archive/album/(?P<album_id>\w+)$', husky.views.album, name='albums'),
@@ -50,4 +50,4 @@ urlpatterns = patterns('',
 
     # Admin
     url(r'^admin/', include(admin.site.urls)),
-)
+]
