@@ -148,7 +148,7 @@ class StudentAdmin(admin.ModelAdmin):
     donation_sheet_link.allow_tags = True
     donation_sheet_link.short_description = "Donation Sheet"
 
-    fields = ['teacher', 'first_name', 'last_name', 'identifier', 'gender', 'age', 'laps', 'disqualify', 'date_added']
+    fields = ['teacher', 'first_name', 'last_name', 'identifier', 'gender', 'age', 'laps', 'disqualify']
     list_display = ['last_name', first_name_link, 'teacher', donation_sheet_link, 'disqualify', 'gender', 'laps', 'total_for_laps', 'total_collected', 'total_due', 'total_raffle_tickets']
     search_fields = ['teacher__last_name', 'first_name', 'last_name']
     list_editable = ['laps', 'gender', 'disqualify']
@@ -178,11 +178,11 @@ class ContentAdmin(admin.ModelAdmin):
     form = ContentModelForm
 
 class BlogAdmin(admin.ModelAdmin):
-    fields = ['title', 'content', 'author', 'date_added']
+    fields = ['title', 'content', 'author']
     list_display = ['title', 'content', 'date_added']
 
 class MessageAdmin(admin.ModelAdmin):
-    fields = ['title', 'content', 'author', 'date_added']
+    fields = ['title', 'content', 'author']
     list_display = ['title', 'content', 'date_added']
 
 class StudentList(ChangeList):
@@ -258,7 +258,7 @@ class DonationAdmin(admin.ModelAdmin):
         return super(DonationAdmin, self).change_view(request, object_id, form_url, extra_context=context)
 
     ordering = ('-date_added',)
-    fields = ['student', 'type', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by', 'date_added']
+    fields = ['student', 'type', 'first_name', 'last_name', 'email_address', 'phone_number', 'donation', 'per_lap', 'paid', 'paid_by']
     list_display = ['id', list_name, 'teacher', 'first_name', 'last_name', 'email_address', 'donation', 'laps', 'per_lap', total_link, 'donated', 'date_added', 'paid', 'paid_by', 'type']
     search_fields = ['email_address', 'first_name', 'last_name', 'student__first_name', 'student__last_name', 'student__teacher__last_name', 'paid_by']
     list_editable = ['per_lap', 'donation', 'paid', 'paid_by', 'type']
@@ -307,15 +307,15 @@ class ShirtAdmin(admin.ModelAdmin):
     list_display = ['id', 'type', 'size', 'price']
 
 class ShirtOrderAdmin(admin.ModelAdmin):
-    fields = ['student', 'shirt', 'email_address', 'quantity', 'price', 'paid', 'paid_by', 'date_added']
+    fields = ['student', 'shirt', 'email_address', 'quantity', 'price', 'paid', 'paid_by']
     list_display = ['student', 'shirt', 'email_address', 'quantity', 'price', 'paid', 'paid_by', 'date_added']
 
 class CalendarAdmin(admin.ModelAdmin):
-    fields = ['title', 'date_of_event', 'duration', 'date_added']
+    fields = ['title', 'date_of_event', 'duration']
     list_display = ['title', 'date_of_event', 'duration']
 
 class PaymentGatewayAdmin(admin.ModelAdmin):
-    fields = ['gateway', 'client_id', 'business_id', 'api_key', 'api_secret', 'public_cert', 'private_key', 'public_key', 'date_added']
+    fields = ['gateway', 'client_id', 'business_id', 'api_key', 'api_secret', 'public_cert', 'private_key', 'public_key']
     list_display = ['gateway', 'client_id', 'business_id', 'api_key', 'date_added']
 
 
