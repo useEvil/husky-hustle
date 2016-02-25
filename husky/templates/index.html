@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load custom_filters %}
+{% load tz %}
 
 {% block content %}
   <!-- Jumbotron -->
@@ -43,7 +44,7 @@
           <div class="panel-heading"><strong>Dates to Remember</strong></div>
             <div class="panel-body">
             {% for entry in calendar %}
-            <p style="font-size: 0.85em;"><strong>{{ entry.title }}</strong> on <strong>{{ entry.date_of_event|date_format }}</strong>{% if entry.duration %} for <strong>{{ entry.duration }}</strong>{% endif %}</p>
+            <p style="font-size: 0.85em;"><strong>{{ entry.title }}</strong> on <strong>{{ entry.date_of_event|localtime|date_format }}</strong>{% if entry.duration %} for <strong>{{ entry.duration }}</strong>{% endif %}</p>
             {% endfor %}
             <div class="clearfix">&nbsp;</div>
           </div>
