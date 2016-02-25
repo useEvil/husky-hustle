@@ -173,7 +173,7 @@ class ContentModelForm(forms.ModelForm):
 #         model = Student
 
 class ContentAdmin(admin.ModelAdmin):
-    fields = ['page', 'content', 'date_added']
+    fields = ['page', 'content']
     list_display = ['page', 'content', 'date_added']
     form = ContentModelForm
 
