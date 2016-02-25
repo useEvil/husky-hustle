@@ -80,7 +80,7 @@ class Calendar(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField(max_length=65000, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
-    date_of_event = models.DateTimeField(auto_now_add=True)
+    date_of_event = models.DateTimeField(auto_now_add=False)
     duration = models.CharField(max_length=25, blank=True, null=True, verbose_name="Duration (ie. 1 hour)")
 
     def get_events(self):
