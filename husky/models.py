@@ -87,7 +87,7 @@ class Calendar(models.Model):
         start_min = date.datetime.now(pytz.utc).strftime('%Y-%m-%d')
         start_max = (date.datetime.now(pytz.utc) + date.timedelta(days=144)).strftime('%Y-%m-%d')
         feed = Calendar.objects.filter(date_of_event__gt=start_min, date_of_event__lte=start_max)
-        return feed.all()
+        return feed.order_by('date_of_event').all()
 
 
 class Photo(object):
