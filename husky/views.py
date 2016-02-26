@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 def index(request):
     c = Context(dict(
         page_title='Home',
-        motd=Message.objects.latest('date_added'),
+        motd=Message().get_latest(),
         content=Content.objects.filter(page='index').get(),
         jumbotron=Content.objects.filter(page='jumbotron').get(),
         calendar=Calendar().get_events(),

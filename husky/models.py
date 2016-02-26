@@ -146,6 +146,14 @@ class Message(models.Model):
     content = models.TextField(max_length=4000)
     date_added = models.DateTimeField(auto_now_add=True)
 
+    def get_latest(self):
+        try:
+            msg = Message.objects.latest('date_added')
+        except:
+            return None
+        else:
+            return msg
+
 
 class Link(models.Model):
 
