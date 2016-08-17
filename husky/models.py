@@ -927,8 +927,7 @@ class Donation(models.Model):
 
     def encrypted_block(self, data=None):
         if not data: data = self.button_data()
-        paypal = PayPal()
-        return paypal.encrypt(data)
+        return PayPal().encrypt(data)
 
 
 class Pledge(models.Model):
